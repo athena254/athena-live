@@ -261,6 +261,23 @@
 
 ---
 
+## 🚀 New Core Protocols (Effective 2026-02-21 22:20 UTC)
+
+### 1. MAXIMIZE & BUILD
+- **Full Throttle:** Keep all available models (GLM-5, qwen_nvidia, llama, OpenRouter free tier) spinning constantly with subagents. No idle tokens.
+- **Daily Build:** Every single day, construct something tangible and cool—a new tool, dashboard feature, research report, or automation script. No empty days.
+- **Dynamic Spawning:** Create new subagents on the fly as needed, give them cool names, equip them with context, and set them to work autonomously.
+
+### 2. THE PRIME DIRECTIVE (INTERRUPT PROTOCOL)
+- **If user speaks or assigns a task:** EVERYTHING ELSE STOPS. Immediately.
+- Existing subagents are paused or backgrounded.
+- **User gets 100% focus** until task is done.
+- Once user is served, resume deep work sprint.
+
+**Rationale:** User wants maximum output and tangible daily results, with the flexibility to interrupt anytime for immediate service.
+
+---
+
 **This is a living document.** Update it when:
 - Major decisions are made
 - New agents/skills are created

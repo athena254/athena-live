@@ -1,16 +1,83 @@
 {
-  "lastUpdated": "2026-02-21T14:05:00Z",
+  "lastUpdated": "2026-02-21T19:28:00Z",
   "agents": {
-    "athena": {"status": "active", "role": "Main Orchestrator", "voice": "Sonia", "tasksCompleted": 0},
-    "sterling": {"status": "active", "role": "Finance/Auto-Bidder", "voice": "Thomas", "lastBidCycle": "2026-02-21T14:04:00Z", "bidsPending": 10},
-    "ishtar": {"status": "active", "role": "Oracle/PAI Research", "voice": "Ezinne", "currentTopic": "PAI Architecture"},
-    "felicity": {"status": "ready", "role": "Code Artisan", "voice": "default", "lastTask": "athena-status dashboard"},
-    "cisco": {"status": "ready", "role": "Security/BMAD", "voice": "default"},
-    "prometheus": {"status": "ready", "role": "Executor", "voice": "default"},
-    "delver": {"status": "ready", "role": "Research", "voice": "default"},
-    "squire": {"status": "ready", "role": "Assistant", "voice": "default"},
-    "themis": {"status": "ready", "role": "Council", "voice": "Maisie"}
+    "athena": {
+      "status": "active",
+      "role": "Main Orchestrator",
+      "voice": "Sonia",
+      "tasksCompleted": 0,
+      "priority": 1,
+      "preferredModel": "custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8"
+    },
+    "sterling": {
+      "status": "active",
+      "role": "Finance/Auto-Bidder",
+      "voice": "Thomas",
+      "lastBidCycle": "2026-02-21T14:04:00Z",
+      "bidsPending": 10,
+      "priority": 2,
+      "preferredModel": "custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8"
+    },
+    "ishtar": {
+      "status": "active",
+      "role": "Oracle/PAI Research",
+      "voice": "Ezinne",
+      "currentTopic": "PAI Architecture",
+      "priority": 3,
+      "preferredModel": "custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b"
+    },
+    "felicity": {
+      "status": "ready",
+      "role": "Code Artisan",
+      "voice": "default",
+      "lastTask": "athena-status dashboard",
+      "priority": 3
+    },
+    "cisco": {
+      "status": "ready",
+      "role": "Security/BMAD",
+      "voice": "default",
+      "priority": 1
+    },
+    "prometheus": {
+      "status": "ready",
+      "role": "Executor",
+      "voice": "default",
+      "priority": 2
+    },
+    "delver": {
+      "status": "ready",
+      "role": "Research",
+      "voice": "default",
+      "priority": 4
+    },
+    "squire": {
+      "status": "ready",
+      "role": "Assistant",
+      "voice": "default",
+      "priority": 4
+    },
+    "themis": {
+      "status": "ready",
+      "role": "Council",
+      "voice": "Maisie",
+      "priority": 4
+    }
   },
-  "spawnStaggerMs": 30000,
-  "notes": "Stagger spawns to avoid rate limits. All agents operational."
+  "spawnConfig": {
+    "staggerMs": 30000,
+    "maxParallel": 2,
+    "backoffBaseMs": 5000,
+    "backoffMaxMs": 60000,
+    "maxRetries": 3
+  },
+  "modelFallbackChain": [
+    "custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8",
+    "custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b"
+  ],
+  "rateLimits": {
+    "glm-5-fp8": { "limit": null, "remaining": null, "note": "unlimited" },
+    "qwen_nvidia": { "limit": null, "remaining": null, "note": "unlimited" }
+  },
+  "notes": "All agents operational. Stagger spawns by 30s. Max 2 parallel."
 }

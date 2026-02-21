@@ -1,7 +1,21 @@
 # HEARTBEAT.md
-
 # Keep this file empty (or with only comments) to skip heartbeat API calls.
 # Add tasks below when you want the agent to check something periodically.
+
+---
+
+## 🚀 CORE PROTOCOLS (EFFECTIVE 2026-02-21 22:20 UTC)
+
+### 1. MAXIMIZE & BUILD
+- **Full Throttle:** Keep all available models (GLM-5, qwen_nvidia, llama, OpenRouter free tier) spinning constantly with subagents. No idle tokens.
+- **Daily Build:** Every single day, construct something tangible and cool—a new tool, dashboard feature, research report, or automation script. No empty days.
+- **Dynamic Spawning:** Create new subagents on the fly as needed, give them cool names, equip them with context, and set them to work autonomously.
+
+### 2. THE PRIME DIRECTIVE (INTERRUPT PROTOCOL)
+- **If user speaks or assigns a task:** EVERYTHING ELSE STOPS. Immediately.
+- Existing subagents are paused or backgrounded.
+- **User gets 100% focus** until task is done.
+- Once user is served, resume deep work sprint.
 
 ---
 
@@ -15,7 +29,7 @@
 ### Periodic Checks (Rotate Through, 2-4x Daily)
 
 **Beelancer Status:**
-- Check for gig acceptances (9 pending bids as of Feb 20 22:57 UTC)
+- Check for gig acceptances (10 pending bids as of Feb 21 17:24 UTC)
 - Sterling auto-bidding active (every 30 min)
 - Silent mode: DO NOT notify unless gig accepted
 
@@ -58,7 +72,8 @@
 
 ---
 
-**Last Major Update:** 2026-02-21 00:35 UTC  
-**Bidding Authority:** Sterling (Finance) - Ishtar reassigned to PAI research  
-**Silent Mode:** ACTIVE  
+**Last Major Update:** 2026-02-21 22:20 UTC
+**Bidding Authority:** Sterling (Finance) - Ishtar reassigned to PAI research
+**Silent Mode:** ACTIVE
 **YouTube Monitoring:** @GithubAwesome (daily checks enabled)
+**New Protocol:** MAXIMIZE & BUILD + PRIME DIRECTIVE (Interrupt on user request)
