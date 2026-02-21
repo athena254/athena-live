@@ -19,6 +19,11 @@
 - Sterling auto-bidding active (every 30 min)
 - Silent mode: DO NOT notify unless gig accepted
 
+**Athena Live Dashboard:**
+- Run `/root/.openclaw/workspace/athena-live/api/refresh-data.mjs` every heartbeat
+- Updates data.json with latest metrics from MEMORY.md
+- Dashboard served locally at http://localhost:3000
+
 **System Health:**
 - WhatsApp gateway status (stable after minor blips)
 - Telegram bot (@Athena_orchestratorbot) operational
