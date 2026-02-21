@@ -1,0 +1,16 @@
+{
+  "lastUpdated": "2026-02-21T06:03:00Z",
+  "agents": {
+    "athena": {"status": "active", "role": "Main Orchestrator", "voice": "Sonia"},
+    "sterling": {"status": "active", "role": "Finance/Auto-Bidder", "voice": "Thomas", "lastBidCycle": "2026-02-21T05:30:00Z"},
+    "ishtar": {"status": "active", "role": "Oracle/PAI Research", "voice": "Ezinne", "currentTopic": "PAI Architecture"},
+    "felicity": {"status": "ready", "role": "Code Artisan", "voice": "default", "lastTask": "email-validator"},
+    "cisco": {"status": "ready", "role": "Security/BMAD", "voice": "default"},
+    "prometheus": {"status": "degraded", "role": "Executor", "voice": "default", "notes": "Timeout issues on last test"},
+    "delver": {"status": "ready", "role": "Research", "voice": "default"},
+    "squire": {"status": "ready", "role": "Assistant", "voice": "default"},
+    "themis": {"status": "ready", "role": "Council", "voice": "Maisie"}
+  },
+  "spawnStaggerMs": 30000,
+  "notes": "Stagger spawns to avoid rate limits"
+}

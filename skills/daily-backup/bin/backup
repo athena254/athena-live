@@ -1,0 +1,88 @@
+#!/bin/bash
+# Athena Daily Backup Script
+# Runs at midnight UTC to backup all changes to GitHub
+
+BACKUP_DIR="/root/.openclaw"
+SSH_KEY="$HOME/.ssh/id_ed25519_athena"
+REMOTE="git@github.com:athena254/Athena-backup.git"
+TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
+LOG_FILE="/root/.openclaw/workspace/memory/backup-log-$(date +%Y-%m).md"
+
+echo "🦉 Athena Daily Backup — $TIMESTAMP"
+echo "=========================================="
+
+# Check SSH key exists
+if [ ! -f "$SSH_KEY" ]; then
+    echo "❌ ERROR: SSH key not found at $SSH_KEY"
+    echo "Backup failed. Add SSH key to GitHub and retry."
+    exit 1
+fi
+
+# Check git repo exists
+if [ ! -d "$BACKUP_DIR/.git" ]; then
+    echo "❌ ERROR: Not a git repository at $BACKUP_DIR"
+    echo "Backup failed. Initialize git repo first."
+    exit 1
+fi
+
+cd "$BACKUP_DIR"
+
+# Remove problematic workspace-* directories (embedded git repos)
+echo "🧹 Cleaning embedded git repositories..."
+for dir in workspace-*; do
+    if [ -d "$dir/.git" ]; then
+        echo "   Removing $dir (embedded git repo)"
+        git rm -rf --cached "$dir" 2>/dev/null || true
+        rm -rf "$dir" 2>/dev/null || true
+    fi
+done
+
+# Also remove known problematic submodules
+for dir in archon personal-ai-infra searxng-install; do
+    if [ -d "$dir" ]; then
+        echo "   Removing $dir (submodule)"
+        git rm -rf --cached "$dir" 2>/dev/null || true
+        rm -rf "$dir" 2>/dev/null || true
+    fi
+done
+
+# Check for changes
+CHANGES=$(git status --porcelain 2>/dev/null | grep -v "^D " | wc -l)
+
+if [ "$CHANGES" -eq 0 ]; then
+    echo "✅ No changes to backup. Workspace is up to date."
+    echo "[$TIMESTAMP] No changes - skipped" >> "$LOG_FILE"
+    exit 0
+fi
+
+echo "📦 Found $CHANGES file(s) to backup..."
+
+# Stage all changes
+git add .
+
+# Commit with timestamp
+COMMIT_MSG="Daily backup — $TIMESTAMP"
+if ! git commit -m "$COMMIT_MSG"; then
+    echo "⚠️  No new changes to commit or commit failed"
+    echo "[$TIMESTAMP] No new changes" >> "$LOG_FILE"
+    exit 0
+fi
+
+# Push to GitHub
+echo "🚀 Pushing to GitHub..."
+if GIT_SSH_COMMAND="ssh -i $SSH_KEY -o IdentitiesOnly=yes" git push origin master 2>&1; then
+    echo "✅ Backup successful! Pushed to $REMOTE"
+    echo "[$TIMESTAMP] Success - $CHANGES files backed up" >> "$LOG_FILE"
+    
+    # Only notify if significant changes (>50 files)
+    if [ "$CHANGES" -gt 50 ]; then
+        echo "📊 Large backup: $CHANGES files changed"
+    fi
+else
+    echo "❌ ERROR: Push failed. Check SSH key and remote repository."
+    echo "[$TIMESTAMP] FAILED - Push error" >> "$LOG_FILE"
+    exit 1
+fi
+
+echo "=========================================="
+echo "Backup complete. Next scheduled: Tomorrow 00:00 UTC"

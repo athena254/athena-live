@@ -1,0 +1,12 @@
+{
+  "lastUpdated": "2026-02-21T06:03:00Z",
+  "models": {
+    "glm-5-fp8": {"status": "active", "rateLimit": "unlimited", "notes": "Primary model"},
+    "qwen_nvidia": {"status": "active", "rateLimit": "unlimited", "notes": "Secondary primary"},
+    "llama": {"status": "available", "rateLimit": "30/min", "notes": "Groq hosted"},
+    "qwen": {"status": "available", "rateLimit": "OAuth", "notes": "OAuth based"},
+    "gemini": {"status": "exhausted", "resetsAt": "2026-02-22T00:00:00Z", "notes": "20/day limit"}
+  },
+  "fallbackChain": ["glm-5-fp8", "qwen_nvidia", "llama", "qwen", "openrouter-free"],
+  "notes": "Rate limit issues resolved by staggering agent spawns to 30s intervals"
+}
