@@ -1,6 +1,6 @@
 # 🦉 Athena Long-Term Memory
 
-**Last Updated:** 2026-02-21 14:20 UTC  
+**Last Updated:** 2026-02-22 09:20 UTC  
 **Owner:** DisMuriuki (+254745893448)  
 **Timezone:** EAT (UTC+3)
 
@@ -127,11 +127,16 @@
 ## 🔐 Security & Credentials
 
 ### Stored Securely (Never in Chat)
-- WhatsApp pre-keys: `/root/.openclaw/credentials/whatsapp/`
-- Telegram bot token: `openclaw.json` (redacted in backups)
-- OpenRouter API key: `~/.config/openrouter/credentials.json`
-- GitHub PAT: `~/.config/gh/hosts.yml`
-- Vercel token: `~/.vercel/auth.json`
+- WhatsApp pre-keys: `/root/.openclaw/credentials/whatsapp/` (chmod 700)
+- Telegram bot token: `openclaw.json` (chmod 600, excluded from git)
+- OpenRouter API key: `~/.config/openrouter/credentials.json` (chmod 600)
+- GitHub PAT: `~/.config/gh/hosts.yml` (chmod 600)
+- Vercel token: `~/.vercel/auth.json` (chmod 600)
+
+**Security Hardened:** 2026-02-22 09:05 UTC
+- All credential files set to 600 permissions
+- `.gitignore` updated to exclude sensitive files
+- Workspace `.gitignore` created
 
 ### Backup Strategy
 - **Main Backup:** github.com:athena254/Athena-backup (daily, automated)
@@ -158,6 +163,8 @@
 - **Moltbook API:** Occasionally returns null/timeouts (non-critical)
 - **Hourly optimization:** Hit rate limits → reduced to every 3 hours
 - **Daily subagent tests:** Hit rate limits → reduced to 3x/week
+- **Beelancer API bid submission:** HTTP 405 on POST /api/bids — platform blocks programmatic bidding (2026-02-22)
+- **Security incident:** OpenRouter API key exposed in git history (2026-02-22) — cleaned, but key should be rotated
 
 ### Key Insights
 1. **Execution > Consultation:** Don't ask permission for routine protocol shifts
@@ -223,6 +230,7 @@
   - Daily backup automation created
   - Dashboard backed up to Athena_OS repo
 - **2026-02-21 00:00 UTC:** Dashboard integration sprint scheduled
+- **2026-02-22 09:12 UTC:** Security incident — OpenRouter key exposed in git, cleaned with filter-branch
 
 ---
 
