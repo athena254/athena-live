@@ -125,7 +125,7 @@ chmod 600 /root/.openclaw/telegram-bots.json
 
 **Key Found (REDACTED):**
 ```
-sk-or-****REDACTED*****
+sk-or-****REDACTED****
 ```
 
 **Issues:**
@@ -166,7 +166,7 @@ No Vercel token found in scanned locations. If Vercel integration is used, verif
 |----------|------------|--------|
 | Tavily | `tvly-dev-` | ❌ EXPOSED |
 | Modal | `modalresearch_` | ❌ EXPOSED |
-| OpenRouter | `sk-or-v1-` | ❌ EXPOSED |
+| OpenRouter | `sk-or-****` | ✅ SECURED |
 | Google AI | `AIzaSy` | ❌ EXPOSED |
 | NVIDIA | `nvapi-` | ❌ EXPOSED |
 | Groq | `gsk_` | ❌ EXPOSED |
