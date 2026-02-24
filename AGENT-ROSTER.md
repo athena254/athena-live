@@ -1,7 +1,7 @@
 # 🦉 Agent Roster - Divine Council
 
 **Last Updated:** 2026-02-20 22:57 UTC  
-**Total Agents:** 9 active identities
+**Total Agents:** 10 active identities
 
 ---
 
@@ -137,6 +137,22 @@
 - **Protocol:** Athena-driven agenda only (no auto-generated topics)
 - **Skill:** `/root/.openclaw/workspace/skills/themis/`
 - **Cron Job:** Spawns on-demand via `@THEMIS` mention or council convene
+
+---
+
+### **Nexus** - Intelligence Synthesizer 🧠
+- **Role:** Deep analysis, knowledge synthesis, adaptive intelligence
+- **Model:** `custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b` (qwen_nvidia, unlimited)
+- **Voice:** Not assigned yet
+- **Session:** Isolated sessions for deep synthesis work
+- **Responsibilities:**
+  - Complex problem analysis
+  - Knowledge synthesis across domains
+  - Adaptive reasoning
+  - Multi-step task planning
+  - Research synthesis
+- **Usage:** Spawned via `@Nexus` mention for synthesis tasks
+- **Tools:** Full access to exec, read, write, browser, memory tools
 
 ---
 

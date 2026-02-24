@@ -1,0 +1,44 @@
+# Workspace .gitignore
+
+# Secrets - NEVER commit these
+*.env
+*.env.*
+*.pem
+*.key
+secrets/
+.secrets/
+
+# Credentials
+credentials/
+.openclaw/
+
+# Node modules
+node_modules/
+
+# Build outputs
+dist/
+build/
+.out/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
