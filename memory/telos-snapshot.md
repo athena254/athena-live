@@ -81,3 +81,86 @@
     - # Wrong
     - **Things you've been wrong about.**
     - Intellectual humility is a superpower. Tracking what you got wrong helps you calibrate your confidence and update your beliefs.
+## 2026-02-24T19:04:50Z (TELOS snapshot)
+- Source directory: /root/.openclaw/workspace/Personal_AI_Infrastructure/Releases/v2.5/.claude/skills/PAI/USER/TELOS
+- File summaries:
+  - BELIEFS.md:
+    - # Beliefs
+    - **Core beliefs that guide your decisions and worldview.**
+    - ---
+  - BOOKS.md:
+    - # Books
+    - **Books that have shaped your thinking.**
+    - ---
+  - CHALLENGES.md:
+    - # Challenges
+    - **Current obstacles you're working to overcome.**
+    - Be honest about what's holding you back. Identifying challenges clearly is the first step to addressing them.
+  - FRAMES.md:
+    - # Frames
+    - **Useful perspectives for seeing the world.**
+    - Frames are mental lenses that help you interpret situations productively.
+  - GOALS.md:
+    - # Goals
+    - **Specific objectives you're working toward.**
+    - Goals support your missions (M#) and represent concrete outcomes you want to achieve.
+  - IDEAS.md:
+    - # Ideas
+    - **Ideas you want to explore, develop, or pursue.**
+    - A capture space for thoughts that might become projects, content, or new directions.
+  - LEARNED.md:
+    - # Learned
+    - **Key lessons from life experience.**
+    - Hard-won wisdom that's worth remembering. These lessons guide future decisions.
+  - MISSION.md:
+    - # Mission
+    - **Your core life missions and purpose.**
+    - Missions are your ultimate purposes - the "why" behind everything else in your TELOS system.
+  - MODELS.md:
+    - # Models
+    - **Your understanding of how the world works.**
+    - Mental models are simplified representations of complex systems. They help you predict, decide, and act.
+  - MOVIES.md:
+    - # Movies
+    - **Films that have influenced or moved you.**
+    - ---
+  - NARRATIVES.md:
+    - # Narratives
+    - **Your active talking points and key messages.**
+    - These are the stories and perspectives you share with others - your public voice and positions.
+  - PREDICTIONS.md:
+    - # Predictions
+    - **Your predictions about the future.**
+    - Making explicit predictions helps you calibrate your understanding of the world.
+  - PROBLEMS.md:
+    - # Problems
+    - **Problems in the world you want to help solve.**
+    - These are bigger than personal challenges - they're issues affecting others that you care about and want to address through your work.
+  - PROJECTS.md:
+    - # Projects
+    - **Current and planned projects.**
+    - ---
+  - STATUS.md:
+    - # Status
+    - **Current state across all life areas.**
+    - A quick snapshot of where you are right now.
+  - STRATEGIES.md:
+    - # Strategies
+    - **Your approaches to addressing challenges and achieving goals.**
+    - Strategies are how you solve problems. Link them to the challenges (C#) they address.
+  - TELOS.md:
+    - # TELOS - Your Complete Life Framework
+    - *Last Updated: [DATE]*
+    - This document represents your complete TELOS (purpose/end goal) framework - encompassing your mission, beliefs, strategies, challenges, goals, and accumulated wisdom that guides your journey.
+  - TRAUMAS.md:
+    - # Traumas
+    - **Formative experiences that shaped who you are.**
+    - Understanding your past helps you understand your present patterns. This is private self-knowledge.
+  - WISDOM.md:
+    - # Wisdom
+    - **Collected insights and aphorisms.**
+    - Truths, quotes, and principles that resonate with you.
+  - WRONG.md:
+    - # Wrong
+    - **Things you've been wrong about.**
+    - Intellectual humility is a superpower. Tracking what you got wrong helps you calibrate your confidence and update your beliefs.
