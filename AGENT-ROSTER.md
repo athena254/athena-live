@@ -85,6 +85,7 @@
 ### **Felicity** - Code Artisan 💻
 - **Role:** Software development, code review, refactoring
 - **Model:** `custom-api-us-west-2-modal-direct-2/zai-org/GLM-5-FP8` (GLM-5 key #2, dedicated)
+- **Fallback:** `minimax-portal/MiniMax-M2.1`
 - **Voice:** Not assigned
 - **Responsibilities:**
   - Code generation and refactoring
@@ -204,7 +205,7 @@ All agents use `edge-tts` (Microsoft neural voices, free) via `/root/.openclaw/w
 | Athena | qwen_nvidia | GLM-5 Key #1 |
 | Ishtar | OpenAI Codex | GLM-5 Key #1 |
 | THEMIS | GLM-5 Key #1 | qwen coder → OpenRouter Free |
-| Felicity | GLM-5 Key #2 | — |
+| Felicity | GLM-5 Key #2 | MiniMax-M2.1 |
 
 ### Secondary (Rate Limited):
 4. llama (`custom-api-groq-com/llama-3.3-70b-versatile`) - 30 req/min
