@@ -575,3 +575,31 @@ Heartbeat 3:
 [CONTINUOUS - NO IDLE]
 ```
 
+
+---
+
+## 📊 Subagent Lessons Learned (2026-02-24 23:02 UTC)
+
+### What Works
+- ✅ Local file operations (write, read, exec)
+- ✅ GLM-5 and qwen_nvidia models (fast, reliable)
+- ✅ Short tasks (< 30 seconds)
+- ✅ Direct execution when subagents fail
+
+### What Fails
+- ❌ Web fetches in subagents (timeout after 60s)
+- ❌ Tool permission errors on some agent IDs
+- ❌ Long-running research tasks
+- ❌ Complex multi-step tasks
+
+### Optimizations Applied
+1. **Task Scoping:** Prefer local operations
+2. **Timeout Management:** Keep tasks under 30 seconds
+3. **Fallback:** Direct execution when subagents fail
+4. **Model Selection:** Use GLM-5/qwen_nvidia for reliability
+
+### Workspace Analysis
+- **Total Size:** ~1.5GB across all repos
+- **Largest:** Personal_AI_Infrastructure (586MB)
+- **Action:** Consider archiving old repos
+
