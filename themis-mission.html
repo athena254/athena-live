@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚖️ THEMIS Mission Control</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #1a1a00 0%, #2a2a00 50%, #0a0a00 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #ffd700;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 30px 0; border-bottom: 1px solid rgba(255, 215, 0, 0.3); }
+        header h1 { font-size: 2rem; margin-bottom: 10px; }
+        header p { color: rgba(255, 215, 0, 0.6); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .stat-card { background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; padding: 20px; text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 700; }
+        .stat-label { font-size: 0.8rem; color: rgba(255, 215, 0, 0.6); }
+        .lattice-matrix { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 20px; margin: 20px 0; }
+        .matrix-row { display: grid; grid-template-columns: 100px repeat(5, 1fr); gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(255, 215, 0, 0.1); }
+        .matrix-row:last-child { border-bottom: none; }
+        .matrix-header { font-weight: 600; font-size: 0.9rem; }
+        .matrix-cell { text-align: center; font-size: 0.8rem; }
+        .collab-link { color: #ffd700; text-decoration: none; }
+        .collab-link:hover { text-decoration: underline; }
+        .btn { display: inline-block; padding: 10px 20px; background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; border-radius: 8px; color: #ffd700; text-decoration: none; margin: 5px; }
+        .btn:hover { background: rgba(255, 215, 0, 0.4); }
+        footer { text-align: center; padding: 20px; color: rgba(255, 215, 0, 0.4); margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚖️ THEMIS Mission Control</h1>
+            <p>Council Orchestrator • Lattice Coordinator • Justice</p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">6</div>
+                <div class="stat-label">Active Agents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Collaborations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Accountability</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">⚖️</div>
+                <div class="stat-label">Balance</div>
+            </div>
+        </div>
+
+        <div class="lattice-matrix">
+            <h3 style="margin-bottom: 15px;">🤝 Lattice Accountability Matrix</h3>
+            <div class="matrix-row matrix-header">
+                <div>Agent</div>
+                <div>→ Prom</div>
+                <div>→ Felicity</div>
+                <div>→ Nexus</div>
+                <div>→ Sterling</div>
+                <div>→ Ishtar</div>
+            </div>
+            <div class="matrix-row">
+                <div style="color: #ff6b00;">⚡ Prometheus</div>
+                <div class="matrix-cell">—</div>
+                <div class="matrix-cell"><a href="felicity-mission.html" class="collab-link">Shared</a></div>
+                <div class="matrix-cell"><a href="nexus-mission.html" class="collab-link">Received</a></div>
+                <div class="matrix-cell">—</div>
+                <div class="matrix-cell">—</div>
+            </div>
+            <div class="matrix-row">
+                <div style="color: #ff00ff;">🎨 Felicity</div>
+                <div class="matrix-cell"><a href="prometheus-mission.html" class="collab-link">Received</a></div>
+                <div class="matrix-cell">—</div>
+                <div class="matrix-cell"><a href="nexus-mission.html" class="collab-link">Shared</a></div>
+                <div class="matrix-cell">—</div>
+                <div class="matrix-cell">—</div>
+            </div>
+            <div class="matrix-row">
+                <div style="color: #00ffff;">🧠 Nexus</div>
+                <div class="matrix-cell"><a href="prometheus-mission.html" class="collab-link">Shared</a></div>
+                <div class="matrix-cell"><a href="felicity-mission.html" class="collab-link">Received</a></div>
+                <div class="matrix-cell">—</div>
+                <div class="matrix-cell">—</div>
+                <div class="matrix-cell">—</div>
+            </div>
+            <div class="matrix-row">
+                <div style="color: #00ff88;">💰 Sterling</div>
+                <div class="matrix-cell">—</div>
+                <div class="matrix-cell">—</div>
+                <div class="matrix-cell">—</div>
+                <div class="matrix-cell">—</div>
+                <div class="matrix-cell">—</div>
+            </div>
+            <div class="matrix-row">
+                <div style="color: #9370db;">🔮 Ishtar</div>
+                <div class="matrix-cell">Guide</div>
+                <div class="matrix-cell">Guide</div>
+                <div class="matrix-cell">Guide</div>
+                <div class="matrix-cell">Guide</div>
+                <div class="matrix-cell">—</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="council-vote.html" class="btn">🗳️ Council Vote</a>
+            <a href="agent-performance.html" class="btn">📊 Performance</a>
+            <a href="athena-unified.html" class="btn">🦉 Athena Unified</a>
+        </div>
+
+        <div class="lattice-matrix">
+            <h3 style="margin-bottom: 15px;">📜 Recent Deliberations</h3>
+            <div style="padding: 10px 0; border-bottom: 1px solid rgba(255, 215, 0, 0.1);">
+                <strong>Build Olympics Results:</strong> Quantum Flux & Neural Nexus tied for victory
+            </div>
+            <div style="padding: 10px 0; border-bottom: 1px solid rgba(255, 215, 0, 0.1);">
+                <strong>Lattice Protocol:</strong> Approved - Cross-agent collaboration mandatory
+            </div>
+            <div style="padding: 10px 0;">
+                <strong>Model Rotation:</strong> GLM-5 + qwen_nvidia as primary unlimited models
+            </div>
+        </div>
+
+        <footer>
+            <p>⚖️ THEMIS Mission Control • Powered by qwen_nvidia</p>
+            <p style="margin-top: 5px; font-size: 0.8rem;">"We are as strong as our weakest link"</p>
+        </footer>
+    </div>
+</body>
+</html>

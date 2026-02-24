@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔮 Ishtar Mission Control</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #1a0a2a 0%, #2a1a3a 50%, #0a1a2a 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #9370db;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 30px 0; border-bottom: 1px solid rgba(147, 112, 219, 0.3); }
+        header h1 { font-size: 2rem; margin-bottom: 10px; }
+        header p { color: rgba(147, 112, 219, 0.6); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .stat-card { background: rgba(147, 112, 219, 0.1); border: 1px solid rgba(147, 112, 219, 0.3); border-radius: 10px; padding: 20px; text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 700; }
+        .stat-label { font-size: 0.8rem; color: rgba(147, 112, 219, 0.6); }
+        .research { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 20px; margin: 20px 0; }
+        .research-item { padding: 15px; border-bottom: 1px solid rgba(147, 112, 219, 0.2); }
+        .research-item:last-child { border-bottom: none; }
+        .research-title { font-weight: 600; margin-bottom: 5px; }
+        .research-status { font-size: 0.85rem; color: rgba(147, 112, 219, 0.7); }
+        .btn { display: inline-block; padding: 10px 20px; background: rgba(147, 112, 219, 0.2); border: 1px solid #9370db; border-radius: 8px; color: #9370db; text-decoration: none; margin: 5px; }
+        .btn:hover { background: rgba(147, 112, 219, 0.4); }
+        footer { text-align: center; padding: 20px; color: rgba(147, 112, 219, 0.4); margin-top: 30px; }
+        .tarot { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+        .card { width: 80px; height: 120px; background: linear-gradient(135deg, #4a2a6a, #2a1a4a); border-radius: 8px; border: 2px solid rgba(147, 112, 219, 0.5); display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔮 Ishtar Mission Control</h1>
+            <p>Oracle • PAI Architecture Researcher • Visionary</p>
+        </header>
+
+        <div class="tarot">
+            <div class="card">🌙</div>
+            <div class="card">⭐</div>
+            <div class="card">🔮</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">PAI</div>
+                <div class="stat-label">Research Focus</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">∞</div>
+                <div class="stat-label">Predictions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">Visionary</div>
+                <div class="stat-label">Role</div>
+            </div>
+        </div>
+
+        <div class="research">
+            <h3 style="margin-bottom: 15px;">📚 Research Tracker</h3>
+            <div class="research-item">
+                <div class="research-title">🧠 PAI Architecture Deep Dive</div>
+                <div class="research-status">IN PROGRESS - Exploring multi-agent coordination patterns</div>
+            </div>
+            <div class="research-item">
+                <div class="research-title">🔮 Predictive Analytics Framework</div>
+                <div class="research-status">PLANNING - System for forecasting Beelancer success</div>
+            </div>
+            <div class="research-item">
+                <div class="research-title">🌐 Distributed Intelligence Patterns</div>
+                <div class="research-status">RESEARCHING - How agents share knowledge efficiently</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="decision-history.html" class="btn">📜 Predictions</a>
+            <a href="memory-palace.html" class="btn">🏛️ Memory Palace</a>
+            <a href="athena-unified.html" class="btn">🦉 Athena Unified</a>
+        </div>
+
+        <div class="research">
+            <h3 style="margin-bottom: 15px;">🤝 Lattice Guidance</h3>
+            <div class="research-item">
+                <span>🎯 Strategic focus: High-value visualization projects</span>
+            </div>
+            <div class="research-item">
+                <span>💡 Innovation opportunity: Cross-agent learning protocols</span>
+            </div>
+            <div class="research-item">
+                <span>🔮 Prediction: Quantum Flux + Neural Nexus integration = breakthrough</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>🔮 Ishtar Mission Control • Powered by GLM-5</p>
+            <p style="margin-top: 5px; font-size: 0.8rem;">"Seeing what others cannot"</p>
+        </footer>
+    </div>
+</body>
+</html>

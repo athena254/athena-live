@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚛️ Quantum Flux Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000011;
+            overflow: hidden;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #fff;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 0, 20, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 20px 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            box-shadow: 0 0 30px rgba(100, 150, 255, 0.2);
+            min-width: 280px;
+        }
+
+        .overlay h1 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00d4ff, #7b2fff, #ff00aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(100, 150, 255, 0.2);
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: #88aaff;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .metric-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(100, 150, 255, 0.2);
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease, background 0.5s ease;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+            background: rgba(0, 0, 20, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(100, 150, 255, 0.3);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, rgba(100, 150, 255, 0.2), rgba(150, 50, 255, 0.2));
+            border: 1px solid rgba(100, 150, 255, 0.4);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, rgba(100, 150, 255, 0.4), rgba(150, 50, 255, 0.4));
+            box-shadow: 0 0 20px rgba(100, 150, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn.active {
+            background: linear-gradient(135deg, #00d4ff, #7b2fff);
+            box-shadow: 0 0 20px rgba(100, 150, 255, 0.6);
+        }
+
+        .info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+            background: rgba(0, 0, 20, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            font-size: 0.85em;
+            color: #88aaff;
+            max-width: 250px;
+        }
+
+        .info strong {
+            color: #00d4ff;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div class="overlay">
+        <h1>⚛️ Quantum Flux</h1>
+        <div class="metric">
+            <div>
+                <div class="metric-label"><span class="live-indicator"></span>CPU Flux</div>
+                <div class="metric-bar"><div class="metric-fill" id="cpu-fill" style="width: 0%; background: #ff6b6b;"></div></div>
+            </div>
+            <div class="metric-value" id="cpu-value">0%</div>
+        </div>
+        <div class="metric">
+            <div>
+                <div class="metric-label">🌀 Memory Waves</div>
+                <div class="metric-bar"><div class="metric-fill" id="mem-fill" style="width: 0%; background: #4ecdc4;"></div></div>
+            </div>
+            <div class="metric-value" id="mem-value">0%</div>
+        </div>
+        <div class="metric">
+            <div>
+                <div class="metric-label">⚡ Energy Level</div>
+                <div class="metric-bar"><div class="metric-fill" id="energy-fill" style="width: 0%; background: #ffe66d;"></div></div>
+            </div>
+            <div class="metric-value" id="energy-value">0%</div>
+        </div>
+        <div class="metric">
+            <div class="metric-label">🎯 Particles</div>
+            <div class="metric-value" id="particle-count">0</div>
+        </div>
+        <div class="metric">
+            <div class="metric-label">🌊 Wave Frequency</div>
+            <div class="metric-value" id="wave-freq">0 Hz</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn active" data-mode="quantum">Quantum</button>
+        <button class="btn" data-mode="nebula">Nebula</button>
+        <button class="btn" data-mode="cyber">Cyber</button>
+        <button class="btn" data-mode="plasma">Plasma</button>
+    </div>
+
+    <div class="info">
+        <strong>Interaction:</strong> Move mouse to attract particles. Click to create flux bursts. System metrics update in real-time.
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let waves = [];
+        let mouse = { x: 0, y: 0, active: false };
+        let currentMode = 'quantum';
+        let time = 0;
+
+        const modes = {
+            quantum: {
+                colors: ['#00d4ff', '#7b2fff', '#ff00aa', '#00ff88'],
+                particleSpeed: 2,
+                waveAmplitude: 50,
+                waveFrequency: 0.02,
+                glowIntensity: 20
+            },
+            nebula: {
+                colors: ['#ff6b6b', '#ffe66d', '#4ecdc4', '#95a5a6'],
+                particleSpeed: 1,
+                waveAmplitude: 80,
+                waveFrequency: 0.01,
+                glowIntensity: 30
+            },
+            cyber: {
+                colors: ['#00ff00', '#00ffff', '#ff00ff', '#ffff00'],
+                particleSpeed: 3,
+                waveAmplitude: 30,
+                waveFrequency: 0.03,
+                glowIntensity: 15
+            },
+            plasma: {
+                colors: ['#ff4500', '#ff6347', '#ffa500', '#ffff00'],
+                particleSpeed: 2.5,
+                waveAmplitude: 60,
+                waveFrequency: 0.025,
+                glowIntensity: 25
+            }
+        };
+
+        // System metrics - will fetch from API if available, otherwise simulate
+        let systemMetrics = {
+            cpu: 25,
+            memory: 45,
+            energy: 60
+        };
+        let useRealMetrics = false;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * modes[currentMode].particleSpeed;
+                this.vy = (Math.random() - 0.5) * modes[currentMode].particleSpeed;
+                this.size = Math.random() * 3 + 1;
+                this.color = modes[currentMode].colors[Math.floor(Math.random() * modes[currentMode].colors.length)];
+                this.life = Math.random() * 100 + 100;
+                this.maxLife = this.life;
+            }
+
+            update() {
+                // Mouse attraction
+                if (mouse.active) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 300) {
+                        this.vx += dx / dist * 0.5;
+                        this.vy += dy / dist * 0.5;
+                    }
+                }
+
+                // Wave motion
+                this.x += Math.sin(time * modes[currentMode].waveFrequency + this.y * 0.01) * 0.5;
+                this.y += Math.cos(time * modes[currentMode].waveFrequency + this.x * 0.01) * 0.5;
+
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // System metric influence
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+
+                // Boundary wrap
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+
+                this.life--;
+                if (this.life <= 0) this.reset();
+            }
+
+            draw() {
+                const alpha = this.life / this.maxLife;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+                ctx.fill();
+
+                // Glow
+                ctx.shadowBlur = modes[currentMode].glowIntensity;
+                ctx.shadowColor = this.color;
+            }
+        }
+
+        class Wave {
+            constructor(y) {
+                this.y = y;
+                this.phase = Math.random() * Math.PI * 2;
+                this.amplitude = modes[currentMode].waveAmplitude;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.moveTo(0, this.y);
+
+                for (let x = 0; x < width; x += 5) {
+                    const y = this.y + Math.sin(x * modes[currentMode].waveFrequency + time * 0.05 + this.phase) * this.amplitude;
+                    ctx.lineTo(x, y);
+                }
+
+                ctx.strokeStyle = modes[currentMode].colors[0] + '40';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }
+
+        function init() {
+            resize();
+            particles = [];
+            waves = [];
+
+            for (let i = 0; i < 200; i++) {
+                particles.push(new Particle());
+            }
+
+            for (let i = 0; i < 5; i++) {
+                waves.push(new Wave(height * (0.2 + i * 0.15)));
+            }
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = modes[currentMode].colors[0] + Math.floor((1 - dist / 100) * 50).toString(16).padStart(2, '0');
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 17, 0.1)';
+            ctx.fillRect(0, 0, width, height);
+
+            time++;
+
+            waves.forEach(wave => wave.draw());
+            drawConnections();
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            // Reset shadow
+            ctx.shadowBlur = 0;
+
+            requestAnimationFrame(animate);
+        }
+
+        async function fetchMetrics() {
+            try {
+                const response = await fetch('/api/metrics');
+                if (response.ok) {
+                    const data = await response.json();
+                    systemMetrics.cpu = data.cpu;
+                    systemMetrics.memory = data.memory;
+                    systemMetrics.energy = data.energy;
+                    useRealMetrics = true;
+                    return true;
+                }
+            } catch (e) {
+                useRealMetrics = false;
+            }
+            return false;
+        }
+
+        function updateMetrics() {
+            if (!useRealMetrics) {
+                // Simulate realistic metric fluctuations
+                systemMetrics.cpu = Math.min(100, Math.max(5, systemMetrics.cpu + (Math.random() - 0.5) * 10));
+                systemMetrics.memory = Math.min(100, Math.max(20, systemMetrics.memory + (Math.random() - 0.5) * 5));
+                systemMetrics.energy = Math.min(100, Math.max(30, systemMetrics.energy + (Math.random() - 0.5) * 8));
+            }
+
+            // Update UI
+            document.getElementById('cpu-fill').style.width = systemMetrics.cpu + '%';
+            document.getElementById('cpu-value').textContent = Math.round(systemMetrics.cpu) + '%';
+
+            document.getElementById('mem-fill').style.width = systemMetrics.memory + '%';
+            document.getElementById('mem-value').textContent = Math.round(systemMetrics.memory) + '%';
+
+            document.getElementById('energy-fill').style.width = systemMetrics.energy + '%';
+            document.getElementById('energy-value').textContent = Math.round(systemMetrics.energy) + '%';
+
+            document.getElementById('particle-count').textContent = particles.length;
+            document.getElementById('wave-freq').textContent = (modes[currentMode].waveFrequency * 100).toFixed(1) + ' Hz';
+
+            // Influence particles based on metrics
+            modes[currentMode].particleSpeed = 1 + systemMetrics.cpu / 50;
+            modes[currentMode].waveAmplitude = 30 + systemMetrics.memory / 2;
+        }
+
+        // Event listeners
+        window.addEventListener('resize', resize);
+
+        canvas.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouse.active = true;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            mouse.active = false;
+        });
+
+        canvas.addEventListener('click', e => {
+            // Create burst effect
+            for (let i = 0; i < 20; i++) {
+                const particle = new Particle();
+                particle.x = e.clientX;
+                particle.y = e.clientY;
+                particle.vx = (Math.random() - 0.5) * 10;
+                particle.vy = (Math.random() - 0.5) * 10;
+                particle.life = 150;
+                particles.push(particle);
+            }
+
+            // Limit total particles
+            while (particles.length > 300) {
+                particles.shift();
+            }
+        });
+
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMode = btn.dataset.mode;
+                init();
+            });
+        });
+
+        // Start
+        init();
+        animate();
+        
+        // Try to fetch real metrics, fall back to simulation
+        (async () => {
+            const hasRealMetrics = await fetchMetrics();
+            if (!hasRealMetrics) {
+                console.log('ℹ️ Using simulated metrics (run quantum-flux-server.mjs for real data)');
+            }
+            setInterval(async () => {
+                if (!useRealMetrics) {
+                    await fetchMetrics();
+                }
+                updateMetrics();
+            }, 1000);
+            updateMetrics();
+        })();
+    </script>
+</body>
+</html>

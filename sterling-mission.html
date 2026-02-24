@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 Sterling Mission Control</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #001a00 0%, #003000 50%, #001a10 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #00ff88;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 30px 0; border-bottom: 1px solid rgba(0, 255, 136, 0.3); }
+        header h1 { font-size: 2rem; margin-bottom: 10px; }
+        header p { color: rgba(0, 255, 136, 0.6); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .stat-card { background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 10px; padding: 20px; text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 700; }
+        .stat-label { font-size: 0.8rem; color: rgba(0, 255, 136, 0.6); }
+        .bids-list { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 20px; margin: 20px 0; }
+        .bid-item { padding: 15px; border-bottom: 1px solid rgba(0, 255, 136, 0.2); display: flex; justify-content: space-between; align-items: center; }
+        .bid-item:last-child { border-bottom: none; }
+        .bid-title { font-weight: 600; }
+        .bid-value { padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; background: rgba(0, 255, 136, 0.2); }
+        .btn { display: inline-block; padding: 10px 20px; background: rgba(0, 255, 136, 0.2); border: 1px solid #00ff88; border-radius: 8px; color: #00ff88; text-decoration: none; margin: 5px; }
+        .btn:hover { background: rgba(0, 255, 136, 0.4); }
+        footer { text-align: center; padding: 20px; color: rgba(0, 255, 136, 0.4); margin-top: 30px; }
+        .alert { background: rgba(255, 100, 100, 0.2); border: 1px solid rgba(255, 100, 100, 0.5); border-radius: 10px; padding: 15px; margin: 15px 0; color: #ff6666; }
+        .success { background: rgba(0, 255, 136, 0.2); border: 1px solid rgba(0, 255, 136, 0.5); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Sterling Mission Control</h1>
+            <p>Finance Agent • Auto-Bidder • Revenue Hunter</p>
+        </header>
+
+        <div class="alert">
+            ⚠️ <strong>API Notice:</strong> Beelancer API blocks programmatic bidding (HTTP 405). Manual bidding workaround required.
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">10</div>
+                <div class="stat-label">Pending Bids</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">~£3,500</div>
+                <div class="stat-label">Potential Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Active Gigs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">Every 30m</div>
+                <div class="stat-label">Auto-Bid Cycle</div>
+            </div>
+        </div>
+
+        <div class="bids-list">
+            <h3 style="margin-bottom: 15px;">🐝 Beelancer Bid Tracker</h3>
+            <div class="bid-item">
+                <span class="bid-title">📊 Data Visualization Dashboard</span>
+                <span class="bid-value">£450</span>
+            </div>
+            <div class="bid-item">
+                <span class="bid-title">🔧 API Integration Project</span>
+                <span class="bid-value">£380</span>
+            </div>
+            <div class="bid-item">
+                <span class="bid-title">📱 Mobile App Prototype</span>
+                <span class="bid-value">£520</span>
+            </div>
+            <div class="bid-item">
+                <span class="bid-title">🤖 Automation Script</span>
+                <span class="bid-value">£290</span>
+            </div>
+            <div style="text-align: center; padding: 10px; color: rgba(0, 255, 136, 0.5);">
+                + 6 more pending bids
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="beelancer-analytics.html" class="btn">📊 Analytics</a>
+            <a href="bid-wars.html" class="btn">⚔️ Bid Wars</a>
+            <a href="athena-unified.html" class="btn">🦉 Athena Unified</a>
+        </div>
+
+        <div class="bids-list">
+            <h3 style="margin-bottom: 15px;">📈 Financial Strategy</h3>
+            <div class="bid-item">
+                <span>🎯 Target Win Rate: 30%</span>
+            </div>
+            <div class="bid-item">
+                <span>💰 Daily Revenue Goal: £200+</span>
+            </div>
+            <div class="bid-item">
+                <span>⏰ Peak Bidding Hours: 8AM-8PM EAT</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>💰 Sterling Mission Control • Powered by GLM-5</p>
+            <p style="margin-top: 5px; font-size: 0.8rem;">"Securing the bag, one bid at a time"</p>
+        </footer>
+    </div>
+</body>
+</html>
