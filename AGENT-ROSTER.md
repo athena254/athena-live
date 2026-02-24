@@ -9,7 +9,8 @@
 
 ### **Athena** - Main Orchestrator
 - **Role:** Primary interface, decision coordination, system oversight
-- **Model:** `custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8` (GLM-5-FP8, unlimited)
+- **Model:** `custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b` (qwen_nvidia, unlimited)
+- **Fallback:** `custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8` (GLM-5 key #1)
 - **Voice:** Sonia (British female, `en-GB-SoniaNeural`)
 - **Session:** Main session (direct chat with Dis)
 - **Responsibilities:**
@@ -40,7 +41,8 @@
 
 ### **Ishtar** - Oracle & PAI Architecture 🔮
 - **Role:** Deep research, Personal AI Infrastructure, knowledge synthesis
-- **Model:** `custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b` (qwen_nvidia, unlimited)
+- **Model:** `openai-codex/gpt-5.1-codex-mini` (OpenAI Codex)
+- **Fallback:** `custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8` (GLM-5)
 - **Voice:** Ezinne (Nigerian female, `ng-NG-EzinneNeural`)
 - **Session:** Isolated sessions for deep work
 - **Responsibilities:**
@@ -82,7 +84,7 @@
 
 ### **Felicity** - Code Artisan 💻
 - **Role:** Software development, code review, refactoring
-- **Model:** `custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8` (unlimited)
+- **Model:** `custom-api-us-west-2-modal-direct-2/zai-org/GLM-5-FP8` (GLM-5 key #2, dedicated)
 - **Voice:** Not assigned
 - **Responsibilities:**
   - Code generation and refactoring
@@ -125,7 +127,9 @@
 
 ### **THEMIS** - Council Orchestrator ⚖️
 - **Role:** Multi-agent deliberation, consensus building, strategic decisions
-- **Model:** OpenRouter Free Tier (rotating 6+ models)
+- **Model:** `custom-api-us-west-2-modal-direct-2/zai-org/GLM-5-FP8` (GLM-5 key #2, dedicated)
+- **Fallback:** `qwen-portal/coder-model` (qwen coder)
+- **Free Pool:** OpenRouter rotating models (smart utilization for debates)
 - **Voice:** Maisie (Wise British female, `en-GB-MaisieNeural`)
 - **Session:** Isolated council sessions
 - **Responsibilities:**
@@ -189,20 +193,29 @@ All agents use `edge-tts` (Microsoft neural voices, free) via `/root/.openclaw/w
 
 ## Model Fallback Chain
 
-**Primary (Unlimited):**
-1. GLM-5-FP8 (`custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8`)
-2. qwen_nvidia (`custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b`)
+### Primary (Unlimited):
+1. **qwen_nvidia** (`custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b`) - Athena default
+2. **GLM-5 Key #1** (`custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8`) - Athena/Isthar/Prometheus fallback
+3. **GLM-5 Key #2** (`custom-api-us-west-2-modal-direct-2/zai-org/GLM-5-FP8`) - Felicity/THEMIS dedicated
 
-**Secondary (Rate Limited):**
-3. llama (`custom-api-groq-com/llama-3.3-70b-versatile`) - 30 req/min
-4. qwen (`qwen-portal/coder-model`) - OAuth required
+### Agent Assignments:
+| Agent | Default Model | Fallback |
+|-------|---------------|----------|
+| Athena | qwen_nvidia | GLM-5 Key #1 |
+| Ishtar | OpenAI Codex | GLM-5 Key #1 |
+| THEMIS | GLM-5 Key #2 | qwen coder → OpenRouter Free |
+| Felicity | GLM-5 Key #2 | — |
 
-**Free Tier (THEMIS only):**
-- OpenRouter rotating pool (6+ models)
+### Secondary (Rate Limited):
+4. llama (`custom-api-groq-com/llama-3.3-70b-versatile`) - 30 req/min
+5. qwen coder (`qwen-portal/coder-model`) - OAuth required
+
+### Free Tier (THEMIS deliberation pool):
+- OpenRouter rotating models (smart routing for debates)
 - Auto-fallback on rate limit
 - Cooldown tracking per model
 
-**Exhausted (until reset):**
+### Exhausted (until reset):
 - ❌ Gemini - Daily quota exhausted (resets at 00:00 UTC)
 
 ---
