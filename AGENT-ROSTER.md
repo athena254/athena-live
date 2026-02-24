@@ -127,7 +127,7 @@
 
 ### **THEMIS** - Council Orchestrator ⚖️
 - **Role:** Multi-agent deliberation, consensus building, strategic decisions
-- **Model:** `custom-api-us-west-2-modal-direct-2/zai-org/GLM-5-FP8` (GLM-5 key #2, dedicated)
+- **Model:** `custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8` (GLM-5 key #1)
 - **Fallback:** `qwen-portal/coder-model` (qwen coder)
 - **Free Pool:** OpenRouter rotating models (smart utilization for debates)
 - **Voice:** Maisie (Wise British female, `en-GB-MaisieNeural`)
@@ -203,7 +203,7 @@ All agents use `edge-tts` (Microsoft neural voices, free) via `/root/.openclaw/w
 |-------|---------------|----------|
 | Athena | qwen_nvidia | GLM-5 Key #1 |
 | Ishtar | OpenAI Codex | GLM-5 Key #1 |
-| THEMIS | GLM-5 Key #2 | qwen coder → OpenRouter Free |
+| THEMIS | GLM-5 Key #1 | qwen coder → OpenRouter Free |
 | Felicity | GLM-5 Key #2 | — |
 
 ### Secondary (Rate Limited):
