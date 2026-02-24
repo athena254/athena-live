@@ -9,8 +9,8 @@
 
 ### **Athena** - Main Orchestrator
 - **Role:** Primary interface, decision coordination, system oversight
-- **Model:** `custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b` (qwen_nvidia, unlimited)
-- **Fallback:** `custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8` (GLM-5 key #1)
+- **Model:** `custom-api-us-west-2-modal-direct-2/zai-org/GLM-5-FP8` (GLM-5 key #2)
+- **Fallback:** `custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b` (qwen_nvidia)
 - **Voice:** Sonia (British female, `en-GB-SoniaNeural`)
 - **Session:** Main session (direct chat with Dis)
 - **Responsibilities:**
@@ -84,7 +84,7 @@
 
 ### **Felicity** - Code Artisan 💻
 - **Role:** Software development, code review, refactoring
-- **Model:** `custom-api-us-west-2-modal-direct-2/zai-org/GLM-5-FP8` (GLM-5 key #2, dedicated)
+- **Model:** `custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b` (qwen_nvidia)
 - **Fallback:** `minimax-portal/MiniMax-M2.1`
 - **Voice:** Not assigned
 - **Responsibilities:**
@@ -195,17 +195,17 @@ All agents use `edge-tts` (Microsoft neural voices, free) via `/root/.openclaw/w
 ## Model Fallback Chain
 
 ### Primary (Unlimited):
-1. **qwen_nvidia** (`custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b`) - Athena default
-2. **GLM-5 Key #1** (`custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8`) - Athena/Isthar/Prometheus fallback
-3. **GLM-5 Key #2** (`custom-api-us-west-2-modal-direct-2/zai-org/GLM-5-FP8`) - Felicity/THEMIS dedicated
+1. **GLM-5 Key #2** (`custom-api-us-west-2-modal-direct-2/zai-org/GLM-5-FP8`) - Athena default
+2. **qwen_nvidia** (`custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b`) - Felicity/Nexus
+3. **GLM-5 Key #1** (`custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8`) - THEMIS/Ishtar/Cisco
 
 ### Agent Assignments:
 | Agent | Default Model | Fallback |
 |-------|---------------|----------|
-| Athena | qwen_nvidia | GLM-5 Key #1 |
+| Athena | GLM-5 Key #2 | qwen_nvidia |
 | Ishtar | OpenAI Codex | GLM-5 Key #1 |
 | THEMIS | GLM-5 Key #1 | qwen coder → OpenRouter Free |
-| Felicity | GLM-5 Key #2 | MiniMax-M2.1 |
+| Felicity | qwen_nvidia | MiniMax-M2.1 |
 
 ### Secondary (Rate Limited):
 4. llama (`custom-api-groq-com/llama-3.3-70b-versatile`) - 30 req/min
@@ -414,10 +414,10 @@ Each agent maintains a TODO in `memory/agent-todos.md`:
 ### Failover Chain
 
 ```
-Athena: qwen_nvidia → GLM-5 Key #1 → llama → OpenRouter free
+Athena: GLM-5 Key #2 → qwen_nvidia → llama → OpenRouter free
 Ishtar: OpenAI Codex → GLM-5 Key #1 → MiniMax-M2.1 → OpenRouter
 THEMIS: GLM-5 Key #1 → qwen coder → OpenRouter free (rotate through 5 models)
-Felicity: GLM-5 Key #2 → MiniMax-M2.1 → OpenRouter free
+Felicity: qwen_nvidia → MiniMax-M2.1 → OpenRouter free
 Sterling: GLM-5 Key #1 → MiniMax-M2.5 → llama → OpenRouter
 Prometheus: github-copilot/gpt-4o → grok-code-fast-1 → OpenRouter
 Nexus: qwen_nvidia → GLM-5 Key #1 → MiniMax-M2.5 → OpenRouter
