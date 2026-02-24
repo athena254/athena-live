@@ -414,12 +414,34 @@ Each agent maintains a TODO in `memory/agent-todos.md`:
 ### Failover Chain
 
 ```
-Athena: GLM-5 Key #2 → qwen_nvidia → llama → OpenRouter free
+### Failover Chain
+
+```
+ANY AGENT can use ANY KEY - No resource left unused
+
+Athena: GLM-5 Key #2 → qwen_nvidia → llama → OpenRouter
 Ishtar: OpenAI Codex → GLM-5 Key #1 → MiniMax-M2.1 → OpenRouter
-THEMIS: GLM-5 Key #1 → qwen coder → OpenRouter free (rotate through 5 models)
-Felicity: qwen_nvidia → MiniMax-M2.1 → OpenRouter free
+THEMIS: GLM-5 Key #1 → qwen coder → OpenRouter (rotate through 5 models)
+Felicity: qwen_nvidia → MiniMax-M2.1 → OpenRouter
 Sterling: GLM-5 Key #1 → MiniMax-M2.5 → llama → OpenRouter
 Prometheus: github-copilot/gpt-4o → grok-code-fast-1 → OpenRouter
+Nexus: qwen_nvidia → GLM-5 Key #1 → MiniMax-M2.5 → OpenRouter
+Delver: llama → qwen_nvidia → OpenRouter (research rotation)
+Cisco: GLM-5 Key #1 → gemini-3-pro-preview → OpenRouter
+Squire: ANY AVAILABLE KEY (operational flexibility)
+```
+
+### Open Resource Pool - All Agents Can Access
+
+**Full Pool (38 models):**
+- Unlimited: qwen_nvidia, GLM-5 Key #1, GLM-5 Key #2
+- Rate Limited: llama (30/min), MiniMax-M2.1, MiniMax-M2.5
+- OpenAI: Codex, GPT-4o
+- Free: OpenRouter (5+ models rotating)
+- GitHub: grok-code-fast-1, gemini-3-pro-preview
+- Vision: qwen-portal/vision-model
+
+**Rule: If a key is available, ANY agent can use it. NO IDLE RESOURCES.**
 Nexus: qwen_nvidia → GLM-5 Key #1 → MiniMax-M2.5 → OpenRouter
 Delver: llama → qwen_nvidia → OpenRouter (research rotation)
 Cisco: GLM-5 Key #1 → gemini-3-pro-preview → OpenRouter
