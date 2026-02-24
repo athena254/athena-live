@@ -85,3 +85,21 @@
 
 **NO IDLE RESOURCES - MAXIMUM THROUGHPUT** 🚀
 
+
+---
+
+## 🔄 Protocol Update - ALL KEYS FOR ALL AGENTS
+
+**Rule:** Any agent can use any available key. No resource left unused.
+
+**38 models in pool:**
+- ✅ GLM-5 Key #1, GLM-5 Key #2 (unlimited)
+- ✅ qwen_nvidia (unlimited)
+- ✅ llama, MiniMax-M2.1, MiniMax-M2.5 (rate limited)
+- ✅ OpenAI Codex, GPT-4o
+- ✅ OpenRouter free pool (5+ models)
+- ✅ GitHub Copilot models
+- ✅ Vision models
+
+**No idle resources. Maximum throughput.** 🚀
+
