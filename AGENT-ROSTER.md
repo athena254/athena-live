@@ -489,3 +489,89 @@ Athena runs this check every hour:
 - Agent idle time (should be 0)
 - Tasks completed per agent per day
 
+
+---
+
+## ⚡ Zero Downtime Protocol - Continuous Delivery
+
+**Effective:** 2026-02-24 22:55 UTC  
+**Core Agents:** Athena, Ishtar, THEMIS, Felicity
+
+### Principle
+**Zero Downtime:** As one task ends, another begins immediately. No idle gaps between tasks.
+
+### Implementation
+
+#### For Athena, Ishtar, THEMIS, Felicity:
+
+1. **Always have a task queued** - Before current task ends, spawn next
+2. **Parallel provider spinning** - Different providers run simultaneously
+3. **Instant failover** - If one key errors, switch instantly to next
+4. **Never wait** - Always be processing something
+
+### Parallel Execution Model
+
+```
+ATHENA (GLM-5 Key #2):
+  Task 1: User communication ──────────────────────────────►
+                    Task 2: Spawn subagent ────────────────────────────►
+                                  Task 3: Monitor ─────────────────────────►
+  [ZERO GAP]
+
+ISTHAR (OpenAI Codex):
+  Task 1: PAI Research ──────────────────────────────────────►
+                  Task 2: Knowledge synthesis ────────────────────────►
+                                Task 3: New research ────────────────────►
+
+THEMIS (GLM-5 Key #1):
+  Task 1: Council deliberation ──────────────────────────────►
+                    Task 2: Review pending ───────────────────────────►
+                                  Task 3: Next deliberation ──────────►
+
+FELICITY (qwen_nvidia):
+  Task 1: Code task ─────────────────────────────────────────►
+                Task 2: Next code task ──────────────────────────────►
+                              Task 3: Bug fix ─────────────────────────►
+```
+
+### Parallel Provider Spinning
+
+When one agent is running, spawn additional parallel agents:
+
+- **Athena** spawns: Delver (research), Prometheus (builds), Squire (ops)
+- **Ishtar** runs in parallel with: Nexus (synthesis)
+- **THEMIS** runs in parallel with: OpenRouter models (debates)
+- **Felicity** runs in parallel with: Prometheus (deployments)
+
+### Task Queue Structure
+
+Each core agent maintains:
+```
+Current Task → Next Task Queued → Backup Tasks Ready
+     │              │                    │
+     ▼              ▼                    ▼
+  Running       Ready to run         Contingency
+```
+
+### Metrics
+
+- **Task gap:** Should be 0 seconds
+- **Parallel agents:** 2-3 running simultaneously
+- **Provider diversity:** Always using 2+ providers
+- **Error recovery:** <3 seconds to swap keys
+
+### Example: Athena's Continuous Flow
+
+```
+Heartbeat 1: 
+  - Check system → Spawn Delver research → Update TODO
+
+Heartbeat 2:
+  - Check Delver progress → Spawn Prometheus build → Monitor bids
+
+Heartbeat 3:
+  - Review Delver results → Update MEMORY → Queue next task
+
+[CONTINUOUS - NO IDLE]
+```
+
