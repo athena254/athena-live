@@ -1,0 +1,81 @@
+{
+  "timestamp": "2026-02-23T23:30:02.033747Z",
+  "files": [
+    {
+      "path": "/root/.openclaw/workspace/memory/2026-02-20.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/2026-02-21.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/2026-02-22.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/2026-02-23.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/agent-role-updates-2026-02-20.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/backup-log-2026-02.md",
+      "issues": [
+        "Missing header"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/beelancer-win-optimization.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/bmad_repo.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/daily-build-backlog.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/daily-build-today.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/pai-agent-coordination.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/security-audit-2026-02-21.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/youtube-githubawesome-tools.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    }
+  ]
+}

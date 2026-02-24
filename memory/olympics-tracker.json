@@ -1,0 +1,90 @@
+{
+  "eventName": "Athena Build Olympics 2026-02-24",
+  "startTime": "2026-02-24T02:27:00Z",
+  "endTime": "2026-02-24T23:59:59Z",
+  "idleThresholdMinutes": 20,
+  "agents": {
+    "sterling": {
+      "role": "Finance",
+      "strengths": ["bidding", "analytics", "revenue optimization"],
+      "model": "GLM5",
+      "submissions": [],
+      "lastLaunch": null,
+      "status": "available"
+    },
+    "ishtar": {
+      "role": "Oracle/PAI Research",
+      "strengths": ["research", "architecture", "deep analysis"],
+      "model": "qwen_nvidia",
+      "submissions": [],
+      "lastLaunch": null,
+      "status": "available"
+    },
+    "delver": {
+      "role": "Research",
+      "strengths": ["investigation", "documentation", "knowledge synthesis"],
+      "model": "llama",
+      "submissions": [],
+      "lastLaunch": null,
+      "status": "available"
+    },
+    "felicity": {
+      "role": "Code Artisan",
+      "strengths": ["web development", "UI/UX", "dashboards", "tools"],
+      "model": "GLM5",
+      "submissions": [],
+      "lastLaunch": "2026-02-24T02:28:00Z",
+      "status": "building",
+      "runId": "42b6d525-a26b-466f-8bf3-7b6e6c02b1c3"
+    },
+    "prometheus": {
+      "role": "Tactical Executor",
+      "strengths": ["automation", "scripts", "execution", "devops"],
+      "model": "qwen",
+      "submissions": [],
+      "lastLaunch": null,
+      "status": "available"
+    },
+    "cisco": {
+      "role": "Security/BMAD",
+      "strengths": ["security audits", "hardening", "monitoring"],
+      "model": "GLM5",
+      "submissions": [],
+      "lastLaunch": null,
+      "status": "available"
+    },
+    "themis": {
+      "role": "Council",
+      "strengths": ["deliberation", "multi-model synthesis", "judging"],
+      "model": "openrouter-free",
+      "submissions": [],
+      "lastLaunch": null,
+      "status": "rate-limited"
+    },
+    "nexus": {
+      "role": "Intelligence Synthesizer",
+      "strengths": ["data integration", "pattern recognition", "reporting"],
+      "model": "qwen_nvidia",
+      "submissions": [],
+      "lastLaunch": null,
+      "status": "available"
+    },
+    "squire": {
+      "role": "Assistant",
+      "strengths": ["organization", "workflow", "utilities"],
+      "model": "GLM5",
+      "submissions": [],
+      "lastLaunch": null,
+      "status": "available"
+    }
+  },
+  "modelUsage": {
+    "GLM5": { "calls": 0, "limit": "unlimited", "lastCall": null },
+    "qwen_nvidia": { "calls": 0, "limit": "unlimited", "lastCall": null },
+    "llama": { "calls": 0, "limit": "30/min", "lastCall": null },
+    "qwen": { "calls": 0, "limit": "oauth", "lastCall": null },
+    "openrouter-free": { "calls": 0, "limit": "rotating", "lastCall": null }
+  },
+  "leaderboard": [],
+  "staggerDelaySeconds": 90
+}

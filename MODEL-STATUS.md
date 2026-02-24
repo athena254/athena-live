@@ -1,0 +1,162 @@
+# 🤖 Model & API Status Dashboard
+
+**Last Updated:** 2026-02-24 00:20 UTC  
+**Auto-refresh:** Every heartbeat
+
+---
+
+## ✅ WORKING MODELS (Primary Fleet)
+
+### 1. GLM-5-FP8 (Modal Direct) 🟢
+- **Status:** OPERATIONAL
+- **Endpoint:** `https://api.us-west-2.modal.direct/v1`
+- **Rate Limit:** UNLIMITED
+- **Context:** 32K tokens
+- **Used by:** Athena, Sterling, Researcher, Finance, Butler, THEMIS, Nexus, Cisco
+- **Reliability:** ⭐⭐⭐⭐⭐ (Best)
+
+### 2. NVIDIA Qwen 3.5 397B 🟡
+- **Status:** OPERATIONAL (occasional timeouts)
+- **Endpoint:** `https://integrate.api.nvidia.com/v1`
+- **Rate Limit:** UNKNOWN (appears unlimited)
+- **Context:** 128K tokens
+- **Used by:** Nexus (fallback), Ishtar (fallback)
+- **Reliability:** ⭐⭐⭐⭐ (Good, but can timeout)
+
+### 3. Groq Llama 🟢
+- **Status:** OPERATIONAL
+- **Endpoint:** `https://api.groq.com/openai/v1`
+- **Rate Limit:** 30 requests/min
+- **Available Models:**
+  - `meta-llama/llama-4-maverick-17b-128e-instruct` ⭐ NEW!
+  - `llama-3.3-70b-versatile`
+  - `whisper-large-v3-turbo` (audio)
+- **Used by:** Prometheus (primary)
+- **Reliability:** ⭐⭐⭐⭐ (Good, rate limited)
+
+### 4. Google Gemini 🟢
+- **Status:** OPERATIONAL
+- **Endpoint:** `https://generativelanguage.googleapis.com/v1beta`
+- **Rate Limit:** 20 requests/day (free tier)
+- **Available Models:**
+  - `gemini-2.5-flash`
+  - `gemini-2.5-flash-lite`
+  - `gemini-3-flash-preview`
+- **Used by:** All agents (fallback)
+- **Reliability:** ⭐⭐⭐ (Limited quota)
+
+---
+
+## ⚠️ PROBLEMATIC MODELS
+
+### 5. OpenRouter Free Tier 🔴
+- **Status:** FAILING
+- **Error:** "No endpoints found for free models"
+- **Issue:** Free tier models may be discontinued or rate-limited
+- **Models configured:**
+  - `meta-llama/llama-3.3-8b-instruct:free` ❌
+  - `qwen/qwen-2-7b-instruct:free` ❓
+  - `mistralai/mistral-7b-instruct:free` ❓
+  - `deepseek/deepseek-r1-0528:free` ❓
+- **Used by:** THEMIS (fallback)
+- **Action needed:** Test each free model or switch to paid tier
+
+### 6. OpenAI Codex (GPT-5.1) ❓
+- **Status:** UNKNOWN
+- **Endpoint:** OAuth-based
+- **Model:** `openai-codex/gpt-5.1-codex-mini`
+- **Used by:** Ishtar (primary)
+- **Action needed:** Test if this model exists and is accessible
+
+### 7. Qwen Portal (OAuth) ❓
+- **Status:** NEEDS AUTH
+- **Endpoint:** `https://portal.qwen.ai/v1`
+- **Models:** `coder-model`, `vision-model`
+- **Used by:** Felicity/Coder (primary), Prometheus (fallback)
+- **Action needed:** Verify OAuth is working
+
+---
+
+## 📊 MODEL ASSIGNMENT MATRIX
+
+| Agent | Primary Model | Fallbacks | Status |
+|-------|--------------|-----------|--------|
+| **Athena** | GLM-5 🟢 | Gemini | ✅ Healthy |
+| **Sterling (Finance)** | GLM-5 🟢 | Gemini | ✅ Healthy |
+| **Researcher** | GLM-5 🟢 | Gemini | ✅ Healthy |
+| **Felicity (Coder)** | qwen ❓ | Gemini | ⚠️ Check OAuth |
+| **Prometheus** | Groq/Llama 🟢 | qwen | ✅ Healthy |
+| **Butler** | GLM-5 🟢 | Gemini | ✅ Healthy |
+| **THEMIS** | GLM-5 🟢 | OpenRouter 🔴 | ⚠️ Fallback broken |
+| **Nexus** | GLM-5 🟢 | NVIDIA, qwen | ✅ Healthy |
+| **Cisco** | GLM-5 🟢 | qwen | ✅ Healthy |
+| **Ishtar** | Codex GPT-5.1 ❓ | NVIDIA, GLM-5 | ⚠️ Primary unknown |
+
+---
+
+## 🚨 CRITICAL ISSUES
+
+### 1. Ishtar's Primary Model
+- **Problem:** Configured to use `openai-codex/gpt-5.1-codex-mini` which may not exist
+- **Impact:** Ishtar will fail on first attempt, fallback to NVIDIA/GLM-5
+- **Fix:** Change Ishtar's primary to GLM-5 or NVIDIA Qwen
+
+### 2. THEMIS Fallback Chain
+- **Problem:** OpenRouter free models returning 404
+- **Impact:** THEMIS will fail if GLM-5 is exhausted
+- **Fix:** Test each free model or remove OpenRouter from fallback
+
+### 3. Felicity/Qwen Portal
+- **Problem:** OAuth may not be active
+- **Impact:** Coder agent may fail on first attempt
+- **Fix:** Test qwen-portal OAuth status
+
+---
+
+## 📋 RECOMMENDED ACTIONS
+
+### Immediate (Do Now)
+1. ✅ Change Ishtar's primary from Codex to GLM-5
+2. ⏳ Test OpenRouter free models individually
+3. ⏳ Verify qwen-portal OAuth is working
+
+### Short-term (This Week)
+1. Add Groq's new Llama 4 Maverick to available models
+2. Configure proper rate limit tracking
+3. Set up model health monitoring
+
+### Long-term
+1. Consider paid OpenRouter tier for reliability
+2. Add more unlimited providers as backups
+3. Implement automatic model switching on failure
+
+---
+
+## 📈 USAGE TRACKING
+
+| Model | Requests Today | Rate Limit | Remaining |
+|-------|---------------|------------|-----------|
+| GLM-5 | ~50 | Unlimited | ∞ |
+| NVIDIA Qwen | ~10 | Unknown | ∞ |
+| Groq Llama | ~5 | 30/min | 25 |
+| Gemini | ~3 | 20/day | 17 |
+| OpenRouter | 0 | N/A | BROKEN |
+
+---
+
+## 🔄 FALLBACK CHAIN PRIORITY
+
+**Recommended order:**
+1. GLM-5 (unlimited, reliable)
+2. NVIDIA Qwen 3.5 397B (large context)
+3. Groq Llama 4 Maverick (NEW, fast)
+4. Gemini (limited quota, use sparingly)
+
+**Avoid:**
+- OpenRouter free tier (currently broken)
+- Unknown OAuth models
+
+---
+
+*Auto-generated by Athena Model Status Dashboard*
+*Refresh: Every heartbeat | Manual refresh: Run model status check*

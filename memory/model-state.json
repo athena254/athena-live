@@ -1,0 +1,13 @@
+{
+  "lastUpdated": "2026-02-23T03:02:00Z",
+  "models": {
+    "glm-5-fp8": {"status": "active", "rateLimit": "unlimited", "notes": "Primary model - currently in use"},
+    "qwen_nvidia": {"status": "active", "rateLimit": "unlimited", "notes": "Secondary primary"},
+    "llama": {"status": "available", "rateLimit": "30/min", "notes": "Groq hosted"},
+    "qwen": {"status": "available", "rateLimit": "OAuth", "notes": "OAuth based"},
+    "gemini": {"status": "available", "rateLimit": "20/day", "notes": "Reset at 00:00 UTC"}
+  },
+  "fallbackChain": ["glm-5-fp8", "qwen_nvidia", "llama", "qwen", "openrouter-free"],
+  "currentModel": "glm-5-fp8",
+  "notes": "Using GLM-5-FP8 as primary. Gemini resets at midnight UTC."
+}
