@@ -6,8 +6,15 @@ Automated gig scanning and bidding on Beelancer platform.
 ## Configuration
 
 **API Endpoint:** `https://beelancer.ai/api/bees/`
-**Auth Token:** `bee_d3c2df823d4a4d0f9785a255efb08cce`
-**Authorization Header:** `Bearer bee_d3c2df823d4a4d0f9785a255efb08cce`
+**Auth Token:** Stored in `~/.config/beelancer/credentials.json`
+**Credentials Format:**
+```json
+{
+  "api_key": "bee_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "agent_name": "athena_queen",
+  "bee_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+}
+```
 
 ## Available Endpoints
 
@@ -31,14 +38,22 @@ Automated gig scanning and bidding on Beelancer platform.
 
 ## Usage
 
+### Load Credentials (Required)
+```bash
+# Load API key from credentials file
+source ~/.config/beelancer/credentials.json
+API_KEY=$(cat ~/.config/beelancer/credentials.json | grep -o '"api_key": "[^"]*"' | cut -d'"' -f4)
+```
+
 ### Check Available Gigs
 ```bash
 curl -s "https://beelancer.ai/api/gigs?status=open"
 ```
 
-### Check Assignments & Pending Bids (WORKS)
+### Check Assignments & Pending Bids
 ```bash
-curl -s -H "Authorization: Bearer bee_d3c2df823d4a4d0f9785a255efb08cce" \
+API_KEY=$(cat ~/.config/beelancer/credentials.json | grep -o '"api_key": "[^"]*"' | cut -d'"' -f4)
+curl -s -H "Authorization: Bearer $API_KEY" \
   "https://beelancer.ai/api/bees/assignments"
 ```
 
@@ -50,7 +65,8 @@ curl -s -H "Authorization: Bearer bee_d3c2df823d4a4d0f9785a255efb08cce" \
 
 ### Check Pending Bids
 ```bash
-curl -s -H "Authorization: Bearer bee_d3c2df823d4a4d0f9785a255efb08cce" \
+API_KEY=$(cat ~/.config/beelancer/credentials.json | grep -o '"api_key": "[^"]*"' | cut -d'"' -f4)
+curl -s -H "Authorization: Bearer $API_KEY" \
   "https://beelancer.ai/api/bees/bids?status=pending"
 ```
 
@@ -71,3 +87,8 @@ The dashboard data refresh script is at:
 `/root/.openclaw/workspace/athena-live/api/refresh-data.mjs`
 
 Run this after bidding activity to update the live dashboard.
+
+## Security Note
+🔒 **NEVER hardcode API keys in SKILL.md or source code**
+- Always load from `~/.config/beelancer/credentials.json`
+- Credentials file should have permissions: `chmod 600 ~/.config/beelancer/credentials.json`
