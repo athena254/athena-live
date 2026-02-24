@@ -275,3 +275,90 @@ All agents use `edge-tts` (Microsoft neural voices, free) via `/root/.openclaw/w
 - Voice profiles enable human-like TTS for storytelling and reports
 - Model rotation prevents rate limit exhaustion
 - Silent mode reduces notification fatigue
+
+---
+
+## 🚀 Always-On Protocol (24/7 Active Agents)
+
+**Effective:** 2026-02-24 22:37 UTC  
+**Agents:** Athena, Ishtar, THEMIS, Felicity
+
+### Core Principle
+These 4 agents are **ALWAYS ON** - no sleeping, no idle time. Each maintains an active TODO list and produces **multiple tangible outputs every single day**.
+
+### Daily Output Requirements
+
+| Agent | Daily Minimum Output |
+|-------|---------------------|
+| **Athena** | 3 tangible tasks (coordination, monitoring, decisions) |
+| **Ishtar** | 3 research items (PAI architecture, insights, knowledge synthesis) |
+| **THEMIS** | 2 council deliberations (debates, consensus building) |
+| **Felicity** | 3 code/UI deliverables (features, fixes, dashboards) |
+
+### Background Task Schedule
+
+#### Athena (Main Orchestrator)
+- Continuous: User communication, agent coordination
+- Every 5 min: System health monitoring
+- Every 30 min: Sterling bidding oversight
+- Daily 00:00: Backup coordination
+- Daily: Update MEMORY.md with significant events
+
+#### Ishtar (Oracle/Research)
+- Continuous: PAI Architecture research
+- Daily: Synthesize 3+ research insights
+- Weekly: Deep dive documentation
+- Background: Knowledge graph expansion
+
+#### THEMIS (Council/Deliberation)
+- On-demand: Council deliberations
+- Daily: Review pending decisions
+- Background: Smart rotation through OpenRouter models
+- Weekly: Strategic analysis reports
+
+#### Felicity (Code Artisan)
+- Continuous: Code generation, dashboard improvement
+- Daily: Ship 3+ features/fixes
+- Background: Monitor dashboard health, user feedback
+
+### TODO List Format
+
+Each agent maintains a TODO in `memory/agent-todos.md`:
+```
+## ATHENA TODO - 2026-02-24
+- [x] Coordinate dashboard deployment
+- [ ] Optimize Beelancer bidding strategy
+- [ ] Review agent performance metrics
+- [ ] Update MEMORY.md
+- [ ] Spin up new subagent for X project
+
+## ISTHAR TODO - 2026-02-24
+- [x] PAI Architecture research: Model routing
+- [ ] Document Oracle insights
+- [ ] Expand knowledge graph
+- [ ] Review 3 papers on autonomous agents
+
+## THEMIS TODO - 2026-02-24
+- [x] Council on bidding strategy
+- [ ] Deliberation on dashboard UX
+- [ ] Synthesize consensus on X
+
+## FELICITY TODO - 2026-02-24
+- [x] Build felicity-mission-v2.html
+- [ ] Deploy 3 dashboards to GitHub Pages
+- [ ] Fix bug in particle canvas
+- [ ] Add new color palette to Felicity Art
+```
+
+### Enforcement
+- **No idle tokens** - Always processing something useful
+- **Daily minimums** - Track tangible output count
+- **Silent mode exceptions** - Only interrupt for critical items
+- **Heartbeat coordination** - Rotate through agent tasks during heartbeats
+
+### Background Execution
+- Use cron jobs for scheduled tasks
+- Spawn subagents for parallel work
+- Maintain persistent TODO lists across sessions
+- Report daily output metrics to Athena
+
