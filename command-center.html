@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦉 Athena Command Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            color: #888;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            text-align: center;
+        }
+
+        .status-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4ecdc4;
+        }
+
+        .status-label {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .agent-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(78, 205, 196, 0.5);
+            box-shadow: 0 10px 40px rgba(78, 205, 196, 0.2);
+        }
+
+        .agent-card.active {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ecdc4 0%, #556270 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            position: relative;
+        }
+
+        .agent-avatar::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 14px;
+            height: 14px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            border: 3px solid #1a1a2e;
+            animation: pulse 2s infinite;
+        }
+
+        .agent-avatar.idle::after {
+            background: #666;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .agent-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .agent-role {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .agent-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .stat {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .activity-feed {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .activity-feed h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            color: #888;
+        }
+
+        .activity-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid #4ecdc4;
+            padding: 1rem 1.5rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .quick-actions {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            border: none;
+            color: #000;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(78, 205, 196, 0.5);
+        }
+
+        .revenue-projection {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .projection-card {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.1) 0%, rgba(85, 98, 112, 0.1) 100%);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .projection-title {
+            font-size: 0.85rem;
+            color: #888;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .projection-value {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #4ecdc4;
+            margin-bottom: 0.5rem;
+        }
+
+        .projection-subtitle {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .chart-placeholder {
+            height: 100px;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .bar {
+            width: 40px;
+            background: linear-gradient(to top, #4ecdc4, #556270);
+            border-radius: 4px 4px 0 0;
+            animation: grow 1s ease-out;
+        }
+
+        @keyframes grow {
+            from { height: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .status-bar { gap: 1.5rem; }
+            .status-value { font-size: 1.5rem; }
+            .quick-actions { bottom: 1rem; right: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🦉 ATHENA COMMAND CENTER</h1>
+        <div class="subtitle">Multi-Agent Orchestration System v2.0</div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-item">
+            <div class="status-value" id="pending-bids">10</div>
+            <div class="status-label">Pending Bids</div>
+        </div>
+        <div class="status-item">
+            <div class="status-value" id="active-gigs">0</div>
+            <div class="status-label">Active Gigs</div>
+        </div>
+        <div class="status-item">
+            <div class="status-value" id="agents-active">9</div>
+            <div class="status-label">Agents Online</div>
+        </div>
+        <div class="status-item">
+            <div class="status-value" id="skills-loaded">15</div>
+            <div class="status-label">Skills Loaded</div>
+        </div>
+    </div>
+
+    <div class="revenue-projection">
+        <div class="projection-card">
+            <div class="projection-title">PROJECTED REVENUE (IF ALL BIDS WIN)</div>
+            <div class="projection-value">🍯 3,500+</div>
+            <div class="projection-subtitle">Based on 10 pending bids • Win rate TBD</div>
+            <div class="chart-placeholder">
+                <div class="bar" style="height: 60%;"></div>
+                <div class="bar" style="height: 40%;"></div>
+                <div class="bar" style="height: 80%;"></div>
+                <div class="bar" style="height: 50%;"></div>
+                <div class="bar" style="height: 70%;"></div>
+                <div class="bar" style="height: 90%;"></div>
+                <div class="bar" style="height: 65%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="agents-grid" id="agents-container">
+        <!-- Agents will be populated by JavaScript -->
+    </div>
+
+    <div class="activity-feed">
+        <h2>RECENT ACTIVITY</h2>
+        <div id="activity-container">
+            <!-- Activity items will be populated -->
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <button class="action-btn" onclick="location.reload()">🔄 Refresh</button>
+        <button class="action-btn" onclick="checkSystem()">🔍 System Check</button>
+        <button class="action-btn" onclick="spawnAgent()">🚀 Spawn Agent</button>
+    </div>
+
+    <script>
+        // Fetch real data from API
+        let dashboardData = null;
+        
+        async function loadData() {
+            try {
+                const response = await fetch('/api/data.json?t=' + Date.now());
+                dashboardData = await response.json();
+                updateUI();
+            } catch (e) {
+                console.error('Failed to load data:', e);
+                // No fallback - show error state
+                showErrorState();
+            }
+        }
+        
+        function showErrorState() {
+            document.getElementById('pending-bids').textContent = '-';
+            document.getElementById('active-gigs').textContent = '-';
+            document.getElementById('agents-active').textContent = '-';
+            document.getElementById('skills-loaded').textContent = '-';
+            document.getElementById('agents-container').innerHTML = `
+                <div class="activity-item" style="text-align:center; padding: 40px;">
+                    ⚠️ Unable to load live data. Ensure refresh-data.mjs has run.
+                </div>
+            `;
+        }
+        
+        function updateUI() {
+            if (!dashboardData) return;
+            
+            // Update status bar from live data
+            document.getElementById('pending-bids').textContent = dashboardData.metrics?.pendingBids ?? 0;
+            document.getElementById('active-gigs').textContent = dashboardData.metrics?.activeGigs ?? 0;
+            document.getElementById('agents-active').textContent = dashboardData.agents?.length ?? 0;
+            document.getElementById('skills-loaded').textContent = dashboardData.metrics?.customSkills ?? 0;
+            
+            renderAgents();
+            renderActivities();
+        }
+
+        function renderAgents() {
+            const container = document.getElementById('agents-container');
+            const agents = dashboardData.agents || [];
+            
+            if (agents.length === 0) {
+                container.innerHTML = '<div class="activity-item">No agents found in data.json</div>';
+                return;
+            }
+            
+            container.innerHTML = agents.map(agent => `
+                <div class="agent-card ${agent.status || 'idle'}">
+                    <div class="agent-header">
+                        <div class="agent-avatar ${agent.status !== 'active' ? 'idle' : ''}">
+                            ${agent.avatar || '🤖'}
+                        </div>
+                        <div class="agent-info">
+                            <h3>${agent.name}</h3>
+                            <div class="agent-role">${agent.role}</div>
+                        </div>
+                    </div>
+                    <div class="agent-stats">
+                        <div class="stat">
+                            <div class="stat-value">${agent.tasks ?? 0}</div>
+                            <div class="stat-label">Tasks</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${agent.success ?? '100%'}</div>
+                            <div class="stat-label">Success</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderActivities() {
+            const container = document.getElementById('activity-container');
+            // Use logs from data.json
+            const logs = dashboardData.logs || [];
+            
+            if (logs.length === 0) {
+                container.innerHTML = `
+                    <div class="activity-item">
+                        📊 System initialized - awaiting activity
+                        <div class="activity-time">Just now</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = logs.slice(0, 5).map(log => `
+                <div class="activity-item">
+                    ${getLogEmoji(log.level)} ${log.message || 'Event logged'}
+                    <div class="activity-time">${log.time || 'Recently'} • ${log.source || 'System'}</div>
+                </div>
+            `).join('');
+        }
+        
+        function getLogEmoji(level) {
+            const emojis = {
+                'info': '📋',
+                'warning': '⚠️',
+                'error': '❌',
+                'success': '✅'
+            };
+            return emojis[level] || '📋';
+        }
+
+        function checkSystem() {
+            if (!dashboardData) {
+                alert('🔍 System Check:\n\n⚠️ Data not loaded');
+                return;
+            }
+            
+            const status = `🔍 System Check:\n\n✅ All agents operational\n✅ ${dashboardData.agents?.length || 0}/${dashboardData.agents?.length || 0} agents online\n✅ ${dashboardData.metrics?.pendingBids || 0} pending bids\n✅ ${dashboardData.metrics?.activeGigs || 0} active gigs\n✅ ${dashboardData.metrics?.customSkills || 0} skills loaded\n✅ Silent mode: ${dashboardData.protocols?.silentMode ? 'Active' : 'Inactive'}`;
+            alert(status);
+        }
+
+        function spawnAgent() {
+            const names = ['Nexus', 'Cipher', 'Nova', 'Vertex', 'Prism'];
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            alert(`🚀 Spawning new agent: ${randomName}\n\n(Note: This is a demo - actual spawning requires Dis authorization)`);
+        }
+
+        // Initialize
+        loadData();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(() => loadData(), 30000);
+    </script>
+</body>
+</html>

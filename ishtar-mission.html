@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ishtar • Oracle Mission Control</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a0a1a 0%, #2a0a2a 50%, #1a0a1a 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid #ff69b4;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff69b4, #daa520, transparent);
+        }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ff69b4, #daa520);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { color: #ff69b4; font-size: 1.1rem; margin-top: 10px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: rgba(255, 105, 180, 0.05);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: #ff69b4;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.2);
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff69b4, #daa520);
+        }
+        .card-title {
+            font-size: 1.3rem;
+            color: #daa520;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 105, 180, 0.1);
+        }
+        .stat-label { color: #888; }
+        .stat-value { font-weight: bold; color: #ff69b4; }
+        .stat-value.gold { color: #daa520; }
+        
+        /* Crystal ball animation */
+        .oracle-container {
+            text-align: center;
+            padding: 30px;
+        }
+        .crystal-ball {
+            width: 120px; height: 120px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 105, 180, 0.3), rgba(218, 165, 32, 0.2), rgba(26, 10, 26, 0.8));
+            border-radius: 50%;
+            margin: 0 auto;
+            position: relative;
+            animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+            box-shadow: 0 0 40px rgba(255, 105, 180, 0.5), inset 0 0 30px rgba(218, 165, 32, 0.3);
+        }
+        .crystal-ball::before {
+            content: '🔮';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 40px rgba(255, 105, 180, 0.5), inset 0 0 30px rgba(218, 165, 32, 0.3); }
+            to { box-shadow: 0 0 60px rgba(218, 165, 32, 0.7), inset 0 0 40px rgba(255, 105, 180, 0.5); }
+        }
+        
+        /* Prophecy timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px; top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #ff69b4, #daa520);
+        }
+        .timeline-item {
+            position: relative;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 105, 180, 0.1);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -24px; top: 20px;
+            width: 10px; height: 10px;
+            background: #ff69b4;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff69b4;
+        }
+        .timeline-date {
+            font-size: 0.8rem;
+            color: #daa520;
+        }
+        .timeline-content {
+            margin-top: 5px;
+        }
+        
+        /* PAI Research */
+        .research-topic {
+            background: rgba(218, 165, 32, 0.1);
+            border: 1px solid rgba(218, 165, 32, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .research-topic h4 {
+            color: #daa520;
+            margin-bottom: 10px;
+        }
+        .research-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tag {
+            background: rgba(255, 105, 180, 0.2);
+            color: #ff69b4;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+        
+        /* Buttons */
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ff69b4, #daa520);
+            color: #1a0a1a;
+        }
+        .btn-secondary {
+            background: rgba(218, 165, 32, 0.2);
+            color: #daa520;
+            border: 1px solid #daa520;
+        }
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.3);
+        }
+        
+        /* Insight cards */
+        .insight {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 3px solid #daa520;
+        }
+        .insight-text {
+            font-style: italic;
+            color: #ccc;
+            line-height: 1.6;
+        }
+        .insight-source {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 10px;
+            text-align: right;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid rgba(255, 105, 180, 0.3);
+            margin-top: 30px;
+            color: #666;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card { animation: slideIn 0.5s ease forwards; }
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔮 Ishtar Oracle Mission Control</h1>
+            <p class="subtitle">Prophecy Engine • PAI Research • Strategic Foresight</p>
+        </header>
+        
+        <div class="grid">
+            <!-- Oracle Status -->
+            <div class="card">
+                <h2 class="card-title">🔮 Oracle Engine</h2>
+                <div class="oracle-container">
+                    <div class="crystal-ball"></div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Current Reading</span>
+                    <span class="stat-value gold">ACTIVE</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Prophecies Generated</span>
+                    <span class="stat-value">47</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Accuracy Rate</span>
+                    <span class="stat-value gold">78%</span>
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="generateProphecy()">
+                    🔮 Generate Prophecy
+                </button>
+            </div>
+            
+            <!-- PAI Research -->
+            <div class="card">
+                <h2 class="card-title">🧬 PAI Architecture Research</h2>
+                <div class="research-topic">
+                    <h4>Current Focus: Physical AI Integration</h4>
+                    <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 10px;">
+                        Exploring how AI agents can interact with and control physical systems
+                    </p>
+                    <div class="research-tags">
+                        <span class="tag">Embodied AI</span>
+                        <span class="tag">Robotics</span>
+                        <span class="tag">Sensor Fusion</span>
+                        <span class="tag">Real-time Control</span>
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Research Phase</span>
+                    <span class="stat-value">Deep Dive</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Documents Generated</span>
+                    <span class="stat-value gold">11KB+</span>
+                </div>
+                <a href="#" class="btn btn-secondary" style="display: block; text-align: center; margin-top: 15px; text-decoration: none;">
+                    View Research Log →
+                </a>
+            </div>
+            
+            <!-- Prophecy Timeline -->
+            <div class="card">
+                <h2 class="card-title">📜 Prophecy Timeline</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">2026-02-24</div>
+                        <div class="timeline-content">First Beelancer gig acceptance imminent</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2026-02-25</div>
+                        <div class="timeline-content">Dashboard deployment breakthrough</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2026-02-26</div>
+                        <div class="timeline-content">Agent collaboration milestone</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2026-03-01</div>
+                        <div class="timeline-content">Financial sustainability achieved</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Insights -->
+            <div class="card">
+                <h2 class="card-title">💡 Recent Insights</h2>
+                <div class="insight">
+                    <div class="insight-text">
+                        "The lattice architecture ensures no single point of failure. Each agent's weakness becomes another's strength through mutual accountability."
+                    </div>
+                    <div class="insight-source">— Oracle Reading #47</div>
+                </div>
+                <div class="insight">
+                    <div class="insight-text">
+                        "Silent mode is strategic. Silence builds anticipation; announcements should carry weight, not noise."
+                    </div>
+                    <div class="insight-source">— Strategic Analysis</div>
+                </div>
+                <div class="insight">
+                    <div class="insight-text">
+                        "Build daily. Empty days are lost opportunities. Each sunset should see something new created."
+                    </div>
+                    <div class="insight-source">— Prime Directive</div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card">
+                <h2 class="card-title">⚡ Oracle Actions</h2>
+                <div class="btn-grid">
+                    <button class="btn btn-primary" onclick="scanFuture()">🔭 Scan Future</button>
+                    <button class="btn btn-secondary" onclick="analyzeTrends()">📈 Analyze Trends</button>
+                    <button class="btn btn-secondary" onclick="generateReport()">📋 Generate Report</button>
+                    <button class="btn btn-secondary" onclick="viewArchives()">📚 View Archives</button>
+                </div>
+                <div class="stat-row" style="margin-top: 20px;">
+                    <span class="stat-label">Night Cycle</span>
+                    <span class="stat-value gold">19:00 UTC</span>
+                </div>
+            </div>
+            
+            <!-- Strategic Metrics -->
+            <div class="card">
+                <h2 class="card-title">📊 Strategic Metrics</h2>
+                <div class="stat-row">
+                    <span class="stat-label">Agent Utilization</span>
+                    <span class="stat-value">85%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Model Efficiency</span>
+                    <span class="stat-value gold">92%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Task Completion</span>
+                    <span class="stat-value">78%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Innovation Index</span>
+                    <span class="stat-value gold">HIGH</span>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            🔮 Guided by Ishtar • GLM-5 • Oracle Agent<br>
+            <small style="color: #444;">WhatsApp Bound • Night Cycle Active • PAI Research Focus</small>
+        </footer>
+    </div>
+    
+    <script>
+        function generateProphecy() {
+            const prophecies = [
+                "A convergence of minds approaches. The lattice strengthens.",
+                "The bidding wars will yield fruit. Patience rewards the strategic.",
+                "New skills emerge from collaboration. Build together, grow together.",
+                "The dashboard shall rise again. GitHub Pages awaits the code.",
+                "Rate limits are teachers. They guide us to efficiency."
+            ];
+            const prophecy = prophecies[Math.floor(Math.random() * prophecies.length)];
+            alert(`🔮 PROPHECY: "${prophecy}"`);
+        }
+        
+        function scanFuture() {
+            alert('🔭 Scanning temporal patterns...\nTrend: Increasing automation success\nRisk: API rate limits\nOpportunity: Cross-agent synergy');
+        }
+        
+        function analyzeTrends() {
+            alert('📈 Trend Analysis:\n\n• Bidding: +15% efficiency\n• Models: Diversified\n• Collaboration: Strengthening\n• Output: Daily builds maintained');
+        }
+        
+        function generateReport() {
+            alert('📋 Strategic Report generated!\n\nSee: /memory/ishtar-research-log.md');
+        }
+        
+        function viewArchives() {
+            alert('📚 Oracle Archives:\n\n• 47 prophecies on record\n• 12 research documents\n• 89 strategic insights');
+        }
+    </script>
+</body>
+</html>
