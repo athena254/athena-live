@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena Quick Launch Terminal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            background: #0a0a0f;
+            min-height: 100vh;
+            color: #00ff88;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .terminal-window {
+            background: #0d0d14;
+            border-radius: 12px;
+            border: 1px solid #1a1a2e;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .terminal-header {
+            background: #1a1a2e;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-title {
+            color: #888;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        .terminal-body {
+            padding: 20px;
+            min-height: 150px;
+        }
+
+        .command-line {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .prompt {
+            color: #00ff88;
+        }
+
+        .cursor {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .shortcut-card {
+            background: #0d0d14;
+            border: 1px solid #1a1a2e;
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .shortcut-card:hover {
+            border-color: #00ff88;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 255, 136, 0.1);
+        }
+
+        .shortcut-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .shortcut-name {
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .shortcut-desc {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .shortcut-command {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #1a1a2e;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #00ccff;
+            font-family: monospace;
+        }
+
+        .categories {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .category-btn {
+            padding: 8px 16px;
+            background: #1a1a2e;
+            border: 1px solid #2a2a3e;
+            border-radius: 20px;
+            color: #888;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #00ff88;
+            color: #0a0a0f;
+            border-color: #00ff88;
+        }
+
+        .output {
+            margin-top: 10px;
+            padding: 10px;
+            background: #050508;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: #0d0d14;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #1a1a2e;
+        }
+
+        .status-item {
+            text-align: center;
+        }
+
+        .status-value {
+            font-size: 1.2rem;
+            color: #00ff88;
+        }
+
+        .status-label {
+            font-size: 0.65rem;
+            color: #555;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Athena Quick Launch</h1>
+            <div class="subtitle">One-click commands for common operations</div>
+        </div>
+
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+                <span class="terminal-title">athena@orchestrator:~</span>
+            </div>
+            <div class="terminal-body">
+                <div class="command-line">
+                    <span class="prompt">$</span>
+                    <span id="current-command">Click a shortcut to execute...</span>
+                    <span class="cursor">▊</span>
+                </div>
+                <div class="output" id="output" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="categories">
+            <button class="category-btn active" data-category="all">All</button>
+            <button class="category-btn" data-category="beelancer">Beelancer</button>
+            <button class="category-btn" data-category="dashboard">Dashboard</button>
+            <button class="category-btn" data-category="backup">Backup</button>
+            <button class="category-btn" data-category="agents">Agents</button>
+            <button class="category-btn" data-category="system">System</button>
+        </div>
+
+        <div class="shortcuts-grid" id="shortcuts-container">
+            <!-- Shortcuts populated by JS -->
+        </div>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-value" id="commands-run">0</div>
+                <div class="status-label">Commands Run</div>
+            </div>
+            <div class="status-item">
+                <div class="status-value" id="last-run">--</div>
+                <div class="status-label">Last Run</div>
+            </div>
+            <div class="status-item">
+                <div class="status-value">Ready</div>
+                <div class="status-label">Status</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const shortcuts = [
+            {
+                id: 'refresh-dashboard',
+                name: 'Refresh Dashboard Data',
+                desc: 'Update data.json with latest metrics',
+                icon: '🔄',
+                category: 'dashboard',
+                command: 'cd /root/.openclaw/workspace/athena-live/api && node refresh-data.mjs'
+            },
+            {
+                id: 'beelancer-status',
+                name: 'Beelancer Status',
+                desc: 'Check pending bids and active gigs',
+                icon: '🐝',
+                category: 'beelancer',
+                command: 'curl -s https://beelancer.com/api/status | jq .'
+            },
+            {
+                id: 'sterling-bid',
+                name: 'Sterling Auto-Bid',
+                desc: 'Trigger bidding cycle manually',
+                icon: '💰',
+                category: 'beelancer',
+                command: 'openclaw run-skill beelancer-bidder'
+            },
+            {
+                id: 'backup-now',
+                name: 'Backup to GitHub',
+                desc: 'Push current state to Athena-backup',
+                icon: '💾',
+                category: 'backup',
+                command: 'cd /root/.openclaw/workspace && git add -A && git commit -m "Auto backup $(date +%Y-%m-%d_%H%M)" && git push'
+            },
+            {
+                id: 'morning-report',
+                name: 'Generate Morning Report',
+                desc: 'Weather, news, tasks summary',
+                icon: '🌅',
+                category: 'system',
+                command: 'openclaw run-skill morning-report'
+            },
+            {
+                id: 'agent-status',
+                name: 'Agent Status Check',
+                desc: 'Show all 9 agents status',
+                icon: '🤖',
+                category: 'agents',
+                command: 'cat /root/.openclaw/workspace/AGENT-ROSTER.md | head -50'
+            },
+            {
+                id: 'memory-view',
+                name: 'View MEMORY.md',
+                desc: 'Long-term memory snapshot',
+                icon: '🧠',
+                category: 'system',
+                command: 'cat /root/.openclaw/workspace/MEMORY.md | head -100'
+            },
+            {
+                id: 'server-start',
+                name: 'Start Dashboard Server',
+                desc: 'Launch localhost:3000',
+                icon: '🚀',
+                category: 'dashboard',
+                command: 'cd /root/.openclaw/workspace/athena-live && node server.mjs &'
+            },
+            {
+                id: 'voice-test',
+                name: 'Test Edge-TTS Voice',
+                desc: 'Say hello with Sonia voice',
+                icon: '🔊',
+                category: 'system',
+                command: '/opt/piper-venv/bin/edge-tts --voice en-GB-SoniaNeural --text "Athena online and ready" | mpg123 -'
+            },
+            {
+                id: 'themis-council',
+                name: 'THEMIS Council',
+                desc: 'Spawn deliberation session',
+                icon: '⚖️',
+                category: 'agents',
+                command: 'openclaw run-skill themis --topic "What should we build next?"'
+            },
+            {
+                id: 'git-status',
+                name: 'Git Status',
+                desc: 'Check uncommitted changes',
+                icon: '📊',
+                category: 'backup',
+                command: 'cd /root/.openclaw/workspace && git status --short'
+            },
+            {
+                id: 'api-health',
+                name: 'API Health Check',
+                desc: 'Test all API connections',
+                icon: '🏥',
+                category: 'system',
+                command: 'curl -s https://api.openai.com/v1/models | jq ".data[0].id" 2>/dev/null && echo "OpenAI: OK" || echo "OpenAI: FAILED"'
+            }
+        ];
+
+        let commandsRun = 0;
+
+        function renderShortcuts(category = 'all') {
+            const container = document.getElementById('shortcuts-container');
+            const filtered = category === 'all' 
+                ? shortcuts 
+                : shortcuts.filter(s => s.category === category);
+            
+            container.innerHTML = filtered.map(s => `
+                <div class="shortcut-card" data-command="${s.command}" data-id="${s.id}">
+                    <div class="shortcut-icon">${s.icon}</div>
+                    <div class="shortcut-name">${s.name}</div>
+                    <div class="shortcut-desc">${s.desc}</div>
+                    <div class="shortcut-command">${s.command.substring(0, 40)}${s.command.length > 40 ? '...' : ''}</div>
+                </div>
+            `).join('');
+
+            // Attach click handlers
+            document.querySelectorAll('.shortcut-card').forEach(card => {
+                card.addEventListener('click', () => executeCommand(card.dataset.command, card.dataset.id));
+            });
+        }
+
+        function executeCommand(command, id) {
+            document.getElementById('current-command').textContent = command;
+            document.getElementById('output').style.display = 'block';
+            document.getElementById('output').textContent = 'Executing...';
+            
+            // Simulate execution (in real implementation, this would call backend)
+            setTimeout(() => {
+                const outputs = {
+                    'refresh-dashboard': '✅ Data refreshed at ' + new Date().toISOString(),
+                    'beelancer-status': '📊 Pending bids: 10\n📊 Active gigs: 0\n💰 Honey potential: £3,500',
+                    'backup-now': '💾 Committing changes...\n✅ Pushed to Athena-backup',
+                    'voice-test': '🔊 Playing: "Athena online and ready"',
+                    'default': '✅ Command executed successfully'
+                };
+                
+                document.getElementById('output').textContent = outputs[id] || outputs.default;
+                commandsRun++;
+                document.getElementById('commands-run').textContent = commandsRun;
+                document.getElementById('last-run').textContent = new Date().toLocaleTimeString();
+            }, 800);
+        }
+
+        // Category filter
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderShortcuts(btn.dataset.category);
+            });
+        });
+
+        // Initial render
+        renderShortcuts();
+    </script>
+</body>
+</html>

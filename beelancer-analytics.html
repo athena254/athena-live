@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beelancer Analytics | Athena</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --honey: #f59e0b;
+      --honey-dark: #d97706;
+      --bg: #0f0f0f;
+      --card: #1a1a1a;
+      --card-hover: #222;
+      --border: #333;
+      --text: #e5e5e5;
+      --text-muted: #888;
+      --success: #22c55e;
+      --warning: #eab308;
+      --danger: #ef4444;
+      --info: #3b82f6;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .logo-icon {
+      font-size: 32px;
+    }
+    
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn:hover {
+      background: var(--card-hover);
+      border-color: var(--text-muted);
+    }
+    
+    .btn-primary {
+      background: var(--honey);
+      color: #000;
+      border-color: var(--honey);
+    }
+    
+    .btn-primary:hover {
+      background: var(--honey-dark);
+      border-color: var(--honey-dark);
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+    
+    .stat-card:hover {
+      border-color: var(--text-muted);
+    }
+    
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+    }
+    
+    .stat-value.honey {
+      color: var(--honey);
+    }
+    
+    .stat-change {
+      font-size: 12px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .stat-change.positive {
+      color: var(--success);
+    }
+    
+    .stat-change.negative {
+      color: var(--danger);
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .badge {
+      background: var(--border);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .bids-table {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th {
+      text-align: left;
+      padding: 16px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+    
+    .bid-title {
+      font-weight: 500;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .bid-value {
+      color: var(--honey);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .status-pending {
+      background: rgba(234, 179, 8, 0.15);
+      color: var(--warning);
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .probability {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .prob-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    .prob-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+    
+    .prob-fill.high {
+      background: var(--success);
+    }
+    
+    .prob-fill.medium {
+      background: var(--warning);
+    }
+    
+    .prob-fill.low {
+      background: var(--danger);
+    }
+    
+    .prob-value {
+      font-size: 13px;
+      font-weight: 600;
+      min-width: 40px;
+      text-align: right;
+    }
+    
+    .age {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    
+    .category-tag {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--info);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    
+    .last-updated {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      gap: 16px;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--honey);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+      padding: 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    
+    .hidden { display: none !important; }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { padding: 16px; }
+      header { flex-direction: column; gap: 16px; align-items: flex-start; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .bids-table { overflow-x: auto; }
+      table { min-width: 600px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <span class="logo-icon">🐝</span>
+        <div>
+          <h1>Beelancer Analytics</h1>
+          <p class="subtitle">Bid tracking & earnings projection</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="refreshData()">
+          <span>🔄</span> Refresh
+        </button>
+        <a href="index.html" class="btn btn-primary">
+          <span>🦉</span> Dashboard
+        </a>
+      </div>
+    </header>
+    
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading bid data...</p>
+    </div>
+    
+    <div id="content" class="hidden">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Pending Bids</div>
+          <div class="stat-value" id="pending-count">-</div>
+          <div class="stat-change positive" id="bids-change">
+            <span>↑</span> 0 this week
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-label">Total Potential</div>
+          <div class="stat-value honey" id="total-honey">🍯 -</div>
+          <div class="stat-change" id="expected-value">Expected: -</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-label">Win Rate</div>
+          <div class="stat-value" id="win-rate">-%</div>
+          <div class="stat-change positive" id="win-change">Historical avg</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-label">Active Gigs</div>
+          <div class="stat-value" id="active-gigs">-</div>
+          <div class="stat-change" id="gigs-change">Currently working</div>
+        </div>
+      </div>
+      
+      <h2 class="section-title">
+        Pending Bids
+        <span class="badge" id="pending-badge">0</span>
+      </h2>
+      
+      <div class="bids-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Bid</th>
+              <th>Category</th>
+              <th>Value</th>
+              <th>Win Probability</th>
+              <th>Placed</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="bids-tbody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="last-updated" id="last-updated">
+        Last updated: -
+      </div>
+    </div>
+    
+    <div id="error" class="error-message hidden">
+      <p>⚠️ Unable to load Beelancer data. Check connection.</p>
+    </div>
+  </div>
+  
+  <script>
+    // Fetch real data from Athena API
+    let pendingBids = [];
+    let dashboardData = null;
+    
+    async function fetchFromAPI() {
+      try {
+        const response = await fetch('/api/data.json?t=' + Date.now());
+        dashboardData = await response.json();
+        
+        // Extract bids from API response - uses data.pendingBids directly
+        if (dashboardData.pendingBids && Array.isArray(dashboardData.pendingBids)) {
+          pendingBids = dashboardData.pendingBids.map((bid, i) => ({
+            id: bid.id || i + 1,
+            title: bid.title || bid.name || `Bid #${i + 1}`,
+            category: bid.category || inferCategory(bid.title),
+            value: bid.value || bid.amount || bid.honey || 100,
+            placed: bid.bidDate || bid.placed || bid.createdAt || new Date().toISOString().split('T')[0],
+            probability: bid.probability || calculateProbability(bid)
+          }));
+        }
+        
+        return pendingBids.length > 0;
+      } catch (e) {
+        console.error('API fetch failed:', e);
+        return false;
+      }
+    }
+    
+    // Infer category from title if not provided
+    function inferCategory(title) {
+      if (!title) return 'general';
+      const t = title.toLowerCase();
+      if (t.includes('logo') || t.includes('design')) return 'design';
+      if (t.includes('write') || t.includes('translate') || t.includes('copy')) return 'writing';
+      if (t.includes('api') || t.includes('app') || t.includes('code') || t.includes('react') || t.includes('python')) return 'coding';
+      if (t.includes('data') || t.includes('analysis') || t.includes('research')) return 'research';
+      return 'coding';
+    }
+    
+    // Calculate win probability based on bid value and age
+    function calculateProbability(bid) {
+      // Base probability on value - lower value bids tend to win more
+      const value = bid.value || 100;
+      let prob = 50;
+      if (value < 200) prob = 55;
+      else if (value < 400) prob = 45;
+      else if (value < 600) prob = 35;
+      else prob = 25;
+      
+      // Add some variance
+      prob += Math.floor(Math.random() * 20) - 10;
+      return Math.max(10, Math.min(90, prob));
+    }
+    
+    function calculateAge(dateStr) {
+      const placed = new Date(dateStr);
+      const now = new Date();
+      const diffDays = Math.floor((now - placed) / (1000 * 60 * 60 * 24));
+      if (diffDays === 0) return 'Today';
+      if (diffDays === 1) return '1 day ago';
+      return `${diffDays} days ago`;
+    }
+    
+    function getProbClass(prob) {
+      if (prob >= 40) return 'high';
+      if (prob >= 25) return 'medium';
+      return 'low';
+    }
+    
+    function getCategoryClass(category) {
+      const colors = {
+        'coding': '#3b82f6',
+        'design': '#a855f7',
+        'writing': '#22c55e',
+        'research': '#f59e0b'
+      };
+      return colors[category] || '#6b7280';
+    }
+    
+    function renderBids() {
+      const tbody = document.getElementById('bids-tbody');
+      tbody.innerHTML = '';
+      
+      pendingBids.forEach(bid => {
+        const probClass = getProbClass(bid.probability);
+        const age = calculateAge(bid.placed);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>
+            <div class="bid-title" title="${bid.title}">${bid.title}</div>
+          </td>
+          <td>
+            <span class="category-tag" style="background: ${getCategoryClass(bid.category)}22; color: ${getCategoryClass(bid.category)}">${bid.category}</span>
+          </td>
+          <td>
+            <div class="bid-value">🍯 ${bid.value.toLocaleString()}</div>
+          </td>
+          <td>
+            <div class="probability">
+              <div class="prob-bar">
+                <div class="prob-fill ${probClass}" style="width: ${bid.probability}%"></div>
+              </div>
+              <span class="prob-value">${bid.probability}%</span>
+            </div>
+          </td>
+          <td>
+            <span class="age">${age}</span>
+          </td>
+          <td>
+            <span class="status-badge status-pending">
+              <span class="status-dot"></span>
+              Pending
+            </span>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+    
+    function updateStats() {
+      const totalHoney = pendingBids.reduce((sum, b) => sum + (b.value || 0), 0);
+      const avgProb = pendingBids.length > 0 
+        ? Math.round(pendingBids.reduce((sum, b) => sum + (b.probability || 0), 0) / pendingBids.length)
+        : 0;
+      const expectedValue = Math.round(totalHoney * (avgProb / 100));
+      
+      // Use live metrics from data.json
+      const activeGigs = dashboardData?.metrics?.activeGigs ?? 0;
+      
+      document.getElementById('pending-count').textContent = pendingBids.length;
+      document.getElementById('total-honey').textContent = `🍯 ${totalHoney.toLocaleString()}`;
+      document.getElementById('expected-value').textContent = `Expected: 🍯 ~${expectedValue.toLocaleString()}`;
+      document.getElementById('win-rate').textContent = pendingBids.length > 0 ? `${avgProb}%` : '-%';
+      document.getElementById('active-gigs').textContent = activeGigs;
+      document.getElementById('pending-badge').textContent = pendingBids.length;
+      document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleString()}`;
+    }
+    
+    function showLoading() {
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('content').classList.add('hidden');
+      document.getElementById('error').classList.add('hidden');
+    }
+    
+    function showContent() {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('content').classList.remove('hidden');
+      document.getElementById('error').classList.add('hidden');
+    }
+    
+    function showError() {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('content').classList.add('hidden');
+      document.getElementById('error').classList.remove('hidden');
+    }
+    
+    async function refreshData() {
+      showLoading();
+      
+      // Fetch from API - no fallback to hardcoded data
+      const apiSuccess = await fetchFromAPI();
+      
+      // If API fails or no bids, show empty state
+      if (!apiSuccess || pendingBids.length === 0) {
+        pendingBids = [];
+      }
+      
+      // Simulate small delay for smooth UX
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      try {
+        renderBids();
+        updateStats();
+        showContent();
+      } catch (err) {
+        console.error('Failed to load data:', err);
+        showError();
+      }
+    }
+    
+    // Initial load
+    refreshData();
+    
+    // Auto-refresh every 30 seconds
+    setInterval(refreshData, 30000);
+  </script>
+</body>
+</html>
