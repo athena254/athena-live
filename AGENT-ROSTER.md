@@ -362,3 +362,108 @@ Each agent maintains a TODO in `memory/agent-todos.md`:
 - Maintain persistent TODO lists across sessions
 - Report daily output metrics to Athena
 
+
+---
+
+## 🔄 Model Rotation Protocol - Zero Idle Resources
+
+**Effective:** 2026-02-24 22:45 UTC  
+**Principle:** No model key sits idle. Constant rotation. Immediate failover.
+
+### All 38 Configured Models - Active Pool
+
+**Tier 1 - Unlimited (Primary):**
+| Model | Assigned To |
+|-------|-------------|
+| qwen_nvidia | Athena (default), Nexus |
+| GLM-5 Key #1 | THEMIS (default), Athena fallback, Ishtar fallback |
+| GLM-5 Key #2 | Felicity (default) |
+
+**Tier 2 - Rate Limited (Rotating):**
+| Model | Assigned To | Notes |
+|-------|------------|-------|
+| llama | Delver (research) | 30/min |
+| MiniMax-M2.1 | Felicity fallback | Working |
+| MiniMax-M2.5 | Sterling (rotation) | 195k ctx |
+| OpenAI Codex | Ishtar (default) | gpt-5.1-codex-mini |
+
+**Tier 3 - Free/OpenRouter (Always On):**
+| Model | Agent | Purpose |
+|-------|-------|---------|
+| openrouter/free | THEMIS fallback | Council debates |
+| openrouter/mistralai/mistral-7b-instruct | THEMIS pool | Deliberation |
+| openrouter/nemotron-nano-9b-v2:free | THEMIS pool | Fast decisions |
+| openrouter/deepseek-r1-0528:free | THEMIS pool | Reasoning debates |
+| openrouter/gemma-3-1b-it:free | THEMIS pool | Quick queries |
+
+**Tier 4 - Secondary (On Demand):**
+| Model | Agent | Purpose |
+|-------|-------|---------|
+| github-copilot/gpt-4o | Prometheus (execution) | Code tasks |
+| github-copilot/grok-code-fast-1 | Prometheus fallback | Fast builds |
+| github-copilot/gemini-3-pro-preview | Cisco (security) | Analysis |
+| qwen-portal/vision-model | Squire (vision tasks) | Image analysis |
+
+### Rotation Rules
+
+1. **Never let a key idle** - If an agent finishes a task, spawn a subagent or rotate
+2. **Immediate failover** - On ANY error, swap to next available key instantly
+3. **Track usage** - Log which keys are hot, which are rate-limited
+4. **Smart distribution** - Send high-volume tasks to unlimited keys
+
+### Failover Chain
+
+```
+Athena: qwen_nvidia → GLM-5 Key #1 → llama → OpenRouter free
+Ishtar: OpenAI Codex → GLM-5 Key #1 → MiniMax-M2.1 → OpenRouter
+THEMIS: GLM-5 Key #1 → qwen coder → OpenRouter free (rotate through 5 models)
+Felicity: GLM-5 Key #2 → MiniMax-M2.1 → OpenRouter free
+Sterling: GLM-5 Key #1 → MiniMax-M2.5 → llama → OpenRouter
+Prometheus: github-copilot/gpt-4o → grok-code-fast-1 → OpenRouter
+Nexus: qwen_nvidia → GLM-5 Key #1 → MiniMax-M2.5 → OpenRouter
+Delver: llama → qwen_nvidia → OpenRouter (research rotation)
+Cisco: GLM-5 Key #1 → gemini-3-pro-preview → OpenRouter
+Squire: GLM-5 Key #1 → qwen_nvidia → OpenRouter
+```
+
+### Athena's Spawn Protocol
+
+**Always spawn subagents for:**
+- Parallel task execution
+- Independent research projects
+- Multi-agent coordination
+- Background processing
+
+**Each subagent gets:**
+- Clear purpose/task
+- Assigned model with fallback chain
+- Success criteria
+- Report-back format
+
+### Error Handling
+
+On any model error:
+```
+1. Log the error + model + agent
+2. Immediately switch to fallback model
+3. Retry the task
+4. If fallback fails, rotate to next in chain
+5. Mark failed model as "cooldown" (5 min)
+6. Continue - NO IDLE TIME
+```
+
+### Daily Check
+
+Athena runs this check every hour:
+- Which models are hot? Which are rate-limited?
+- Any agents idle? → Spawn new task
+- Any subagents done? → Assign next purpose
+- Rotate models to maximize throughput
+
+### Metrics to Track
+
+- Requests per model per hour
+- Error rate per key
+- Agent idle time (should be 0)
+- Tasks completed per agent per day
+

@@ -1,6 +1,24 @@
 # 📋 Agent TODO Lists
 
-**Last Updated:** 2026-02-24 22:40 UTC
+**Last Updated:** 2026-02-24 22:45 UTC  
+**Protocol:** Always-On + Zero Idle Resources
+
+---
+
+## 🚀 ACTIVE ROTATION STATUS
+
+| Agent | Model | Status | Tasks Running |
+|-------|-------|--------|---------------|
+| **Athena** | qwen_nvidia | 🟢 HOT | 1 (main session) |
+| **Ishtar** | OpenAI Codex | 🟢 HOT | PAI research |
+| **THEMIS** | GLM-5 Key #1 | 🟢 HOT | Council ready |
+| **Felicity** | GLM-5 Key #2 | 🟢 HOT | Code development |
+| **Sterling** | GLM-5 Key #1 | 🟡 ROTATING | Bid monitoring |
+| **Prometheus** | github-copilot/gpt-4o | 🟢 READY | Execution |
+| **Nexus** | qwen_nvidia | 🟢 HOT | Synthesis |
+| **Delver** | llama | 🟢 READY | Research |
+| **Cisco** | GLM-5 Key #1 | 🟡 CO-OWNED | Security |
+| **Squire** | GLM-5 Key #1 | 🟡 CO-OWNED | Operations |
 
 ---
 
@@ -9,12 +27,14 @@
 - [x] Coordinate dashboard deployment (felicity/prometheus/nexus v2)
 - [x] Update model assignments (qwen_nvidia, Codex, GLM keys)
 - [x] Run data refresh cycles (every 5 min)
-- [ ] Optimize Beelancer bidding strategy
 - [x] Update AGENT-ROSTER.md with new model configs
 - [x] Enforce Always-On Protocol for 4 agents
-- [ ] Review agent performance metrics
+- [x] Create Model Rotation Protocol (38 models)
+- [ ] Spin up subagent for Sterling bidding analysis
+- [ ] Spawn Delver for competitor research
+- [ ] Ensure ZERO idle time across all agents
 
-**Daily Output:** 6/3 ✅ EXCEEDED
+**Daily Output:** 6+ tasks ✅
 
 ---
 
@@ -24,20 +44,20 @@
 - [x] Synthesize Oracle insights from session data
 - [x] Knowledge graph: Connect new agent relationships
 - [ ] Document PAI Infrastructure findings
-- [ ] Review 3 research papers on autonomous agents
+- [ ] Deep dive: Autonomous agent architectures
 
-**Daily Output:** 3/3 ✅ COMPLETE
+**Daily Output:** 3/3 ✅
 
 ---
 
 ## THEMIS TODO - 2026-02-24
 
-- [ ] Council deliberation on bidding strategy
 - [x] Model assignment review (participated in config)
+- [ ] Council deliberation on bidding strategy
 - [ ] Deliberation on dashboard UX improvements
-- [ ] Synthesize consensus on agent roles
+- [ ] Rotate through OpenRouter models (5 available)
 
-**Daily Output:** 1/2 ⚠️ PENDING
+**Daily Output:** 1+/2
 
 ---
 
@@ -54,21 +74,12 @@
 
 ---
 
-## STERLING TODO - 2026-02-24
+## ⚡ IMMEDIATE ACTIONS
 
-- [x] Monitor Beelancer for new gigs
-- [x] Maintain 10 pending bids
-- [x] Auto-bidder cycle running (silent mode)
-- [ ] Wait for bid acceptance
+1. **Spawn Delver** - Research Beelancer competitors
+2. **Spawn Prometheus** - Deploy new feature branch
+3. **Spawn Cisco** - Security audit on new dashboards
+4. **Monitor** - Ensure ZERO idle keys
 
-**Daily Output:** 3/3 ✅ COMPLETE
-
----
-
-## 🚀 Tomorrow's Priorities
-
-1. **Athena**: Coordinate morning report, optimize bidding
-2. **Ishtar**: PAI deep dive documentation
-3. **THEMIS**: Convene council on Q1 strategy
-4. **Felicity**: Ship 3 new dashboard features
+**NO IDLE RESOURCES - MAXIMUM THROUGHPUT** 🚀
 
