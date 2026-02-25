@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time - Athena Live</title>
+    <style>
+        body { font-family: system-ui; margin: 0; background: #1a1a2e; color: #fff; padding: 2rem; text-align: center; }
+        .time { font-size: 4rem; color: #00ff88; }
+    </style>
+</head>
+<body>
+    <h1>🕐 UTC Time</h1>
+    <div class="time" id="clock">--:--:--</div>
+    <script>setInterval(() => { document.getElementById('clock').innerText = new Date().toUTCString().split(' ')[4]; }, 1000);</script>
+</body>
+</html>
