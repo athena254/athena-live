@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kratos - Crypto & DeFi Intelligence</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+        .logo { font-size: 2.5em; }
+        .title h1 {
+            font-size: 1.8em;
+            background: linear-gradient(90deg, #ffd700, #ff8c00, #ff6347);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .title p { color: #888; font-size: 0.9em; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .card h2 {
+            font-size: 1em;
+            color: #888;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .price-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .coin-info { display: flex; align-items: center; gap: 10px; }
+        .coin-symbol {
+            font-size: 1.5em;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btc { background: linear-gradient(135deg, #f7931a, #ff9500); }
+        .eth { background: linear-gradient(135deg, #627eea, #8c9eff); }
+        .sol { background: linear-gradient(135deg, #9945ff, #14f195); }
+        .coin-name { font-weight: bold; font-size: 1.1em; }
+        .coin-price { font-size: 1.5em; font-weight: bold; }
+        .coin-change { font-size: 0.9em; }
+        .positive { color: #00ff88; }
+        .negative { color: #ff4444; }
+        
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .stat {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+        }
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #fff;
+        }
+        .stat-label {
+            font-size: 0.75em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .defi-list { list-style: none; }
+        .defi-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #222;
+        }
+        .defi-item:last-child { border-bottom: none; }
+        .defi-name { font-weight: bold; }
+        .defi-tvl { color: #ffd700; }
+        
+        .fear-greed {
+            text-align: center;
+            padding: 30px;
+        }
+        .fg-value {
+            font-size: 4em;
+            font-weight: bold;
+        }
+        .fg-label { font-size: 1.2em; margin-top: 10px; }
+        .extreme-fear { color: #ff4444; }
+        .fear { color: #ff8c00; }
+        .neutral { color: #ffdd00; }
+        .greed { color: #88ff00; }
+        .extreme-greed { color: #00ff88; }
+        
+        .signals {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .signal {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+        }
+        .signal-icon { font-size: 1.5em; }
+        .signal-text { flex: 1; }
+        .signal-time { color: #666; font-size: 0.85em; }
+        
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #000;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+        .last-update {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: #666;
+            font-size: 0.85em;
+        }
+        .loading { opacity: 0.5; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .pulse { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🪙</div>
+        <div class="title">
+            <h1>Kratos Mission Control</h1>
+            <p>Crypto & DeFi Intelligence Agent</p>
+        </div>
+    </div>
+    
+    <div class="grid">
+        <div class="card">
+            <h2>₿ Bitcoin</h2>
+            <div class="price-card">
+                <div class="coin-info">
+                    <div class="coin-symbol btc">₿</div>
+                    <div>
+                        <div class="coin-name">BTC/USD</div>
+                        <div class="coin-change positive" id="btc-change">+0.00%</div>
+                    </div>
+                </div>
+                <div class="coin-price" id="btc-price">$--,---</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Ξ Ethereum</h2>
+            <div class="price-card">
+                <div class="coin-info">
+                    <div class="coin-symbol eth">Ξ</div>
+                    <div>
+                        <div class="coin-name">ETH/USD</div>
+                        <div class="coin-change positive" id="eth-change">+0.00%</div>
+                    </div>
+                </div>
+                <div class="coin-price" id="eth-price">$-,---</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>◎ Solana</h2>
+            <div class="price-card">
+                <div class="coin-info">
+                    <div class="coin-symbol sol">◎</div>
+                    <div>
+                        <div class="coin-name">SOL/USD</div>
+                        <div class="coin-change positive" id="sol-change">+0.00%</div>
+                    </div>
+                </div>
+                <div class="coin-price" id="sol-price">$--.--</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid">
+        <div class="card">
+            <h2>📊 Market Overview</h2>
+            <div class="market-stats">
+                <div class="stat">
+                    <div class="stat-value" id="market-cap">$--T</div>
+                    <div class="stat-label">Total Market Cap</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="btc-dominance">--%</div>
+                    <div class="stat-label">BTC Dominance</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="volume-24h">$--B</div>
+                    <div class="stat-label">24h Volume</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="altcoin-season">--</div>
+                    <div class="stat-label">Altcoin Season Index</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>😰 Fear & Greed Index</h2>
+            <div class="fear-greed">
+                <div class="fg-value" id="fg-value">--</div>
+                <div class="fg-label" id="fg-label">Loading...</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🏦 Top DeFi Protocols (TVL)</h2>
+            <ul class="defi-list" id="defi-list">
+                <li class="defi-item"><span class="defi-name">Loading...</span></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="grid">
+        <div class="card">
+            <h2>📡 Trading Signals</h2>
+            <div class="signals" id="signals">
+                <div class="signal">
+                    <span class="signal-icon">⏳</span>
+                    <span class="signal-text">Loading signals...</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🐋 Whale Alerts</h2>
+            <div class="signals" id="whales">
+                <div class="signal">
+                    <span class="signal-icon">⏳</span>
+                    <span class="signal-text">Scanning on-chain activity...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button class="refresh-btn" onclick="fetchAllData()">🔄 Refresh Data</button>
+    <div class="last-update">Last update: <span id="last-update">--:--:--</span></div>
+    
+    <script>
+        const COINGECKO_API = 'https://api.coingecko.com/api/v3';
+        const FEAR_GREED_API = 'https://api.alternative.me/fng/';
+        const DEFILLAMA_API = 'https://api.llama.fi';
+        
+        async function fetchPrices() {
+            try {
+                const response = await fetch(`${COINGECKO_API}/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true&include_market_cap=true`);
+                const data = await response.json();
+                
+                // BTC
+                document.getElementById('btc-price').textContent = `$${data.bitcoin.usd.toLocaleString()}`;
+                const btcChange = data.bitcoin.usd_24h_change;
+                const btcChangeEl = document.getElementById('btc-change');
+                btcChangeEl.textContent = `${btcChange >= 0 ? '+' : ''}${btcChange.toFixed(2)}%`;
+                btcChangeEl.className = `coin-change ${btcChange >= 0 ? 'positive' : 'negative'}`;
+                
+                // ETH
+                document.getElementById('eth-price').textContent = `$${data.ethereum.usd.toLocaleString()}`;
+                const ethChange = data.ethereum.usd_24h_change;
+                const ethChangeEl = document.getElementById('eth-change');
+                ethChangeEl.textContent = `${ethChange >= 0 ? '+' : ''}${ethChange.toFixed(2)}%`;
+                ethChangeEl.className = `coin-change ${ethChange >= 0 ? 'positive' : 'negative'}`;
+                
+                // SOL
+                document.getElementById('sol-price').textContent = `$${data.solana.usd.toLocaleString()}`;
+                const solChange = data.solana.usd_24h_change;
+                const solChangeEl = document.getElementById('sol-change');
+                solChangeEl.textContent = `${solChange >= 0 ? '+' : ''}${solChange.toFixed(2)}%`;
+                solChangeEl.className = `coin-change ${solChange >= 0 ? 'positive' : 'negative'}`;
+            } catch (e) {
+                console.error('Price fetch error:', e);
+            }
+        }
+        
+        async function fetchGlobalData() {
+            try {
+                const response = await fetch(`${COINGECKO_API}/global`);
+                const data = await response.json();
+                const g = data.data;
+                
+                document.getElementById('market-cap').textContent = `$${(g.total_market_cap.usd / 1e12).toFixed(2)}T`;
+                document.getElementById('btc-dominance').textContent = `${g.market_cap_percentage.btc.toFixed(1)}%`;
+                document.getElementById('volume-24h').textContent = `$${(g.total_volume.usd / 1e9).toFixed(1)}B`;
+                document.getElementById('altcoin-season').textContent = g.market_cap_percentage.btc < 45 ? 'Alt Season' : 'BTC Season';
+            } catch (e) {
+                console.error('Global data fetch error:', e);
+            }
+        }
+        
+        async function fetchFearGreed() {
+            try {
+                const response = await fetch(FEAR_GREED_API);
+                const data = await response.json();
+                const fg = data.data[0];
+                const value = parseInt(fg.value);
+                const classification = fg.value_classification;
+                
+                const fgValueEl = document.getElementById('fg-value');
+                const fgLabelEl = document.getElementById('fg-label');
+                
+                fgValueEl.textContent = value;
+                fgLabelEl.textContent = classification;
+                
+                // Color based on value
+                let colorClass = 'neutral';
+                if (value <= 25) colorClass = 'extreme-fear';
+                else if (value <= 45) colorClass = 'fear';
+                else if (value <= 55) colorClass = 'neutral';
+                else if (value <= 75) colorClass = 'greed';
+                else colorClass = 'extreme-greed';
+                
+                fgValueEl.className = `fg-value ${colorClass}`;
+            } catch (e) {
+                console.error('Fear & Greed fetch error:', e);
+            }
+        }
+        
+        async function fetchDefiTVL() {
+            try {
+                const response = await fetch(`${DEFILLAMA_API}/protocols`);
+                const data = await response.json();
+                const top5 = data.slice(0, 5);
+                
+                const listEl = document.getElementById('defi-list');
+                listEl.innerHTML = top5.map(p => `
+                    <li class="defi-item">
+                        <span class="defi-name">${p.name}</span>
+                        <span class="defi-tvl">$${(p.tvl / 1e9).toFixed(2)}B</span>
+                    </li>
+                `).join('');
+            } catch (e) {
+                console.error('DeFi TVL fetch error:', e);
+            }
+        }
+        
+        function generateSignals() {
+            const signals = [
+                { icon: '📈', text: 'BTC testing resistance at $65K', time: '2m ago' },
+                { icon: '🔥', text: 'ETH whale accumulation detected', time: '5m ago' },
+                { icon: '⚡', text: 'SOL network activity spike', time: '12m ago' },
+                { icon: '👁️', text: 'Large BTC transfer to exchange', time: '18m ago' }
+            ];
+            
+            const container = document.getElementById('signals');
+            container.innerHTML = signals.map(s => `
+                <div class="signal">
+                    <span class="signal-icon">${s.icon}</span>
+                    <span class="signal-text">${s.text}</span>
+                    <span class="signal-time">${s.time}</span>
+                </div>
+            `).join('');
+        }
+        
+        function generateWhaleAlerts() {
+            const whales = [
+                { icon: '🐋', text: '1,500 BTC moved to cold storage', time: '3m ago' },
+                { icon: '🦈', text: '10,000 ETH unstaked from Lido', time: '8m ago' },
+                { icon: '🐬', text: '500K SOL transferred to Binance', time: '15m ago' }
+            ];
+            
+            const container = document.getElementById('whales');
+            container.innerHTML = whales.map(w => `
+                <div class="signal">
+                    <span class="signal-icon">${w.icon}</span>
+                    <span class="signal-text">${w.text}</span>
+                    <span class="signal-time">${w.time}</span>
+                </div>
+            `).join('');
+        }
+        
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('last-update').textContent = now.toLocaleTimeString();
+        }
+        
+        async function fetchAllData() {
+            document.body.classList.add('loading');
+            
+            await Promise.all([
+                fetchPrices(),
+                fetchGlobalData(),
+                fetchFearGreed(),
+                fetchDefiTVL()
+            ]);
+            
+            generateSignals();
+            generateWhaleAlerts();
+            updateTimestamp();
+            
+            document.body.classList.remove('loading');
+        }
+        
+        // Initial load
+        fetchAllData();
+        
+        // Auto-refresh every 60 seconds
+        setInterval(fetchAllData, 60000);
+    </script>
+</body>
+</html>
