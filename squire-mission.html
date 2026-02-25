@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squire - Assistant Agent</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Mono', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2a2a2a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #708090;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid rgba(112, 128, 144, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover { background: rgba(112, 128, 144, 0.2); border-color: #708090; }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(112, 128, 144, 0.3);
+            padding-bottom: 20px;
+        }
+        .logo { font-size: 3em; }
+        .title h1 {
+            font-size: 2em;
+            background: linear-gradient(90deg, #708090, #a0a0a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .title p { color: #888; font-size: 0.9em; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(112, 128, 144, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .card h2 {
+            font-size: 0.9em;
+            color: #708090;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Task List */
+        .task-list { list-style: none; }
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .task-check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #708090;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .task-check.done { background: #708090; }
+        .task-text { flex: 1; }
+        .task-priority {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+        .priority-high { background: rgba(255, 68, 68, 0.2); color: #ff4444; }
+        .priority-medium { background: rgba(255, 200, 0, 0.2); color: #ffc800; }
+        .priority-low { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
+        
+        /* Quick Actions */
+        .actions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(112, 128, 144, 0.1);
+            border: 1px solid rgba(112, 128, 144, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .action-btn:hover { background: rgba(112, 128, 144, 0.2); transform: translateY(-2px); }
+        .action-icon { font-size: 1.5em; }
+        .action-text { font-size: 0.9em; font-weight: bold; }
+        
+        /* Notifications */
+        .notif-list { list-style: none; }
+        .notif-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .notif-icon { font-size: 1.2em; }
+        .notif-content { flex: 1; }
+        .notif-title { font-weight: bold; font-size: 0.9em; }
+        .notif-desc { font-size: 0.8em; color: #888; margin-top: 3px; }
+        
+        /* Productivity */
+        .prod-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .prod-item { text-align: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; }
+        .prod-value { font-size: 1.8em; font-weight: bold; color: #a0a0a0; }
+        .prod-label { font-size: 0.75em; color: #666; margin-top: 5px; }
+        
+        /* Schedule */
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .schedule-time {
+            font-weight: bold;
+            color: #708090;
+            min-width: 60px;
+        }
+        .schedule-event { flex: 1; }
+    </style>
+</head>
+<body>
+    <a href="hub.html" class="back-link">← Back to Hub</a>
+    
+    <div class="header">
+        <div class="logo">🗡️</div>
+        <div class="title">
+            <h1>Squire Mission Control</h1>
+            <p>Assistant Agent • Task Manager</p>
+        </div>
+    </div>
+    
+    <div class="grid">
+        <div class="card">
+            <h2>📋 Task List</h2>
+            <ul class="task-list">
+                <li class="task-item">
+                    <span class="task-check done"></span>
+                    <span class="task-text" style="text-decoration: line-through; color: #666;">Complete dashboard deployment</span>
+                    <span class="task-priority priority-high">Done</span>
+                </li>
+                <li class="task-item">
+                    <span class="task-check"></span>
+                    <span class="task-text">Monitor Beelancer bids</span>
+                    <span class="task-priority priority-medium">Active</span>
+                </li>
+                <li class="task-item">
+                    <span class="task-check"></span>
+                    <span class="task-text">Update agent mission controls</span>
+                    <span class="task-priority priority-high">In Progress</span>
+                </li>
+                <li class="task-item">
+                    <span class="task-check"></span>
+                    <span class="task-text">Schedule weekly backup verification</span>
+                    <span class="task-priority priority-low">Pending</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>⚡ Quick Actions</h2>
+            <div class="actions-grid">
+                <div class="action-btn">
+                    <span class="action-icon">📊</span>
+                    <span class="action-text">Status Report</span>
+                </div>
+                <div class="action-btn">
+                    <span class="action-icon">🔄</span>
+                    <span class="action-text">Refresh Data</span>
+                </div>
+                <div class="action-btn">
+                    <span class="action-icon">📤</span>
+                    <span class="action-text">Push to Git</span>
+                </div>
+                <div class="action-btn">
+                    <span class="action-icon">🔧</span>
+                    <span class="action-text">Run Diagnostics</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🔔 Notifications</h2>
+            <ul class="notif-list">
+                <li class="notif-item">
+                    <span class="notif-icon">✅</span>
+                    <div class="notif-content">
+                        <div class="notif-title">Dashboard Refresh Complete</div>
+                        <div class="notif-desc">10 pending bids, 0 active gigs</div>
+                    </div>
+                </li>
+                <li class="notif-item">
+                    <span class="notif-icon">📋</span>
+                    <div class="notif-content">
+                        <div class="notif-title">New Agent Added</div>
+                        <div class="notif-desc">Apollo, Hermes, Kratos configured</div>
+                    </div>
+                </li>
+                <li class="notif-item">
+                    <span class="notif-icon">🔄</span>
+                    <div class="notif-content">
+                        <div class="notif-title">Backup Scheduled</div>
+                        <div class="notif-desc">Daily backup at 00:00 UTC</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>📈 Productivity</h2>
+            <div class="prod-stats">
+                <div class="prod-item">
+                    <div class="prod-value">24</div>
+                    <div class="prod-label">Tasks Completed</div>
+                </div>
+                <div class="prod-item">
+                    <div class="prod-value">98%</div>
+                    <div class="prod-label">Success Rate</div>
+                </div>
+                <div class="prod-item">
+                    <div class="prod-value">4</div>
+                    <div class="prod-label">Pending Tasks</div>
+                </div>
+                <div class="prod-item">
+                    <div class="prod-value">12h</div>
+                    <div class="prod-label">Uptime Today</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>📅 Schedule</h2>
+            <div class="schedule-item">
+                <span class="schedule-time">00:00</span>
+                <span class="schedule-event">Daily GitHub Backup</span>
+            </div>
+            <div class="schedule-item">
+                <span class="schedule-time">04:00</span>
+                <span class="schedule-event">Morning Report (7 AM EAT)</span>
+            </div>
+            <div class="schedule-item">
+                <span class="schedule-time">17:00</span>
+                <span class="schedule-event">Evening Report (8 PM EAT)</span>
+            </div>
+            <div class="schedule-item">
+                <span class="schedule-time">19:00</span>
+                <span class="schedule-event">Ishtar Night Cycle</span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🎯 Quick Stats</h2>
+            <div class="prod-stats">
+                <div class="prod-item">
+                    <div class="prod-value">GLM-5</div>
+                    <div class="prod-label">Model</div>
+                </div>
+                <div class="prod-item">
+                    <div class="prod-value">Ready</div>
+                    <div class="prod-label">Status</div>
+                </div>
+                <div class="prod-item">
+                    <div class="prod-value">∞</div>
+                    <div class="prod-label">Capacity</div>
+                </div>
+                <div class="prod-item">
+                    <div class="prod-value">Athena</div>
+                    <div class="prod-label">Parent</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

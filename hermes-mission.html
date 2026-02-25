@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hermes - Outreach & Marketing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Mono', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a1a2a 0%, #1a2a3a 50%, #2a3a4a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #87ceeb;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover { background: rgba(135, 206, 235, 0.2); border-color: #87ceeb; }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(135, 206, 235, 0.3);
+            padding-bottom: 20px;
+        }
+        .logo { font-size: 3em; }
+        .title h1 {
+            font-size: 2em;
+            background: linear-gradient(90deg, #87ceeb, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .title p { color: #888; font-size: 0.9em; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: rgba(20, 30, 50, 0.8);
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .card h2 {
+            font-size: 0.9em;
+            color: #87ceeb;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Campaign Tracker */
+        .campaign-list { list-style: none; }
+        .campaign-item {
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #87ceeb;
+        }
+        .campaign-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .campaign-name { font-weight: bold; }
+        .campaign-status {
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            background: rgba(135, 206, 235, 0.2);
+            color: #87ceeb;
+        }
+        .campaign-progress {
+            height: 6px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .campaign-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #87ceeb, #00bfff);
+            border-radius: 3px;
+        }
+        
+        /* Message Queue */
+        .message-list { list-style: none; }
+        .message-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .message-icon { font-size: 1.2em; }
+        .message-content { flex: 1; }
+        .message-title { font-weight: bold; font-size: 0.9em; }
+        .message-meta { font-size: 0.75em; color: #666; margin-top: 3px; }
+        .message-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            background: rgba(0, 191, 255, 0.2);
+            color: #00bfff;
+        }
+        
+        /* Engagement Metrics */
+        .engagement-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .engage-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+        .engage-value { font-size: 1.8em; font-weight: bold; color: #00bfff; }
+        .engage-label { font-size: 0.75em; color: #666; margin-top: 5px; }
+        .engage-trend {
+            font-size: 0.7em;
+            color: #00ff88;
+            margin-top: 3px;
+        }
+        
+        /* Calendar */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+        .calendar-day.active {
+            background: rgba(135, 206, 235, 0.3);
+            color: #87ceeb;
+            font-weight: bold;
+        }
+        .calendar-day.today {
+            border: 2px solid #87ceeb;
+        }
+        
+        /* Stats */
+        .stats-row { display: flex; justify-content: space-around; text-align: center; }
+        .stat-item { }
+        .stat-value { font-size: 1.5em; font-weight: bold; color: #87ceeb; }
+        .stat-label { font-size: 0.7em; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <a href="hub.html" class="back-link">← Back to Hub</a>
+    
+    <div class="header">
+        <div class="logo">📨</div>
+        <div class="title">
+            <h1>Hermes Mission Control</h1>
+            <p>Outreach & Marketing Agent</p>
+        </div>
+    </div>
+    
+    <div class="grid">
+        <div class="card">
+            <h2>📊 Campaign Tracker</h2>
+            <ul class="campaign-list">
+                <li class="campaign-item">
+                    <div class="campaign-header">
+                        <span class="campaign-name">Athena Brand Launch</span>
+                        <span class="campaign-status">Planning</span>
+                    </div>
+                    <div class="campaign-progress"><div class="campaign-fill" style="width: 15%"></div></div>
+                </li>
+                <li class="campaign-item">
+                    <div class="campaign-header">
+                        <span class="campaign-name">Beelancer Portfolio</span>
+                        <span class="campaign-status">Active</span>
+                    </div>
+                    <div class="campaign-progress"><div class="campaign-fill" style="width: 40%"></div></div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>📬 Message Queue</h2>
+            <ul class="message-list">
+                <li class="message-item">
+                    <span class="message-icon">✉️</span>
+                    <div class="message-content">
+                        <div class="message-title">Welcome Sequence</div>
+                        <div class="message-meta">Auto-response template</div>
+                    </div>
+                    <span class="message-badge">Ready</span>
+                </li>
+                <li class="message-item">
+                    <span class="message-icon">📱</span>
+                    <div class="message-content">
+                        <div class="message-title">Status Update</div>
+                        <div class="message-meta">Daily digest</div>
+                    </div>
+                    <span class="message-badge">Scheduled</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>📈 Engagement Metrics</h2>
+            <div class="engagement-grid">
+                <div class="engage-item">
+                    <div class="engage-value">0</div>
+                    <div class="engage-label">Messages Sent</div>
+                </div>
+                <div class="engage-item">
+                    <div class="engage-value">0%</div>
+                    <div class="engage-label">Open Rate</div>
+                </div>
+                <div class="engage-item">
+                    <div class="engage-value">0</div>
+                    <div class="engage-label">Responses</div>
+                </div>
+                <div class="engage-item">
+                    <div class="engage-value">Ready</div>
+                    <div class="engage-label">Status</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>📅 Outreach Calendar</h2>
+            <div class="calendar-grid">
+                <span class="calendar-day">M</span>
+                <span class="calendar-day">T</span>
+                <span class="calendar-day">W</span>
+                <span class="calendar-day">T</span>
+                <span class="calendar-day">F</span>
+                <span class="calendar-day">S</span>
+                <span class="calendar-day">S</span>
+                <span class="calendar-day">23</span>
+                <span class="calendar-day">24</span>
+                <span class="calendar-day today active">25</span>
+                <span class="calendar-day">26</span>
+                <span class="calendar-day">27</span>
+                <span class="calendar-day">28</span>
+                <span class="calendar-day">1</span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🎯 Quick Stats</h2>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Campaigns</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Contacts</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">Ready</div>
+                    <div class="stat-label">Status</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🚀 Channels</h2>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value">✓</div>
+                    <div class="stat-label">Email</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">✓</div>
+                    <div class="stat-label">Telegram</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">✓</div>
+                    <div class="stat-label">WhatsApp</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

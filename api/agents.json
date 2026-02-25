@@ -1,0 +1,134 @@
+{
+  "lastUpdated": "2026-02-25T07:22:00Z",
+  "total": 12,
+  "agents": [
+    {
+      "id": "athena",
+      "name": "Athena",
+      "role": "Main Orchestrator",
+      "status": "active",
+      "priority": 1,
+      "model": "GLM-5 Key #2",
+      "voice": "Sonia (British F)",
+      "description": "Primary interface, decision coordination, system oversight"
+    },
+    {
+      "id": "sterling",
+      "name": "Sterling",
+      "role": "Finance & Auto-Bidding",
+      "status": "active",
+      "priority": 1,
+      "model": "GLM-5 Key #1",
+      "voice": "Thomas (British M)",
+      "description": "Financial management, earnings tracking, autonomous bidding"
+    },
+    {
+      "id": "apollo",
+      "name": "Apollo",
+      "role": "Client Relations Manager",
+      "status": "ready",
+      "priority": 1,
+      "model": "GLM-5 Key #1",
+      "voice": "Apollo (warm, professional)",
+      "description": "Client communication, satisfaction tracking, escalation handling",
+      "createdAt": "2026-02-25T07:20:00Z"
+    },
+    {
+      "id": "hermes",
+      "name": "Hermes",
+      "role": "Outreach & Marketing",
+      "status": "ready",
+      "priority": 1,
+      "model": "GLM-5 Key #1",
+      "voice": "Hermes (persuasive, dynamic)",
+      "description": "Lead generation, outreach campaigns, A/B testing",
+      "createdAt": "2026-02-25T07:20:00Z"
+    },
+    {
+      "id": "ishtar",
+      "name": "Ishtar",
+      "role": "Oracle & PAI Architecture",
+      "status": "active",
+      "priority": 2,
+      "model": "OpenAI Codex",
+      "voice": "Ezinne (Nigerian F)",
+      "description": "Deep research, Personal AI Infrastructure, knowledge synthesis"
+    },
+    {
+      "id": "felicity",
+      "name": "Felicity",
+      "role": "Code Artisan",
+      "status": "active",
+      "priority": 2,
+      "model": "qwen_nvidia",
+      "voice": "Default",
+      "description": "Software development, code review, refactoring"
+    },
+    {
+      "id": "cisco",
+      "name": "Cisco",
+      "role": "Security & BMAD",
+      "status": "ready",
+      "priority": 2,
+      "model": "GLM-5 Key #1",
+      "voice": "Default",
+      "description": "BMAD methodology, security auditing, PRD creation"
+    },
+    {
+      "id": "prometheus",
+      "name": "Prometheus",
+      "role": "Tactical Executor",
+      "status": "ready",
+      "priority": 2,
+      "model": "qwen coder",
+      "voice": "Default",
+      "description": "Command execution, deployment, git operations"
+    },
+    {
+      "id": "themis",
+      "name": "THEMIS",
+      "role": "Council Orchestrator",
+      "status": "active",
+      "priority": 3,
+      "model": "GLM-5 Key #1",
+      "voice": "Maisie (British F)",
+      "description": "Multi-agent deliberation, consensus building"
+    },
+    {
+      "id": "nexus",
+      "name": "Nexus",
+      "role": "Intelligence Synthesizer",
+      "status": "ready",
+      "priority": 3,
+      "model": "qwen_nvidia",
+      "voice": "Default",
+      "description": "Deep analysis, knowledge synthesis, adaptive intelligence"
+    },
+    {
+      "id": "delver",
+      "name": "Delver",
+      "role": "Research & Analysis",
+      "status": "ready",
+      "priority": 3,
+      "model": "llama",
+      "voice": "Default",
+      "description": "Deep research, information gathering, trend analysis"
+    },
+    {
+      "id": "squire",
+      "name": "Squire",
+      "role": "Assistant & Operations",
+      "status": "ready",
+      "priority": 3,
+      "model": "GLM-5 Key #1",
+      "voice": "Default",
+      "description": "Routine tasks, system maintenance, operational support"
+    }
+  ],
+  "priorities": {
+    "1": "HIGH - Revenue/client-facing",
+    "2": "MEDIUM - Quality and development",
+    "3": "LOW - Support and utility"
+  },
+  "voiceEngine": "edge-tts (Microsoft neural, free)"
+}

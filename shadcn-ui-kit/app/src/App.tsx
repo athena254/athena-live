@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -9,9 +9,6 @@ import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
-import { toast } from "sonner"
 
 interface AthenaData {
   lastUpdated: string;
@@ -42,91 +39,75 @@ interface Protocol {
 interface ModelAssignment {
   name: string;
   key: string;
-  status: "hot" | "warm" | "cold";
+  status: string;
   requests: number;
+  latency?: string;
 }
 
-const agents: Agent[] = [
-  { name: "Athena", role: "Main Orchestrator", emoji: "🦉", status: "active", model: "GLM-5 Key #2", fallback: "qwen_nvidia", tasks: 47, uptime: "99.9%" },
-  { name: "Sterling", role: "Finance / Bidding", emoji: "💰", status: "watching", model: "GLM-5 Key #1", fallback: "MiniMax-M2.5", tasks: 23, uptime: "100%" },
-  { name: "Ishtar", role: "Oracle / PAI Research", emoji: "🌙", status: "ready", model: "OpenAI Codex", fallback: "GLM-5 Key #1", tasks: 15, uptime: "98.5%" },
-  { name: "THEMIS", role: "Council Deliberation", emoji: "⚖️", status: "ready", model: "GLM-5 Key #1", fallback: "qwen coder", tasks: 12, uptime: "99.2%" },
-  { name: "Felicity", role: "Code Artisan", emoji: "🎨", status: "ready", model: "qwen_nvidia", fallback: "MiniMax-M2.1", tasks: 34, uptime: "99.7%" },
-  { name: "Prometheus", role: "Executor", emoji: "⚡", status: "ready", model: "GPT-4o", fallback: "grok-code-fast", tasks: 28, uptime: "98.9%" },
-  { name: "Nexus", role: "Intelligence", emoji: "🧠", status: "ready", model: "qwen_nvidia", fallback: "GLM-5 Key #1", tasks: 19, uptime: "97.8%" },
-  { name: "Cisco", role: "Security", emoji: "🔒", status: "ready", model: "GLM-5 Key #1", fallback: "gemini-3-pro", tasks: 8, uptime: "100%" },
-  { name: "Delver", role: "Research", emoji: "🕵️", status: "ready", model: "llama", fallback: "qwen_nvidia", tasks: 11, uptime: "96.5%" },
-  { name: "Squire", role: "Operations", emoji: "🤴", status: "ready", model: "GLM-5 Key #1", fallback: "qwen_nvidia", tasks: 22, uptime: "99.1%" },
-];
+interface Skill {
+  name: string;
+  status: string;
+  tasks: number;
+  category?: string;
+}
 
-const protocols: Protocol[] = [
-  { name: "Always-On", active: true, description: "4 core agents never sleep" },
-  { name: "Zero Downtime", active: true, description: "Instant failover on errors" },
-  { name: "Zero Idle Resources", active: true, description: "38 models in rotation" },
-  { name: "Silent Mode", active: true, description: "Beelancer alerts only on acceptance" },
-  { name: "Model Rotation", active: true, description: "Auto-switch on rate limits" },
-  { name: "Auto-Backup", active: true, description: "Daily GitHub sync" },
-  { name: "Heartbeat Monitoring", active: true, description: "Periodic system checks" },
-  { name: "Subagent Spawning", active: true, description: "Parallel task execution" },
-];
-
-const models: ModelAssignment[] = [
-  { name: "GLM-5 Key #1", key: "custom-api-us-west-2-modal-direct", status: "hot", requests: 1247 },
-  { name: "GLM-5 Key #2", key: "custom-api-us-west-2-modal-direct-2", status: "hot", requests: 982 },
-  { name: "qwen_nvidia", key: "custom-integrate-api-nvidia-com", status: "hot", requests: 2156 },
-  { name: "llama (Groq)", key: "custom-api-groq-com", status: "warm", requests: 456 },
-  { name: "MiniMax-M2.1", key: "minimax-portal", status: "warm", requests: 234 },
-  { name: "OpenAI Codex", key: "openai-codex", status: "hot", requests: 567 },
-  { name: "OpenRouter Free", key: "openrouter/free", status: "cold", requests: 89 },
-];
-
-const skills = [
-  { name: "agent-mention-router", status: "active", tasks: 234 },
-  { name: "beelancer-bidder", status: "active", tasks: 156 },
-  { name: "free-tts", status: "active", tasks: 89 },
-  { name: "hot-swap-llm", status: "active", tasks: 67 },
-  { name: "themis", status: "active", tasks: 45 },
-  { name: "daily-backup", status: "active", tasks: 1 },
-  { name: "automation-workflows", status: "ready", tasks: 0 },
-];
-
-const recentActivity = [
-  { time: "23:52", event: "Data refresh completed", agent: "System", status: "success" },
-  { time: "23:50", event: "GitHub sync completed", agent: "Athena", status: "success" },
-  { time: "23:47", event: "React dashboard deployed", agent: "Felicity", status: "success" },
-  { time: "23:45", event: "Beelancer poll - 10 pending", agent: "Sterling", status: "info" },
-  { time: "23:42", event: "Data refresh completed", agent: "System", status: "success" },
-  { time: "23:40", event: "Subagent spawned for research", agent: "Athena", status: "info" },
-  { time: "23:38", event: "shadcn-ui kit installed", agent: "Felicity", status: "success" },
-  { time: "23:35", event: "Security scan completed", agent: "Cisco", status: "success" },
-];
+interface Activity {
+  time: string;
+  event: string;
+  agent: string;
+  status: string;
+}
 
 export default function AthenaMissionControl() {
   const [data, setData] = useState<AthenaData | null>(null);
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [models, setModels] = useState<ModelAssignment[]>([]);
+  const [protocols, setProtocols] = useState<Protocol[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [activity, setActivity] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [silentMode, setSilentMode] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [refreshInterval, setRefreshInterval] = useState("30");
 
-  useEffect(() => {
-    fetchData();
-    if (autoRefresh) {
-      const interval = setInterval(fetchData, parseInt(refreshInterval) * 1000);
-      return () => clearInterval(interval);
-    }
-  }, [autoRefresh, refreshInterval]);
-
-  const fetchData = async () => {
+  const fetchAllData = async () => {
     try {
-      const res = await fetch('api/data.json');
-      const json = await res.json();
-      setData(json);
+      const [dataRes, agentsRes, modelsRes, protocolsRes, skillsRes, activityRes] = await Promise.all([
+        fetch('api/data.json'),
+        fetch('api/agents.json'),
+        fetch('api/models.json'),
+        fetch('api/protocols.json'),
+        fetch('api/skills.json'),
+        fetch('api/activity.json')
+      ]);
+
+      const dataJson = await dataRes.json();
+      const agentsJson = await agentsRes.json();
+      const modelsJson = await modelsRes.json();
+      const protocolsJson = await protocolsRes.json();
+      const skillsJson = await skillsRes.json();
+      const activityJson = await activityRes.json();
+
+      setData(dataJson);
+      setAgents(agentsJson.agents);
+      setModels(modelsJson.models);
+      setProtocols(protocolsJson.protocols);
+      setSkills(skillsJson.skills);
+      setActivity(activityJson.activity);
     } catch (err) {
       console.error('Failed to fetch data:', err);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAllData();
+    if (autoRefresh) {
+      const interval = setInterval(fetchAllData, parseInt(refreshInterval) * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [autoRefresh, refreshInterval]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -152,7 +133,7 @@ export default function AthenaMissionControl() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#0a0a1a] via-[#1a0a2e] to-[#0a1a2a] flex items-center justify-center">
-        <div className="text-[#00ff88] text-xl animate-pulse">🦉 Loading Athena Mission Control...</div>
+        <div className="text-[#00ff88] text-xl animate-pulse">🦉 Loading Mission Control...</div>
       </div>
     );
   }
@@ -167,14 +148,14 @@ export default function AthenaMissionControl() {
             <Button variant="outline" size="sm" className="border-[#8a2be2]/30 text-[#8a2be2] hover:bg-[#8a2be2]/10">
               ⚙️ Settings
             </Button>
-            <Button variant="outline" size="sm" className="border-[#00ff88]/30 text-[#00ff88] hover:bg-[#00ff88]/10">
+            <Button variant="outline" size="sm" className="border-[#00ff88]/30 text-[#00ff88] hover:bg-[#00ff88]/10" onClick={fetchAllData}>
               🔄 Refresh Now
             </Button>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#8a2be2] via-[#ff69b4] to-[#00ffff] bg-clip-text text-transparent">
             🦉 Athena Mission Control
           </h1>
-          <p className="text-gray-400 text-lg">Lattice Multi-Agent System • Full Integration</p>
+          <p className="text-gray-400 text-lg">Lattice Multi-Agent System • Real-Time Data</p>
           <div className="flex items-center justify-center gap-4 mt-2">
             <Badge variant="outline" className="border-[#00ff88]/50 text-[#00ff88]">
               🟢 Systems Online
@@ -201,13 +182,13 @@ export default function AthenaMissionControl() {
           </Card>
           <Card className="bg-black/40 border-[#00ffff]/30">
             <CardContent className="pt-4 text-center">
-              <div className="text-2xl md:text-3xl font-bold text-[#00ffff]">{data?.skillsTracked || 0}</div>
+              <div className="text-2xl md:text-3xl font-bold text-[#00ffff]">{data?.skillsTracked || skills.length}</div>
               <p className="text-xs text-gray-400">Skills</p>
             </CardContent>
           </Card>
           <Card className="bg-black/40 border-[#ff69b4]/30">
             <CardContent className="pt-4 text-center">
-              <div className="text-2xl md:text-3xl font-bold text-[#ff69b4]">{data?.agents || 0}</div>
+              <div className="text-2xl md:text-3xl font-bold text-[#ff69b4]">{data?.agents || agents.length}</div>
               <p className="text-xs text-gray-400">Agents</p>
             </CardContent>
           </Card>
@@ -240,11 +221,10 @@ export default function AthenaMissionControl() {
           {/* Dashboard Tab */}
           <TabsContent value="dashboard" className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-              {/* Protocols */}
               <Card className="bg-black/40 border-[#ffd700]/30">
                 <CardHeader>
                   <CardTitle className="text-[#ffd700] flex items-center gap-2">
-                    ⚡ Active Protocols
+                    ⚡ Active Protocols ({protocols.filter(p => p.active).length})
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -259,7 +239,6 @@ export default function AthenaMissionControl() {
                 </CardContent>
               </Card>
 
-              {/* Quick Actions */}
               <Card className="bg-black/40 border-[#8a2be2]/30">
                 <CardHeader>
                   <CardTitle className="text-[#8a2be2]">🚀 Quick Actions</CardTitle>
@@ -288,14 +267,13 @@ export default function AthenaMissionControl() {
                 </CardContent>
               </Card>
 
-              {/* Recent Activity */}
               <Card className="bg-black/40 border-[#00ffff]/30 md:col-span-2">
                 <CardHeader>
                   <CardTitle className="text-[#00ffff]">📜 Recent Activity</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ScrollArea className="h-[200px]">
-                    {recentActivity.map((item, i) => (
+                    {activity.map((item, i) => (
                       <div key={i} className="flex items-center gap-3 py-2 border-b border-gray-800 last:border-0">
                         <span className="text-gray-500 text-sm">{item.time}</span>
                         <Badge className={getStatusColor(item.status)}>{item.status}</Badge>
@@ -355,7 +333,7 @@ export default function AthenaMissionControl() {
             <Card className="bg-black/40 border-[#00ffff]/30">
               <CardHeader>
                 <CardTitle className="text-[#00ffff]">🔑 Model Status & Assignments</CardTitle>
-                <CardDescription className="text-gray-400">38 models in rotation pool</CardDescription>
+                <CardDescription className="text-gray-400">{models.length} models in rotation pool</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -371,6 +349,7 @@ export default function AthenaMissionControl() {
                       <div className="text-right">
                         <Badge className={getModelStatusColor(model.status)}>{model.status}</Badge>
                         <div className="text-xs text-gray-400 mt-1">{model.requests.toLocaleString()} requests</div>
+                        {model.latency && <div className="text-xs text-[#00ffff]">{model.latency}</div>}
                       </div>
                     </div>
                   ))}
@@ -413,6 +392,7 @@ export default function AthenaMissionControl() {
                         <Badge variant="outline" className="border-[#ff69b4]/50 text-[#ff69b4]">
                           {skill.name}
                         </Badge>
+                        {skill.category && <span className="text-xs text-gray-500">[{skill.category}]</span>}
                       </div>
                       <div className="flex items-center gap-4">
                         <span className="text-sm text-gray-400">{skill.tasks} tasks</span>
@@ -433,7 +413,7 @@ export default function AthenaMissionControl() {
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[400px]">
-                  {recentActivity.map((item, i) => (
+                  {activity.map((item, i) => (
                     <div key={i} className="flex items-start gap-3 py-3 border-b border-gray-800 last:border-0">
                       <span className="text-gray-500 text-sm min-w-[50px]">{item.time}</span>
                       <Badge className={getStatusColor(item.status)}>{item.status}</Badge>
@@ -510,8 +490,8 @@ export default function AthenaMissionControl() {
 
         {/* Footer */}
         <div className="text-center text-gray-500 text-sm pb-6">
-          <p>🦉 Athena Mission Control v2.0 • Full Integration</p>
-          <p className="mt-1">Auto-refresh: {autoRefresh ? `${refreshInterval}s` : 'Disabled'}</p>
+          <p>🦉 Athena Mission Control v2.0 • Real-Time Data</p>
+          <p className="mt-1">Auto-refresh: {autoRefresh ? `${refreshInterval}s` : 'Disabled'} | Data sources: 6 APIs</p>
         </div>
       </div>
     </div>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delver - Research Agent</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Mono', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #0a1a3a 50%, #1a2a4a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4169e1;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid rgba(65, 105, 225, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover { background: rgba(65, 105, 225, 0.2); border-color: #4169e1; }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(65, 105, 225, 0.3);
+            padding-bottom: 20px;
+        }
+        .logo { font-size: 3em; }
+        .title h1 {
+            font-size: 2em;
+            background: linear-gradient(90deg, #4169e1, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .title p { color: #888; font-size: 0.9em; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: rgba(10, 20, 50, 0.8);
+            border: 1px solid rgba(65, 105, 225, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .card h2 {
+            font-size: 0.9em;
+            color: #4169e1;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Knowledge Graph */
+        .graph-container {
+            height: 200px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .graph-node {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            background: rgba(65, 105, 225, 0.3);
+            border: 2px solid #4169e1;
+        }
+        .graph-line {
+            position: absolute;
+            height: 2px;
+            background: rgba(65, 105, 225, 0.5);
+            transform-origin: left center;
+        }
+        
+        /* Research Queue */
+        .research-list { list-style: none; }
+        .research-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #4169e1;
+        }
+        .research-icon { font-size: 1.2em; }
+        .research-info { flex: 1; }
+        .research-title { font-weight: bold; font-size: 0.9em; }
+        .research-meta { font-size: 0.75em; color: #666; margin-top: 3px; }
+        .research-progress {
+            width: 60px;
+            height: 6px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .research-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4169e1, #00bfff);
+            border-radius: 3px;
+        }
+        
+        /* Discovery Feed */
+        .discovery-list { list-style: none; }
+        .discovery-item {
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .discovery-source {
+            font-size: 0.75em;
+            color: #4169e1;
+            margin-bottom: 5px;
+        }
+        .discovery-text { font-size: 0.9em; }
+        .discovery-time { font-size: 0.7em; color: #666; margin-top: 5px; }
+        
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00bfff;
+        }
+        .stat-label { font-size: 0.7em; color: #666; margin-top: 5px; }
+        
+        /* Search Box */
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(65, 105, 225, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9em;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #4169e1;
+        }
+        .search-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #4169e1, #00bfff);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .search-btn:hover { transform: scale(1.05); }
+        
+        /* Tags */
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag {
+            padding: 5px 12px;
+            background: rgba(65, 105, 225, 0.2);
+            border: 1px solid rgba(65, 105, 225, 0.3);
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tag:hover { background: rgba(65, 105, 225, 0.4); }
+    </style>
+</head>
+<body>
+    <a href="hub.html" class="back-link">← Back to Hub</a>
+    
+    <div class="header">
+        <div class="logo">🔍</div>
+        <div class="title">
+            <h1>Delver Mission Control</h1>
+            <p>Research Agent • Knowledge Explorer</p>
+        </div>
+    </div>
+    
+    <div class="grid">
+        <div class="card">
+            <h2>🔎 Quick Search</h2>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search knowledge base...">
+                <button class="search-btn">Search</button>
+            </div>
+            <div class="tag-cloud">
+                <span class="tag">PAI Architecture</span>
+                <span class="tag">Auto-bidding</span>
+                <span class="tag">Dashboard</span>
+                <span class="tag">Security</span>
+                <span class="tag">MCP Tools</span>
+                <span class="tag">GitHub</span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🕸️ Knowledge Graph</h2>
+            <div class="graph-container" id="graph">
+                <div class="graph-node" style="top: 80px; left: 130px;">AI</div>
+                <div class="graph-node" style="top: 40px; left: 220px;">PAI</div>
+                <div class="graph-node" style="top: 120px; left: 250px;">API</div>
+                <div class="graph-node" style="top: 70px; left: 50px;">ML</div>
+                <div class="graph-node" style="top: 140px; left: 80px;">NLP</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>📚 Research Queue</h2>
+            <ul class="research-list">
+                <li class="research-item">
+                    <span class="research-icon">🤖</span>
+                    <div class="research-info">
+                        <div class="research-title">PAI Hook System Analysis</div>
+                        <div class="research-meta">Started Feb 24 • Ishtar leading</div>
+                    </div>
+                    <div class="research-progress"><div class="research-fill" style="width: 85%"></div></div>
+                </li>
+                <li class="research-item">
+                    <span class="research-icon">📊</span>
+                    <div class="research-info">
+                        <div class="research-title">Bidding Strategy Optimization</div>
+                        <div class="research-meta">Ongoing • Sterling auto-bid</div>
+                    </div>
+                    <div class="research-progress"><div class="research-fill" style="width: 60%"></div></div>
+                </li>
+                <li class="research-item">
+                    <span class="research-icon">🔐</span>
+                    <div class="research-info">
+                        <div class="research-title">Security Hardening Audit</div>
+                        <div class="research-meta">Completed Feb 22</div>
+                    </div>
+                    <div class="research-progress"><div class="research-fill" style="width: 100%"></div></div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>💡 Discovery Feed</h2>
+            <ul class="discovery-list">
+                <li class="discovery-item">
+                    <div class="discovery-source">📄 GitHub</div>
+                    <div class="discovery-text">New edge-tts features for voice synthesis</div>
+                    <div class="discovery-time">2 hours ago</div>
+                </li>
+                <li class="discovery-item">
+                    <div class="discovery-source">🌐 Web</div>
+                    <div class="discovery-text">OpenClaw 2.0 roadmap preview available</div>
+                    <div class="discovery-time">5 hours ago</div>
+                </li>
+                <li class="discovery-item">
+                    <div class="discovery-source">📰 Reddit</div>
+                    <div class="discovery-text">r/LocalLLaMA: New open models benchmark</div>
+                    <div class="discovery-time">1 day ago</div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>📊 Research Stats</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">Queries Today</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Topics Tracked</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">89%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🎯 Focus Areas</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">🔥</div>
+                    <div class="stat-label">AI Agents</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">⚡</div>
+                    <div class="stat-label">Automation</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">🛡️</div>
+                    <div class="stat-label">Security</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

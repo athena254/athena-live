@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧭 Athena Hub | Agent Navigation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0a1a2a 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #fff;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #8a2be2, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { color: rgba(255,255,255,0.6); margin-top: 10px; }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #8a2be2;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            background: rgba(138, 43, 226, 0.1);
+            border-color: #8a2be2;
+        }
+        
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        
+        .agent-card {
+            background: rgba(20, 10, 40, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #fff;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+        .agent-card:hover {
+            transform: translateY(-5px);
+            border-color: #8a2be2;
+            box-shadow: 0 10px 40px rgba(138, 43, 226, 0.3);
+        }
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--agent-color, #8a2be2);
+        }
+        
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .agent-icon {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+        }
+        .agent-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        .agent-role {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 3px;
+        }
+        
+        .agent-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 3px;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .status-online {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+        .status-busy {
+            background: rgba(255, 200, 0, 0.2);
+            color: #ffc800;
+            border: 1px solid rgba(255, 200, 0, 0.3);
+        }
+        
+        .launch-btn {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(0, 255, 255, 0.1));
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .agent-card:hover .launch-btn {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.5), rgba(0, 255, 255, 0.2));
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.3);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Dashboard</a>
+        
+        <header>
+            <h1>🧭 Agent Hub</h1>
+            <p class="subtitle">Mission Control Navigation • 13 Active Agents</p>
+        </header>
+        
+        <div class="agent-grid">
+            <!-- Athena - Main Orchestrator -->
+            <a href="athena-mission.html" class="agent-card" style="--agent-color: #8a2be2;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">🦉</div>
+                    <div>
+                        <div class="agent-name">Athena</div>
+                        <div class="agent-role">Main Orchestrator</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">GLM-5</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">∞</div>
+                        <div class="stat-label">Tasks</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Sterling - Finance -->
+            <a href="sterling-mission.html" class="agent-card" style="--agent-color: #ffd700;">
+                <span class="status-badge status-online">AUTO-BID</span>
+                <div class="agent-header">
+                    <div class="agent-icon">💰</div>
+                    <div>
+                        <div class="agent-name">Sterling</div>
+                        <div class="agent-role">Finance & Auto-Bidding</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">GLM-5</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">10</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">30m</div>
+                        <div class="stat-label">Interval</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Ishtar - Oracle -->
+            <a href="ishtar-mission.html" class="agent-card" style="--agent-color: #ff69b4;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">🔮</div>
+                    <div>
+                        <div class="agent-name">Ishtar</div>
+                        <div class="agent-role">Oracle & PAI Research</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">Codex</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">PAI</div>
+                        <div class="stat-label">Focus</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Active</div>
+                        <div class="stat-label">Research</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Felicity - Code Artisan -->
+            <a href="felicity-mission.html" class="agent-card" style="--agent-color: #00ffff;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">🎨</div>
+                    <div>
+                        <div class="agent-name">Felicity</div>
+                        <div class="agent-role">Code Artisan</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">qwen</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Builds</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">Success</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Prometheus - Executor -->
+            <a href="prometheus-mission.html" class="agent-card" style="--agent-color: #ff4500;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">🔥</div>
+                    <div>
+                        <div class="agent-name">Prometheus</div>
+                        <div class="agent-role">Executor</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">GPT-4o</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">98.5%</div>
+                        <div class="stat-label">Success</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Tasks</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Nexus - Intelligence Synthesizer -->
+            <a href="nexus-mission.html" class="agent-card" style="--agent-color: #9370db;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">🧠</div>
+                    <div>
+                        <div class="agent-name">Nexus</div>
+                        <div class="agent-role">Intelligence Synthesizer</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">qwen</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">87%</div>
+                        <div class="stat-label">Confidence</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Synthesis</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- THEMIS - Council -->
+            <a href="themis-mission.html" class="agent-card" style="--agent-color: #daa520;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">⚖️</div>
+                    <div>
+                        <div class="agent-name">THEMIS</div>
+                        <div class="agent-role">Council Orchestrator</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">GLM-5</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Members</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Active</div>
+                        <div class="stat-label">Status</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Cisco - Security -->
+            <a href="cisco-mission.html" class="agent-card" style="--agent-color: #32cd32;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">🛡️</div>
+                    <div>
+                        <div class="agent-name">Cisco</div>
+                        <div class="agent-role">Security & BMAD</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">GLM-5</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">98%</div>
+                        <div class="stat-label">Security</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Clear</div>
+                        <div class="stat-label">Threats</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Delver - Research -->
+            <a href="delver-mission.html" class="agent-card" style="--agent-color: #4169e1;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">🔍</div>
+                    <div>
+                        <div class="agent-name">Delver</div>
+                        <div class="agent-role">Researcher</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">llama</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">Queries</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Ready</div>
+                        <div class="stat-label">Status</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Squire - Assistant -->
+            <a href="squire-mission.html" class="agent-card" style="--agent-color: #708090;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">🗡️</div>
+                    <div>
+                        <div class="agent-name">Squire</div>
+                        <div class="agent-role">Assistant</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">GLM-5</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Tasks</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Ready</div>
+                        <div class="stat-label">Status</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Apollo - Client Relations -->
+            <a href="apollo-mission.html" class="agent-card" style="--agent-color: #f0e68c;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">☀️</div>
+                    <div>
+                        <div class="agent-name">Apollo</div>
+                        <div class="agent-role">Client Relations</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">GLM-5</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Clients</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Ready</div>
+                        <div class="stat-label">Status</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Hermes - Outreach -->
+            <a href="hermes-mission.html" class="agent-card" style="--agent-color: #87ceeb;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">📨</div>
+                    <div>
+                        <div class="agent-name">Hermes</div>
+                        <div class="agent-role">Outreach & Marketing</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">GLM-5</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Campaigns</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Ready</div>
+                        <div class="stat-label">Status</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+            
+            <!-- Kratos - Crypto/DeFi -->
+            <a href="kratos-mission-control.html" class="agent-card" style="--agent-color: #ffd700;">
+                <span class="status-badge status-online">ONLINE</span>
+                <div class="agent-header">
+                    <div class="agent-icon">🪙</div>
+                    <div>
+                        <div class="agent-name">Kratos</div>
+                        <div class="agent-role">Crypto & DeFi Intelligence</div>
+                    </div>
+                </div>
+                <div class="agent-stats">
+                    <div class="stat">
+                        <div class="stat-value">GLM-5</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Live</div>
+                        <div class="stat-label">APIs</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Active</div>
+                        <div class="stat-label">Status</div>
+                    </div>
+                </div>
+                <div class="launch-btn">Launch Mission Control →</div>
+            </a>
+        </div>
+        
+        <footer>
+            <p>🧭 Athena Hub | Lattice System v2.0</p>
+            <p>13 Active Agents • Zero Downtime Protocol</p>
+        </footer>
+    </div>
+</body>
+</html>
