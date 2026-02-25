@@ -1,0 +1,64 @@
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Simple Counter&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .counter {
+            text-align: center;
+        }
+        .count {
+            font-size: 3em;
+            margin: 20px;
+        }
+        button {
+            font-size: 1.5em;
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="counter"&gt;
+        &lt;h1&gt;Counter&lt;/h1&gt;
+        &lt;div class="count" id="count"&gt;0&lt;/div&gt;
+        &lt;button onclick="increment()"&gt;+&lt;/button&gt;
+        &lt;button onclick="decrement()"&gt;-&lt;/button&gt;
+        &lt;button onclick="reset()"&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;script&gt;
+        let count = 0;
+        const countElement = document.getElementById('count');
+
+        function updateDisplay() {
+            countElement.textContent = count;
+        }
+
+        function increment() {
+            count++;
+            updateDisplay();
+        }
+
+        function decrement() {
+            count--;
+            updateDisplay();
+        }
+
+        function reset() {
+            count = 0;
+            updateDisplay();
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;

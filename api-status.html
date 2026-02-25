@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Status Checker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+        .status-grid {
+            display: grid;
+            gap: 15px;
+        }
+        .endpoint {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .endpoint:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+        .endpoint-info {
+            flex: 1;
+        }
+        .endpoint-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .endpoint-url {
+            font-size: 0.85rem;
+            color: #888;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+        .endpoint-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 120px;
+            justify-content: flex-end;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .status-indicator.loading {
+            background: #ffa500;
+        }
+        .status-indicator.success {
+            background: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        .status-indicator.error {
+            background: #ff4757;
+        }
+        .response-time {
+            font-size: 0.85rem;
+            color: #888;
+            min-width: 60px;
+            text-align: right;
+        }
+        .response-time.fast {
+            color: #00ff88;
+        }
+        .response-time.medium {
+            color: #ffa500;
+        }
+        .response-time.slow {
+            color: #ff4757;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        button {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            color: #1a1a2e;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .summary {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .summary-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 15px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 5px;
+        }
+        .stat-value.success {
+            color: #00ff88;
+        }
+        .stat-value.error {
+            color: #ff4757;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        .last-check {
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 API Status Checker</h1>
+        <p class="subtitle">Real-time connectivity monitoring</p>
+        
+        <div class="status-grid" id="endpoints"></div>
+        
+        <div class="summary">
+            <div class="summary-stats">
+                <div class="stat">
+                    <div class="stat-value success" id="up-count">0</div>
+                    <div class="stat-label">Endpoints Up</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value error" id="down-count">0</div>
+                    <div class="stat-label">Endpoints Down</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="avg-response">0ms</div>
+                    <div class="stat-label">Avg Response</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button onclick="checkAllEndpoints()">🔄 Check All</button>
+            <button onclick="toggleAutoRefresh()" id="auto-refresh-btn">⏸ Pause</button>
+        </div>
+        
+        <p class="last-check" id="last-check">Last check: Never</p>
+    </div>
+
+    <script>
+        // Configuration - Add your endpoints here
+        const endpoints = [
+            { name: 'Beelancer', url: 'https://beelancer.com', timeout: 5000 },
+            { name: 'OpenRouter', url: 'https://openrouter.ai', timeout: 5000 },
+            { name: 'GitHub', url: 'https://api.github.com', timeout: 5000 },
+            { name: 'Google', url: 'https://www.google.com', timeout: 5000 },
+            { name: 'Cloudflare', url: 'https://www.cloudflare.com', timeout: 5000 }
+        ];
+
+        let autoRefresh = true;
+        let autoRefreshInterval = null;
+        let responseTimes = [];
+
+        function getResponseTimeClass(ms) {
+            if (ms < 500) return 'fast';
+            if (ms < 1500) return 'medium';
+            return 'slow';
+        }
+
+        function updateSummary() {
+            const upCount = document.querySelectorAll('.status-indicator.success').length;
+            const downCount = document.querySelectorAll('.status-indicator.error').length;
+            const avgTime = responseTimes.length > 0 
+                ? Math.round(responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length)
+                : 0;
+
+            document.getElementById('up-count').textContent = upCount;
+            document.getElementById('down-count').textContent = downCount;
+            document.getElementById('avg-response').textContent = avgTime + 'ms';
+        }
+
+        async function checkEndpoint(endpoint, index) {
+            const startTime = Date.now();
+            const statusEl = document.getElementById(`status-${index}`);
+            const timeEl = document.getElementById(`time-${index}`);
+            
+            // Set loading state
+            statusEl.className = 'status-indicator loading';
+            timeEl.textContent = '...';
+            timeEl.className = 'response-time';
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), endpoint.timeout);
+
+                const response = await fetch(endpoint.url, { 
+                    method: 'HEAD',
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                responseTimes.push(responseTime);
+
+                statusEl.className = 'status-indicator success';
+                timeEl.textContent = responseTime + 'ms';
+                timeEl.className = 'response-time ' + getResponseTimeClass(responseTime);
+            } catch (error) {
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                responseTimes.push(responseTime);
+
+                statusEl.className = 'status-indicator error';
+                timeEl.textContent = 'Failed';
+                timeEl.className = 'response-time slow';
+            }
+
+            updateSummary();
+        }
+
+        function createEndpointElement(endpoint, index) {
+            return `
+                <div class="endpoint">
+                    <div class="endpoint-info">
+                        <div class="endpoint-name">${endpoint.name}</div>
+                        <div class="endpoint-url">${endpoint.url}</div>
+                    </div>
+                    <div class="endpoint-status">
+                        <div class="status-indicator loading" id="status-${index}"></div>
+                        <div class="response-time" id="time-${index}">...</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkAllEndpoints() {
+            responseTimes = [];
+            document.getElementById('last-check').textContent = 'Last check: ' + new Date().toLocaleTimeString();
+            
+            endpoints.forEach((endpoint, index) => {
+                checkEndpoint(endpoint, index);
+            });
+        }
+
+        function toggleAutoRefresh() {
+            autoRefresh = !autoRefresh;
+            const btn = document.getElementById('auto-refresh-btn');
+            
+            if (autoRefresh) {
+                btn.textContent = '⏸ Pause';
+                startAutoRefresh();
+            } else {
+                btn.textContent = '▶ Resume';
+                stopAutoRefresh();
+            }
+        }
+
+        function startAutoRefresh() {
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+            autoRefreshInterval = setInterval(() => {
+                if (autoRefresh) {
+                    checkAllEndpoints();
+                }
+            }, 30000); // Check every 30 seconds
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+
+        // Initialize
+        function init() {
+            const container = document.getElementById('endpoints');
+            container.innerHTML = endpoints.map((endpoint, index) => 
+                createEndpointElement(endpoint, index)
+            ).join('');
+
+            // Initial check
+            checkAllEndpoints();
+            
+            // Start auto-refresh
+            startAutoRefresh();
+        }
+
+        init();
+    </script>
+</body>
+</html>
