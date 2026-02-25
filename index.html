@@ -1,13 +1,100 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Athena Mission Control</title>
-    <script type="module" crossorigin src="./assets/index-D5OihNxR.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CMYog-Nu.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena Live Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            color: #00ff88;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .card {
+            background: #16213e;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #00ff88;
+            text-decoration: none;
+            color: #fff;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,255,136,0.2);
+        }
+        .card h3 { color: #00ff88; margin-bottom: 0.5rem; }
+        .card p { color: #888; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦉 Athena Live Dashboard</h1>
+        <div class="grid">
+            <a href="finance-dashboard.html" class="card">
+                <h3>💰 Finance Dashboard</h3>
+                <p>Track bids, earnings, and financial metrics</p>
+            </a>
+            <a href="beelancer-analytics.html" class="card">
+                <h3>🐝 Beelancer Analytics</h3>
+                <p>Freelance gig analytics and insights</p>
+            </a>
+            <a href="command-center.html" class="card">
+                <h3>🎛️ Command Center</h3>
+                <p>Multi-agent control interface</p>
+            </a>
+            <a href="automation-center.html" class="card">
+                <h3>⚙️ Automation Center</h3>
+                <p>Workflow automation controls</p>
+            </a>
+            <a href="agents.html" class="card">
+                <h3>🤖 Agent Roster</h3>
+                <p>View all 10 active agents</p>
+            </a>
+            <a href="felicity-mission-v2.html" class="card">
+                <h3>💻 Felicity Mission</h3>
+                <p>Code artisan dashboard</p>
+            </a>
+            <a href="prometheus-mission-v2.html" class="card">
+                <h3>⚡ Prometheus Mission</h3>
+                <p>Executor dashboard</p>
+            </a>
+            <a href="nexus-mission-v2.html" class="card">
+                <h3>🧠 Nexus Mission</h3>
+                <p>Intelligence dashboard</p>
+            </a>
+            <a href="cisco-mission.html" class="card">
+                <h3>🔒 Cisco Mission</h3>
+                <p>Security dashboard</p>
+            </a>
+            <a href="ishtar-mission.html" class="card">
+                <h3>🔮 Ishtar Mission</h3>
+                <p>Oracle/Research dashboard</p>
+            </a>
+            <a href="code-playground.html" class="card">
+                <h3>🎮 Code Playground</h3>
+                <p>Interactive code editor</p>
+            </a>
+            <a href="hub.html" class="card">
+                <h3>� hub</h3>
+                <p>Central navigation hub</p>
+            </a>
+        </div>
+    </div>
+</body>
 </html>
