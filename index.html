@@ -182,6 +182,41 @@
             border: 1px solid rgba(0, 255, 136, 0.3);
         }
         
+        .subagent-links {
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            background: rgba(10, 5, 20, 0.6);
+        }
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .link-card {
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .link-card:hover {
+            transform: translateY(-4px);
+            border-color: #00ff88;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+        .link-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .link-subtitle {
+            font-size: 0.85em;
+            color: #9da5ff;
+        }
+        
         footer {
             text-align: center;
             padding: 30px;
@@ -457,6 +492,64 @@
                 <div class="view-mission">View Mission Control →</div>
             </a>
         </div>
+        
+        <section class="subagent-links">
+            <div class="section-title">Subagent Mission Controls</div>
+            <div class="link-grid">
+                <a class="link-card" href="athena-mission.html">
+                    <div class="link-title">Athena</div>
+                    <div class="link-subtitle">Orchestration dashboard & helper sync</div>
+                </a>
+                <a class="link-card" href="ishtar-mission.html">
+                    <div class="link-title">Ishtar</div>
+                    <div class="link-subtitle">PAI architect & mission orchestration view</div>
+                </a>
+                <a class="link-card" href="sterling-mission.html">
+                    <div class="link-title">Sterling</div>
+                    <div class="link-subtitle">Beelancer bids + bidding patterns</div>
+                </a>
+                <a class="link-card" href="cisco-mission.html">
+                    <div class="link-title">Cisco</div>
+                    <div class="link-subtitle">Security & infrastructure health</div>
+                </a>
+                <a class="link-card" href="felicity-mission.html">
+                    <div class="link-title">Felicity</div>
+                    <div class="link-subtitle">UX polish & interface pulse</div>
+                </a>
+                <a class="link-card" href="prometheus-mission.html">
+                    <div class="link-title">Prometheus</div>
+                    <div class="link-subtitle">Deployment automation & helper runs</div>
+                </a>
+                <a class="link-card" href="nexus-mission.html">
+                    <div class="link-title">Nexus</div>
+                    <div class="link-subtitle">Synthesis & intelligence briefs</div>
+                </a>
+                <a class="link-card" href="delver-mission.html">
+                    <div class="link-title">Delver</div>
+                    <div class="link-subtitle">Automation optimization & specs</div>
+                </a>
+                <a class="link-card" href="squire-mission.html">
+                    <div class="link-title">Squire</div>
+                    <div class="link-subtitle">Documentation & knowledge guard</div>
+                </a>
+                <a class="link-card" href="hermes-mission.html">
+                    <div class="link-title">Hermes</div>
+                    <div class="link-subtitle">Outreach drafts & signal scouting</div>
+                </a>
+                <a class="link-card" href="apollo-mission.html">
+                    <div class="link-title">Apollo</div>
+                    <div class="link-subtitle">Client relations & touchpoints</div>
+                </a>
+                <a class="link-card" href="themis-mission.html">
+                    <div class="link-title">THEMIS Council</div>
+                    <div class="link-subtitle">Dedicated debate & verdict board</div>
+                </a>
+                <a class="link-card" href="kratos-mission-control.html">
+                    <div class="link-title">Kratos</div>
+                    <div class="link-subtitle">Crypto/DeFi intelligence control</div>
+                </a>
+            </div>
+        </section>
         
         <footer>
             <p>🦉 Athena Dashboard • Lattice System v2.0</p>
