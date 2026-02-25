@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena Live - Sidebar</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --accent: #e94560;
+            --accent-hover: #ff6b6b;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --border-color: #2a2a4a;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .nav-section {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-label {
+            padding: 8px 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-left-color: var(--accent);
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .status-section {
+            padding: 20px;
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .status-label {
+            color: var(--text-secondary);
+        }
+
+        .status-value {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.warning {
+            background: var(--warning);
+        }
+
+        .status-dot.error {
+            background: var(--error);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .user-section {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .user-status {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: var(--accent);
+            color: white;
+        }
+
+        .badge.warning {
+            background: var(--warning);
+            color: #1a1a2e;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">🦉</div>
+                <span>Athena Live</span>
+            </div>
+        </div>
+
+        <nav class="nav-section">
+            <div class="nav-label">Main</div>
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">📈</span>
+                <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">📅</span>
+                <span>Schedule</span>
+            </a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-label">Live</div>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🎥</span>
+                <span>Streams</span>
+                <span class="badge">3</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">📡</span>
+                <span>Monitoring</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🔔</span>
+                <span>Alerts</span>
+                <span class="badge warning">2</span>
+            </a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-label">Settings</div>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span>Configuration</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span>Team</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">📜</span>
+                <span>Logs</span>
+            </a>
+        </nav>
+
+        <div class="status-section">
+            <div class="status-item">
+                <span class="status-label">System</span>
+                <span class="status-value">
+                    <span class="status-dot"></span>
+                    Online
+                </span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Stream</span>
+                <span class="status-value">
+                    <span class="status-dot"></span>
+                    Live
+                </span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Latency</span>
+                <span class="status-value">24ms</span>
+            </div>
+        </div>
+
+        <div class="user-section">
+            <div class="user-avatar">AL</div>
+            <div class="user-info">
+                <div class="user-name">Athena Live</div>
+                <div class="user-status">Administrator</div>
+            </div>
+        </div>
+    </aside>
+
+    <script>
+        // Simple navigation handler
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
