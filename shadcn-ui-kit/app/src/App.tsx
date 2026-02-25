@@ -58,6 +58,22 @@ interface Activity {
   status: string;
 }
 
+const subagentLinks = [
+  { name: 'Athena', href: '/athena-mission.html', subtitle: 'Orchestration dashboard & helper sync' },
+  { name: 'Ishtar', href: '/ishtar-mission.html', subtitle: 'PAI architect & mission orchestration view' },
+  { name: 'Sterling', href: '/sterling-mission.html', subtitle: 'Beelancer bids + bidding patterns' },
+  { name: 'Cisco', href: '/cisco-mission.html', subtitle: 'Security & infrastructure health' },
+  { name: 'Felicity', href: '/felicity-mission.html', subtitle: 'UX polish & interface pulse' },
+  { name: 'Prometheus', href: '/prometheus-mission.html', subtitle: 'Deployment automation & helper runs' },
+  { name: 'Nexus', href: '/nexus-mission.html', subtitle: 'Synthesis & intelligence briefs' },
+  { name: 'Delver', href: '/delver-mission.html', subtitle: 'Automation optimization & specs' },
+  { name: 'Squire', href: '/squire-mission.html', subtitle: 'Documentation & knowledge guard' },
+  { name: 'Hermes', href: '/hermes-mission.html', subtitle: 'Outreach drafts & signal scouting' },
+  { name: 'Apollo', href: '/apollo-mission.html', subtitle: 'Client relations & touchpoints' },
+  { name: 'THEMIS Council', href: '/themis-mission.html', subtitle: 'Dedicated debate & verdict board' },
+  { name: 'Kratos', href: '/kratos-mission-control.html', subtitle: 'Crypto/DeFi intelligence control' },
+];
+
 export default function AthenaMissionControl() {
   const [data, setData] = useState<AthenaData | null>(null);
   const [agents, setAgents] = useState<Agent[]>([]);
@@ -487,6 +503,22 @@ export default function AthenaMissionControl() {
             </div>
           </TabsContent>
         </Tabs>
+
+        <div className="bg-black/40 border border-[#8a2be2]/30 rounded-2xl p-6 mt-8">
+          <div className="text-2xl font-semibold text-[#8a2be2] mb-4">Subagent Mission Controls</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {subagentLinks.map((agent) => (
+              <a
+                key={agent.name}
+                href={agent.href}
+                className="block rounded-xl border border-gray-800 bg-white/0 p-4 transition hover:border-[#00ff88] hover:bg-white/[0.05]"
+              >
+                <div className="text-lg font-semibold text-white">{agent.name}</div>
+                <p className="text-sm text-gray-400 mt-1">{agent.subtitle}</p>
+              </a>
+            ))}
+          </div>
+        </div>
 
         {/* Footer */}
         <div className="text-center text-gray-500 text-sm pb-6">
