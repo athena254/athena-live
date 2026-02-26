@@ -32,3 +32,4 @@
     { "id": "janus", "name": "Janus", "avatar": "🚪", "role": "Gateway", "voice": "Portal", "model": "GLM-5 Key #2", "fallback": "qwen_nvidia", "status": "active", "tasks": 156, "success": "99.6%", "specialty": "OpenClaw gateway mgmt" }
   ]
 }
+<!-- Force rebuild Thu Feb 26 07:30:26 PM UTC 2026 -->
