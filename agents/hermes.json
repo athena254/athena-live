@@ -1,0 +1,19 @@
+{
+  "id": "hermes",
+  "name": "Hermes",
+  "role": "Outreach & Marketing Agent",
+  "description": "Executes outreach campaigns, tracks leads, A/B tests messaging, monitors competitors",
+  "voice": "Hermes",
+  "status": "ready",
+  "priority": 1,
+  "preferredModel": "custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8",
+  "fallbackModel": "custom-api-groq-com/llama-3.3-70b-versatile",
+  "platforms": ["linkedin", "twitter", "email", "telegram"],
+  "campaignPath": "~/.openclaw/workspace/memory/campaigns/",
+  "dailyOutreachLimit": 50,
+  "abTestEnabled": true,
+  "tasks": ["campaign_execute", "lead_qualify", "ab_test_analyze", "competitor_monitor"],
+  "spawnTriggers": ["scheduled_campaign", "lead_response", "competitor_mention"],
+  "createdAt": "2026-02-25T07:20:00Z",
+  "createdBy": "Athena"
+}

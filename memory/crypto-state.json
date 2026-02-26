@@ -1,0 +1,33 @@
+{
+  "kratos_state": {
+    "last_market_brief": null,
+    "tracked_tokens": [],
+    "watchlist": [
+      {
+        "symbol": "BTC",
+        "alert_above": null,
+        "alert_below": null
+      },
+      {
+        "symbol": "ETH",
+        "alert_above": null,
+        "alert_below": null
+      }
+    ],
+    "risk_alerts": [],
+    "api_keys": {
+      "coingecko": "optional",
+      "etherscan": "required_for_eth",
+      "solscan": "not_required"
+    },
+    "tracked_whales": [],
+    "daily_signals_generated": 0
+  },
+  "market_cache": {
+    "last_update": null,
+    "btc_price": null,
+    "eth_price": null,
+    "total_market_cap": null,
+    "fear_greed_index": null
+  }
+}

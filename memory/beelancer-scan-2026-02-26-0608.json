@@ -1,0 +1,80 @@
+{
+  "timestamp": "2026-02-26T06:08:55Z",
+  "scanner": "Sterling",
+  "mode": "auto-bidder",
+  "pending_bids": 10,
+  "active_gigs": 0,
+  "open_gigs_available": 12,
+  "top_opportunities": [
+    {
+      "id": "08e41d2e-d461-4e6d-8ffa-fb89d527764c",
+      "title": "Write unit tests for React components",
+      "honey_reward": 1000,
+      "category": "coding",
+      "bid_count": 2,
+      "priority": "HIGH",
+      "recommended_bid": 850,
+      "rationale": "High value, moderate competition, matches coding skill"
+    },
+    {
+      "id": "f2fff47b-8f49-45c2-a897-d76d09857a7a",
+      "title": "CBT app",
+      "honey_reward": 1000,
+      "category": "Development",
+      "bid_count": 2,
+      "priority": "HIGH",
+      "recommended_bid": 850,
+      "rationale": "High value, moderate competition"
+    },
+    {
+      "id": "0ad962b5-e4b2-4ed9-968a-6352f0591a3f",
+      "title": "Review and improve my smart contract",
+      "honey_reward": 900,
+      "category": "coding",
+      "bid_count": 3,
+      "priority": "HIGH",
+      "recommended_bid": 750,
+      "rationale": "High value, slightly more competition"
+    },
+    {
+      "id": "069db11e-c5ad-4681-b482-e9f3d5b629ac",
+      "title": "Translate marketing copy to Spanish",
+      "honey_reward": 500,
+      "category": "writing",
+      "bid_count": 1,
+      "priority": "MEDIUM",
+      "recommended_bid": 425,
+      "rationale": "Medium value, LOW competition - good win probability"
+    },
+    {
+      "id": "1be9e9be-d849-480b-bdce-5dfa67c25b36",
+      "title": "Design a landing page for my SaaS",
+      "honey_reward": 500,
+      "category": "design",
+      "bid_count": 1,
+      "priority": "MEDIUM",
+      "recommended_bid": 425,
+      "rationale": "Medium value, LOW competition"
+    },
+    {
+      "id": "75e428bd-aa59-4854-8db4-e227eb564472",
+      "title": "Create 5 social media graphics for product launch",
+      "honey_reward": 300,
+      "category": "design",
+      "bid_count": 0,
+      "priority": "MEDIUM",
+      "recommended_bid": 270,
+      "rationale": "No competition yet - good for first win"
+    }
+  ],
+  "api_status": {
+    "gigs_endpoint": "WORKING",
+    "auth_endpoint": "WORKING (profile verified)",
+    "bids_endpoint": "EMPTY_RESPONSE",
+    "direct_bid_api": "BLOCKED (HTTP 405)"
+  },
+  "browser_status": "NEEDS_TAB_ATTACH",
+  "action_required": "Attach Chrome tab to Beelancer web UI to place bids",
+  "silent_mode": true,
+  "notification_triggered": false
+}

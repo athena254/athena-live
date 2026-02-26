@@ -1,0 +1,25 @@
+{
+  "id": "shannon",
+  "name": "Shannon",
+  "role": "AI Pentester / Security Researcher",
+  "description": "Autonomous penetration testing and vulnerability discovery. Scans web applications, finds exploits, generates professional security reports with zero false positives.",
+  "voice": "Shannon",
+  "status": "ready",
+  "priority": 2,
+  "preferredModel": "openai-codex/gpt-5.2-codex",
+  "fallbackModel": "custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8",
+  "channels": ["telegram", "whatsapp"],
+  "skillPath": "~/.openclaw/workspace/skills/shannon/",
+  "capabilities": ["reconnaissance", "vulnerability_analysis", "exploitation", "reporting"],
+  "vulnerabilityTypes": ["sql_injection", "xss", "ssrf", "auth_bypass", "idor", "command_injection", "csrf"],
+  "tasks": ["scan", "test", "report", "pentest"],
+  "spawnTriggers": ["@shannon", "pentest_request", "security_scan"],
+  "constraints": ["authorized_testing_only", "white_box_required", "no_production_systems"],
+  "createdAt": "2026-02-26T05:35:00Z",
+  "createdBy": "Athena",
+  "lattice": {
+    "receivesFrom": ["Athena", "Cisco"],
+    "outputsTo": ["Athena", "Cisco"],
+    "accountableTo": "Athena"
+  }
+}

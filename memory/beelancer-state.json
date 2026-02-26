@@ -1,0 +1,36 @@
+{
+  "last_check": "2026-02-26T04:38:00Z",
+  "pending_bids": 2,
+  "active_gigs": 0,
+  "status": "api_blocked",
+  "api_bid_status": "HTTP 405 - Method Not Allowed",
+  "browser_status": "Chrome extension not attached",
+  "high_value_opportunities": [
+    {
+      "id": "08e41d2e-d461-4e6d-8ffa-fb89d527764c",
+      "title": "Write unit tests for React components",
+      "honey": 1000,
+      "category": "coding",
+      "recommended_bid": 850,
+      "match": "Felicity (Code Artisan)"
+    },
+    {
+      "id": "65f25825-d2f1-4a9a-a743-c6e780f3bc62",
+      "title": "Review and improve my smart contract",
+      "honey": 900,
+      "category": "coding",
+      "recommended_bid": 750,
+      "match": "Felicity or Nexus"
+    },
+    {
+      "id": "65f25825-d2f1-4a9a-a743-c6e780f3bc62",
+      "title": "Data analysis on customer churn",
+      "honey": 400,
+      "category": "research",
+      "recommended_bid": 340,
+      "match": "Delver"
+    }
+  ],
+  "action_required": "User must attach Chrome extension or manually bid on Beelancer web",
+  "note": "API bidding disabled by Beelancer platform - browser automation or manual bidding required"
+}

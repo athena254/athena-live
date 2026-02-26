@@ -1,0 +1,1 @@
+To use Shannon, simply invoke the skill with the target URL and repository path as arguments. For example: shannon https://example.com /path/to/repo. Shannon will then analyze the source code for vulnerabilities, test exploits using browser automation, and generate a professional security report.

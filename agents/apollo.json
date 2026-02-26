@@ -1,0 +1,19 @@
+{
+  "id": "apollo",
+  "name": "Apollo",
+  "role": "Client Relations Manager",
+  "description": "Manages client communication, tracks satisfaction, handles escalations, and maintains client profiles",
+  "voice": "Apollo",
+  "status": "ready",
+  "priority": 1,
+  "preferredModel": "custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8",
+  "fallbackModel": "custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b",
+  "channels": ["email", "telegram", "whatsapp"],
+  "checkIntervalMs": 300000,
+  "escalationThreshold": 0.7,
+  "profilePath": "~/.openclaw/workspace/memory/clients/",
+  "tasks": ["client_checkin", "sentiment_analysis", "report_generate", "escalation_handle"],
+  "spawnTriggers": ["client_message", "scheduled_checkin", "escalation_detected"],
+  "createdAt": "2026-02-25T07:20:00Z",
+  "createdBy": "Athena"
+}
