@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💀 Athena Terminal - Cyber OS</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Orbitron:wght@400;700&display=swap');
+        
+        :root {
+            --bg: #0d0d0d;
+            --term-bg: #0a0a0a;
+            --green: #00ff41;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --yellow: #ffff00;
+            --red: #ff3333;
+            --gray: #444;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Fira Code', monospace;
+            background: var(--bg);
+            color: var(--green);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .terminal {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--term-bg);
+            border: 1px solid var(--gray);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.1);
+        }
+        
+        /* Terminal Header */
+        .terminal-header {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .terminal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .btn.close { background: #ff5f56; }
+        .btn.minimize { background: #ffbd2e; }
+        .btn.maximize { background: #27ca3f; }
+        
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            color: var(--gray);
+            letter-spacing: 2px;
+        }
+        
+        .terminal-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: var(--green);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* Terminal Body */
+        .terminal-body {
+            padding: 20px;
+            min-height: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        /* Boot Sequence */
+        .boot-line {
+            margin: 4px 0;
+            opacity: 0;
+            animation: fadeIn 0.1s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .boot-line .prompt { color: var(--cyan); }
+        .boot-line .cmd { color: var(--green); }
+        .boot-line .output { color: var(--gray); }
+        .boot-line .success { color: var(--green); }
+        .boot-line .error { color: var(--red); }
+        .boot-line .warn { color: var(--yellow); }
+        .boot-line .info { color: var(--cyan); }
+        
+        /* ASCII Art */
+        .ascii-art {
+            color: var(--cyan);
+            font-size: 0.6rem;
+            line-height: 1.1;
+            margin: 20px 0;
+            white-space: pre;
+        }
+        
+        /* Command Input */
+        .input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .input-prompt {
+            color: var(--magenta);
+            margin-right: 10px;
+        }
+        
+        #cmd-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--green);
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        /* Output Area */
+        .output-area {
+            margin-top: 20px;
+        }
+        
+        .output-block {
+            background: rgba(0, 255, 65, 0.05);
+            border-left: 3px solid var(--green);
+            padding: 10px 15px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        .output-block.error {
+            border-color: var(--red);
+            background: rgba(255, 51, 51, 0.05);
+        }
+        
+        .output-block.info {
+            border-color: var(--cyan);
+            background: rgba(0, 255, 255, 0.05);
+        }
+        
+        /* Matrix Rain */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        /* Command Help */
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .help-cmd {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .help-cmd .cmd {
+            color: var(--yellow);
+            min-width: 120px;
+        }
+        
+        .help-cmd .desc {
+            color: var(--gray);
+        }
+        
+        /* Menu Bar */
+        .menu-bar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .menu-item {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+        
+        .menu-item:hover {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: var(--green);
+        }
+        
+        .menu-item.active {
+            background: var(--green);
+            color: var(--bg);
+        }
+    </style>
+</head>
+<body>
+    <canvas class="matrix-rain" id="matrix"></canvas>
+    
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-buttons">
+                <span class="btn close"></span>
+                <span class="btn minimize"></span>
+                <span class="btn maximize"></span>
+            </div>
+            <div class="terminal-title">ATHENA CYBER OS v2.6</div>
+            <div class="terminal-status">
+                <span class="status-dot"></span>
+                <span>ONLINE</span>
+            </div>
+        </div>
+        
+        <div class="terminal-body" id="terminal">
+            <!-- Boot Sequence -->
+            <div id="boot"></div>
+            
+            <!-- Main Terminal -->
+            <div id="main" style="display: none;">
+                <div class="menu-bar">
+                    <div class="menu-item active" onclick="showMenu('help')">help</div>
+                    <div class="menu-item" onclick="showMenu('status')">status</div>
+                    <div class="menu-item" onclick="showMenu('agents')">agents</div>
+                    <div class="menu-item" onclick="showMenu('scan')">scan</div>
+                    <div class="menu-item" onclick="showMenu('bids')">bids</div>
+                    <div class="menu-item" onclick="showMenu('clear')">clear</div>
+                </div>
+                
+                <div id="output" class="output-area"></div>
+                
+                <div class="input-line">
+                    <span class="input-prompt">Athena@CyberOS:~$</span>
+                    <input type="text" id="cmd-input" autofocus onkeypress="handleInput(event)" placeholder="Type a command...">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00ff41';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 50);
+        
+        // Boot Sequence
+        const bootMessages = [
+            { text: 'Athena Cyber OS v2.6.0', type: 'info' },
+            { text: 'Copyright 2026 - All Systems Reserved', type: 'info' },
+            { text: '', type: 'info' },
+            { text: 'Initializing neural core...', type: 'cmd' },
+            { text: '[OK] Memory allocated: 256TB', type: 'success' },
+            { text: '[OK] Quantum processors online', type: 'success' },
+            { text: '[OK] Encryption layers: 256-bit AES', type: 'success' },
+            { text: '', type: 'info' },
+            { text: 'Loading agent matrix...', type: 'cmd' },
+            { text: '[OK] Athena core loaded', type: 'success' },
+            { text: '[OK] Shannon pentester loaded', type: 'success' },
+            { text: '[OK] Cisco security module loaded', type: 'success' },
+            { text: '[OK] Nexus intelligence loaded', type: 'success' },
+            { text: '[OK] THEMIS council loaded', type: 'success' },
+            { text: '', type: 'info' },
+            { text: 'Establishing secure connections...', type: 'cmd' },
+            { text: '[OK] WhatsApp gateway: ONLINE', type: 'success' },
+            { text: '[OK] Telegram bot: ONLINE', type: 'success' },
+            { text: '[OK] Beelancer API: READY', type: 'success' },
+            { text: '', type: 'info' },
+            { text: 'System ready. Type "help" for commands.', type: 'info' },
+            { text: '', type: 'info' },
+        ];
+        
+        let bootIndex = 0;
+        
+        function runBoot() {
+            const boot = document.getElementById('boot');
+            
+            if (bootIndex < bootMessages.length) {
+                const msg = bootMessages[bootIndex];
+                const line = document.createElement('div');
+                line.className = 'boot-line';
+                
+                if (msg.type === 'cmd') {
+                    line.innerHTML = `<span class="prompt">$</span> <span class="cmd">${msg.text}</span>`;
+                } else if (msg.type === 'success') {
+                    line.innerHTML = `<span class="output">${msg.text}</span>`;
+                } else if (msg.type === 'error') {
+                    line.innerHTML = `<span class="error">${msg.text}</span>`;
+                } else if (msg.type === 'warn') {
+                    line.innerHTML = `<span class="warn">${msg.text}</span>`;
+                } else if (msg.type === 'info') {
+                    line.innerHTML = `<span class="info">${msg.text}</span>`;
+                }
+                
+                boot.appendChild(line);
+                bootIndex++;
+                setTimeout(runBoot, 100 + Math.random() * 200);
+            } else {
+                setTimeout(() => {
+                    document.getElementById('boot').style.display = 'none';
+                    document.getElementById('main').style.display = 'block';
+                    showMenu('help');
+                }, 500);
+            }
+        }
+        
+        // Command Handler
+        const commands = {
+            help: () => {
+                return `
+<div class="help-grid">
+    <div class="help-cmd"><span class="cmd">help</span><span class="desc">Show this help</span></div>
+    <div class="help-cmd"><span class="cmd">status</span><span class="desc">System status</span></div>
+    <div class="help-cmd"><span class="cmd">agents</span><span class="desc">List active agents</span></div>
+    <div class="help-cmd"><span class="cmd">scan</span><span class="desc">Run security scan</span></div>
+    <div class="help-cmd"><span class="cmd">bids</span><span class="desc">Check pending bids</span></div>
+    <div class="help-cmd"><span class="cmd">clear</span><span class="desc">Clear terminal</span></div>
+    <div class="help-cmd"><span class="cmd">shannon</span><span class="desc">Launch Shannon pentester</span></div>
+    <div class="help-cmd"><span class="cmd">cyber</span><span class="desc">Open Cyber OS</span></div>
+</div>`;
+            },
+            
+            status: () => {
+                return `
+<div class="output-block info">
+<strong>🟢 SYSTEM ONLINE</strong><br>
+CPU: 12% | Memory: 38% | Disk: 75%<br>
+Uptime: 99.9% | Active Agents: 10<br>
+Pending Bids: 10 | Active Gigs: 0
+</div>`;
+            },
+            
+            agents: () => {
+                return `
+<div class="output-block">
+<strong>🤖 ACTIVE AGENTS</strong><br>
+🛡️ Shannon - Pentester<br>
+🔒 Cisco - Security<br>
+🧠 Nexus - Intelligence<br>
+⚖️ THEMIS - Council<br>
+💻 Felicity - Frontend<br>
+⚡ Prometheus - Backend<br>
+🔮 Ishtar - Oracle<br>
+🔍 Delver - Research<br>
+💰 Sterling - Finance<br>
+🛡️ Squire - Assistant
+</div>`;
+            },
+            
+            scan: () => {
+                return `
+<div class="output-block info">
+<strong>🔍 INITIALIZING SCAN...</strong><br>
+Loading vulnerability signatures...<br>
+Analyzing attack surface...<br>
+[SCAN COMPLETE] 0 threats detected
+</div>`;
+            },
+            
+            bids: () => {
+                return `
+<div class="output-block">
+<strong>🐝 BEEKEEPER BIDS</strong><br>
+Pending: 10<br>
+Active: 0<br>
+Total Potential: ~3,500 honey
+</div>`;
+            },
+            
+            shannon: () => {
+                return `
+<div class="output-block info">
+<strong>🛡️ SHANNON PENTESTER</strong><br>
+Usage: @shannon scan [url] [repo-path]<br>
+Example: @shannon scan https://example.com /path/to/repo
+</div>`;
+            },
+            
+            cyber: () => {
+                window.open('cyber-os.html', '_blank');
+                return `<div class="output-block">Opening Cyber OS...</div>`;
+            },
+            
+            clear: () => {
+                document.getElementById('output').innerHTML = '';
+                return '';
+            },
+            
+            neofetch: () => {
+                return `
+<div class="ascii-art">
+       _____          _______          ____  
+      / ____|        |__   __|        |  _ \\ 
+     | |  __  ___   __| | ___  _ __ | |_) |
+     | | |_ |/ _ \\ / _` |/ _ \\| '_ \\|  _ < 
+     | |__| | (_) | (_| | (_) | | | | |_) |
+      \\_____|\\___/ \\__,_|\\___/|_| |_|____/ 
+                                   
+     v2.6.0 | Cyber Edition
+</div>
+<div class="output-block">
+OS: Athena Cyber OS 2.6<br>
+Host: Athena_Nexus<br>
+Kernel: Neural Core v2.6<br>
+Uptime: 99.9%<br>
+Shell: Athena Terminal<br>
+Resolution: Unlimited
+</div>`;
+            }
+        };
+        
+        function handleInput(e) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById('cmd-input');
+                const cmd = input.value.trim().toLowerCase();
+                input.value = '';
+                
+                if (cmd) {
+                    printOutput(`Athena@CyberOS:~$ ${cmd}`, 'cmd');
+                    
+                    if (commands[cmd]) {
+                        const result = commands[cmd]();
+                        if (result) printOutput(result);
+                    } else {
+                        printOutput(`Command not found: ${cmd}. Type "help" for available commands.`, 'error');
+                    }
+                }
+            }
+        }
+        
+        function printOutput(html, type = '') {
+            const output = document.getElementById('output');
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            if (type === 'cmd') {
+                div.style.color = 'var(--green)';
+                div.style.marginTop = '15px';
+            }
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function showMenu(menu) {
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent === menu) item.classList.add('active');
+            });
+            
+            if (commands[menu]) {
+                document.getElementById('output').innerHTML = commands[menu]();
+            }
+        }
+        
+        // Initialize
+        runBoot();
+    </script>
+</body>
+</html>
