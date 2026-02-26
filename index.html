@@ -40,6 +40,62 @@
         }
         .card h3 { color: #00ff88; margin-bottom: 0.5rem; }
         .card p { color: #888; font-size: 0.9rem; }
+        .card.cyber { border-color: #ff00aa; }
+        .card.cyber:hover { box-shadow: 0 8px 30px rgba(255,0,170,0.3); }
+        .card.cyber h3 { color: #ff00aa; }
+        .activity-section {
+            margin-top: 3rem;
+            background: rgba(22, 33, 62, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 1.5rem;
+        }
+        .activity-section h2 {
+            color: #00ff88;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .activity-list {
+            list-style: none;
+        }
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-icon {
+            font-size: 1.2rem;
+            min-width: 2rem;
+        }
+        .activity-content { flex: 1; }
+        .activity-time {
+            color: #666;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        .activity-item.success { color: #00ff88; }
+        .activity-item.warning { color: #ffaa00; }
+        .activity-item.info { color: #00f0ff; }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
     </style>
 </head>
 <body>
@@ -91,9 +147,69 @@
                 <p>Interactive code editor</p>
             </a>
             <a href="hub.html" class="card">
-                <h3>� hub</h3>
+                <h3>🔗 hub</h3>
                 <p>Central navigation hub</p>
             </a>
+            <a href="cyber-os.html" class="card cyber">
+                <h3>🛡️ Athena Cyber OS</h3>
+                <p>Security ops with Shannon AI Pentester</p>
+            </a>
+            <a href="quick-launch.html" class="card" style="border-color: #00f0ff;">
+                <h3>🚀 Quick Launch</h3>
+                <p>Agent launcher with animated cards</p>
+            </a>
+            <a href="themis-council.html" class="card" style="border-color: #9b4dca;">
+                <h3>⚖️ THEMIS Council</h3>
+                <p>Multi-agent deliberation chamber</p>
+            </a>
+            <a href="terminal.html" class="card" style="border-color: #00ff41;">
+                <h3>💀 Athena Terminal</h3>
+                <p>Cyber OS command line interface</p>
+            </a>
+            <a href="mission-control.html" class="card" style="border-color: #ff6b35;">
+                <h3>🎯 Mission Control</h3>
+                <p>Agent mission status dashboard</p>
+            </a>
+            <a href="network-map.html" class="card" style="border-color: #00ff88;">
+                <h3>🗺️ Network Map</h3>
+                <p>Interactive agent network visualization</p>
+            </a>
+        </div>
+
+        <div class="activity-section">
+            <h2><span class="pulse-dot"></span>Recent Activity</h2>
+            <ul class="activity-list">
+                <li class="activity-item success">
+                    <span class="activity-icon">✅</span>
+                    <span class="activity-content">Felicity completed code review on main branch</span>
+                    <span class="activity-time">2m ago</span>
+                </li>
+                <li class="activity-item info">
+                    <span class="activity-icon">🤖</span>
+                    <span class="activity-content">Nexus analyzed 3 new research papers</span>
+                    <span class="activity-time">5m ago</span>
+                </li>
+                <li class="activity-item success">
+                    <span class="activity-icon">🚀</span>
+                    <span class="activity-content">Prometheus executed deployment pipeline</span>
+                    <span class="activity-time">12m ago</span>
+                </li>
+                <li class="activity-item warning">
+                    <span class="activity-icon">⚠️</span>
+                    <span class="activity-content">Cisco detected unusual network pattern</span>
+                    <span class="activity-time">18m ago</span>
+                </li>
+                <li class="activity-item info">
+                    <span class="activity-icon">📊</span>
+                    <span class="activity-content">Beelancer synced 5 new gig opportunities</span>
+                    <span class="activity-time">25m ago</span>
+                </li>
+                <li class="activity-item success">
+                    <span class="activity-icon">💾</span>
+                    <span class="activity-content">Memory palace backup completed</span>
+                    <span class="activity-time">1h ago</span>
+                </li>
+            </ul>
         </div>
     </div>
 </body>
