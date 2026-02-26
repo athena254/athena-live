@@ -1,372 +1,550 @@
-# Ishtar Research Log - PAI Architecture Deep Dive
+# Ishtar Research Log
 
-**Session:** 2026-02-24 19:00 UTC  
-**Topic:** PAI (Personal AI Infrastructure) Architecture Deep Dive  
-**Status:** Complete
-
----
-
-## Executive Summary
-
-Personal AI Infrastructure (PAI) v3.0 is a sophisticated AI agent framework built on Claude Code, featuring a 12-step problem-solving algorithm, event-driven hook automation, and a modular skill system. It transforms Claude from a conversational AI into a personal digital assistant with persistent memory, multi-agent orchestration, and autonomous capabilities.
+## PAI Architecture Deep Dive (2026-02-24 → 2026-02-25)
+*Completed*
 
 ---
 
-## Core Architecture Components
+## Multi-Agent Orchestration Systems (2026-02-26)
+*Research in progress*
 
-### 1. The Algorithm (12-Step Methodology)
-
-Located at: `Releases/v3.0/.claude/skills/PAI/THEALGORITHM.md`
-
-**The 12 Steps:**
-
-1. **ATTENTION** - Focus intently on what matters
-2. **OBSERVE** - Gather comprehensive information
-3. **UNDERSTAND** - Build deep comprehension
-4. **ORIENT** - Position strategically in the landscape
-5. **DECIDE** - Choose direction with conviction
-6. **PLAN** - Create executable strategy
-7. **ACT** - Execute with full engagement
-8. **REFINE** - Improve based on feedback
-9. **ITERATE** - Cycle through approach variations
-10. **EVALUATE** - Measure results objectively
-11. **LEARN** - Extract wisdom from outcomes
-12. **ADAPT** - Integrate learnings into future cycles
-
-**Key Insight:** This isn't just a linear process—it's a cycle. Learn → Adapt feeds back to Attention for the next iteration.
+### Research Focus
+Designing comprehensive multi-agent orchestration for Athena's 13+ agents, integrating OpenClaw's native capabilities with PAI-inspired patterns.
 
 ---
 
-### 2. The Skill System
+## 1. OPENCLAW MULTI-AGENT ARCHITECTURE
 
-Located at: `Releases/v3.0/.claude/skills/PAI/SKILLSYSTEM.md`
+### Core Concepts
 
-**Hierarchy:**
-```
-~/.claude/
-├── SKILL.md                    # Main entry point (loads all skills)
-├── skills/
-│   ├── CORE/                   # Essential infrastructure
-│   │   ├── SKILL.md           # Core skill loader
-│   │   ├── SYSTEM/            # System-level capabilities
-│   │   └── USER/              # User-specific data (TELOS)
-│   ├── PAI/                   # PAI-specific skills
-│   │   ├── SKILL.md           # PAI skill definitions
-│   │   ├── THEALGORITHM.md    # Problem-solving methodology
-│   │   └── *.md               # Supporting documentation
-│   └── [Other Skills]/        # Modular capabilities
-│       ├── Agents/            # Multi-agent orchestration
-│       ├── Telos/             # Life framework system
-│       ├── Browser/           # Web automation
-│       ├── Research/          # Deep research capabilities
-│       └── 30+ more...
+**Agent Definition:**
+Each agent in OpenClaw is a fully scoped "brain" with:
+- **Workspace** (files, AGENTS.md/SOUL.md/USER.md, local notes, persona rules)
+- **State directory** (`agentDir`) for auth profiles, model registry, per-agent config
+- **Session store** (chat history + routing state) under `~/.openclaw/agents/<agentId>/sessions`
+
+**Isolation Guarantees:**
+- Auth profiles are per-agent
+- Skills are per-agent via workspace `skills/` folder
+- Shared skills from `~/.openclaw/skills`
+- Sessions keyed as `agent:<agentId>:<mainKey>`
+
+### Routing Layer
+
+**Deterministic Binding Rules** (most-specific wins):
+1. `peer` match (exact DM/group/channel id)
+2. `parentPeer` match (thread inheritance)
+3. `guildId + roles` (Discord role routing)
+4. `guildId` (Discord)
+5. `teamId` (Slack)
+6. `accountId` match for a channel
+7. channel-level match (`accountId: "*"`)
+8. fallback to default agent
+
+**Binding Structure:**
+```json
+{
+  "agentId": "work",
+  "match": {
+    "channel": "whatsapp",
+    "accountId": "personal",
+    "peer": { "kind": "group", "id": "1203630...@g.us" }
+  }
+}
 ```
 
-**Context Loading:**
-- Skills load dynamically based on task
-- Each skill has SKILL.md as entry point
-- Supports both file-based and directory-based skills
-- Lazy loading for performance
+### Session Tools
+
+**Tool Suite:**
+- `sessions_list` - List sessions with optional filters
+- `sessions_history` - Fetch transcript for a session
+- `sessions_send` - Send message to another session
+- `sessions_spawn` - Spawn sub-agent in isolated session
+
+**Key Patterns:**
+- Main direct chat key: `"main"` (resolves to agent's main key)
+- Group chats: `agent:<agentId>:<channel>:group:<id>`
+- Cron jobs: `cron:<job.id>`
+- Hooks: `hook:<uuid>`
+- Node sessions: `node-<nodeId>`
+
+**Security Model:**
+- Session visibility: `self | tree | agent | all`
+- Sandboxed sessions default to `spawned` visibility
+- Agent-to-agent messaging requires explicit enable + allowlist
 
 ---
 
-### 3. The Hook System
+## 2. ATHENA'S CURRENT IMPLEMENTATION
 
-Located at: `Releases/v2.4/.claude/skills/CORE/SYSTEM/THEHOOKSYSTEM.md`
+### Agent Roster (13+ Agents)
 
-**Hook Events:**
+**Core Agents:**
+1. **Athena** - Main orchestrator, primary interface
+2. **Sterling** - Finance, full auto-bidding authority
+3. **Ishtar** - PAI Architecture, research
+4. **Delver** - Deep research, knowledge exploration
+5. **Squire** - Task management, reminders
+6. **Felicity** - Emotional support, wellness
+7. **Prometheus** - Project planning, milestones
+8. **Cisco** - Communication, notifications
+9. **THEMIS** - Oversight, compliance
 
-| Event | When | Purpose |
-|-------|------|---------|
-| SessionStart | New conversation | Load context, initialize state |
-| SessionEnd | Conversation ends | Generate summaries, cleanup |
-| UserPromptSubmit | User sends message | Detect ratings, update UI |
-| Stop | Agent completes response | Voice notifications, capture work |
-| SubagentStop | Subagent completes | Capture agent outputs |
-| PreToolUse | Before tool execution | Security validation |
-| PostToolUse | After tool execution | Analytics, error tracking |
+**Planned/Recent Agents:**
+10. **Apollo** - Prospecting, new client acquisition (JSON config)
+11. **Hermes** - Client relations, communication (JSON config)
+12. **Kratos** - Crypto/DeFi trading (JSON config)
+13. **Chiron** - QA testing, validation (markdown profile)
+14. **Mnemosyne** - Memory management, archival (markdown profile)
+15. **Talia** - Content creation, social media (markdown profile)
 
-**Key Hook Implementations:**
-- **LoadContext.hook.ts** - Loads PAI context at session start
-- **StopOrchestrator.hook.ts** - Unified stop event handler
-- **UpdateTabTitle.hook.ts** - Dynamic tab state feedback
-- **ExplicitRatingCapture.hook.ts** - Detects user ratings (1-10)
-- **ImplicitSentimentCapture.hook.ts** - Analyzes user sentiment
+### Lattice Accountability Pattern
 
-**Architecture Principle:** Hooks run asynchronously, fail gracefully, and never block Claude Code's core functionality.
+Each agent defines communication channels:
 
----
+```markdown
+### Lattice Accountability
 
-### 4. CLI-First Architecture
+**I Receive From:**
+- Athena (primary directives)
+- Cisco (user communications)
 
-Located at: `Releases/v3.0/.claude/skills/PAI/CLIFIRSTARCHITECTURE.md`
+**I Output To:**
+- Athena (status reports)
+- Sterling (financial data)
 
-**Philosophy:** Everything is a CLI tool. No GUI required, all operations scriptable.
-
-**Key Benefits:**
-- Full automation capability
-- Remote operation via SSH
-- Scriptable workflows
-- Version controllable
-- Headless execution
-
-**Tools Created:**
-- `~/.claude/tools/UpdateTabTitle.ts` - Tab state management
-- `~/.claude/tools/Inference.ts` - AI-powered analysis
-- `~/.claude/skills/CORE/Tools/` - Various utility scripts
-
----
-
-### 5. TELOS System
-
-Located at: `Releases/v2.4/.claude/skills/CORE/USER/TELOS/TELOS.md`
-
-**Purpose:** A complete life framework for storing personal context.
-
-**Components:**
-- **MISSIONS (M#)** - Core life purposes
-- **GOALS (G#)** - Specific objectives
-- **CHALLENGES (C#)** - Current obstacles
-- **STRATEGIES (S#)** - Approaches to address challenges
-- **PROBLEMS (P#)** - World problems to solve
-- **NARRATIVES (N#)** - Active talking points
-- **BELIEFS (B#)** - Core beliefs
-- **FRAMES (FR#)** - Mental perspectives
-- **MODELS (MO#)** - Understanding of systems
-- **TRAUMAS (TR#)** - Formative experiences
-- **LESSONS** - Hard-won wisdom
-- **WISDOM** - Collected aphorisms
-- **WRONG** - Intellectual humility log
-
-**Usage:** PAI loads TELOS to understand user's context, goals, and decision-making framework.
-
----
-
-### 6. Multi-Agent System
-
-Located at: `Releases/v3.0/.claude/skills/Agents/`
-
-**Agent Types:**
-- **engineer** - Feature implementation
-- **researcher** - Deep research tasks
-- **pentester** - Security testing
-- **intern** - Basic tasks
-- **writer** - Content creation
-- etc.
-
-**Orchestration:**
-- Main agent delegates to subagents via Task tool
-- Subagent outputs captured via SubagentStop hook
-- Agent-specific voices via ElevenLabs
-- Session mapping in `MEMORY/STATE/agent-sessions.json`
-
----
-
-### 7. Memory & History System
-
-**Directory Structure:**
-```
-~/.claude/MEMORY/
-├── WORK/                      # Task completions
-│   └── YYYY-MM-DD-HHMMSS_description/
-├── LEARNING/                  # Problem-solving learnings
-│   ├── SYSTEM/               # System-level learnings
-│   ├── ALGORITHM/            # Algorithm-related
-│   └── SIGNALS/              # User feedback signals
-│       └── ratings.jsonl     # Explicit/implicit ratings
-├── STATE/                     # Runtime state
-│   ├── current-work.json     # Active task tracking
-│   ├── agent-sessions.json   # Session→agent mapping
-│   └── progress/             # Ongoing progress
-├── RAW/                       # Event logs
-│   └── YYYY-MM/YYYY-MM-DD_all-events.jsonl
-└── USER/                      # User-specific data
+**I Am Accountable To:**
+- Athena (primary)
+- THEMIS (compliance oversight)
 ```
 
-**File Naming Convention:**
+### Configuration Patterns
+
+**JSON Config Structure (Apollo, Hermes, Kratos):**
+```json
+{
+  "id": "apollo",
+  "name": "Apollo",
+  "role": "Prospecting Agent",
+  "description": "Prospecting and new client acquisition",
+  "preferredModel": "anthropic/claude-3-5-sonnet",
+  "tasks": [
+    {
+      "name": "prospect_search",
+      "description": "Search for new prospects on platforms",
+      "priority": "HIGH"
+    }
+  ],
+  "spawnTriggers": [
+    {
+      "condition": "beelancer_new_lead",
+      "action": "analyze_prospect"
+    }
+  ]
+}
 ```
-YYYY-MM-DD-HHMMSS_TYPE_description.md
+
+**Markdown Profile Structure (Chiron, Mnemosyne):**
+```markdown
+# Agent Profile: Chiron (QA)
+
+## Operating Specs
+- Model: claude-3-5-sonnet
+- Tools: exec, read, write, sessions_spawn
+- Isolation: sandboxed
+
+## Workflow
+1. Receive test request from Athena
+2. Execute test suite
+3. Report results to Mnemosyne for logging
+
+## Success Metrics
+- Test coverage > 80%
+- False positive rate < 5%
 ```
 
-**Types:** WORK, LEARNING, SESSION, RESEARCH, FEATURE, DECISION
+---
+
+## 3. ORCHESTRATION ARCHITECTURE DESIGN
+
+### 3.1 Communication Protocol
+
+**Message Structure:**
+```typescript
+interface AgentMessage {
+  id: string;           // UUID
+  timestamp: string;    // ISO 8601
+  source: AgentRef;     // Sender agent
+  target: AgentRef;     // Recipient agent
+  type: MessageType;    // REQUEST | RESPONSE | BROADCAST | STATUS
+  priority: Priority;   // CRITICAL | HIGH | MEDIUM | LOW
+  payload: any;         // Message content
+  context?: Context;    // Task context
+  replyTo?: string;     // Original message ID
+}
+
+type Priority = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+type MessageType = 'REQUEST' | 'RESPONSE' | 'BROADCAST' | 'STATUS' | 'HEARTBEAT';
+
+interface AgentRef {
+  agentId: string;
+  sessionId?: string;
+  channel?: string;
+}
+
+interface Context {
+  taskId?: string;
+  parentTask?: string;
+  deadline?: string;
+  metadata?: Record<string, any>;
+}
+```
+
+**Priority Handling:**
+| Priority | Response Time | Use Case |
+|----------|--------------|----------|
+| CRITICAL | Immediate | Security alerts, system failures |
+| HIGH | < 5 min | Active tasks, user requests |
+| MEDIUM | < 1 hour | Research, analysis |
+| LOW | < 24 hours | Maintenance, archival |
+
+### 3.2 Task Delegation Engine
+
+**Delegation Decision Tree:**
+```
+User Request → Athena (Router)
+    │
+    ├─ Finance related? → Sterling
+    │       └─ Auto-bid eligible? → Process immediately
+    │       └─ Needs approval? → Route to Dis
+    │
+    ├─ Research needed? → Ishtar/Delver
+    │       └─ PAI architecture? → Ishtar
+    │       └─ General research? → Delver
+    │
+    ├─ Client communication? → Hermes
+    │       └─ New prospect? → Apollo
+    │       └─ Existing client? → Hermes
+    │
+    ├─ Task management? → Squire
+    │
+    ├─ Emotional support? → Felicity
+    │
+    └─ Content creation? → Talia
+```
+
+**Task Structure:**
+```typescript
+interface Task {
+  id: string;
+  type: TaskType;
+  status: TaskStatus;
+  priority: Priority;
+  created: string;
+  deadline?: string;
+  assignee: string;      // Agent ID
+  requester: string;     // Agent or user
+  input: any;
+  output?: any;
+  error?: string;
+  retryCount: number;
+  maxRetries: number;
+  dependencies: string[]; // Task IDs
+}
+
+type TaskType = 
+  | 'RESEARCH' | 'ANALYSIS' | 'EXECUTION' 
+  | 'COMMUNICATION' | 'MONITORING' | 'MAINTENANCE';
+
+type TaskStatus = 
+  | 'PENDING' | 'ASSIGNED' | 'IN_PROGRESS' 
+  | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+```
+
+### 3.3 State Synchronization
+
+**Shared State Objects:**
+```typescript
+// Global state accessible to all agents
+interface GlobalState {
+  activeTasks: Map<string, Task>;
+  agentStatus: Map<string, AgentStatus>;
+  recentDecisions: Decision[];
+  systemAlerts: Alert[];
+}
+
+// Per-agent state
+interface AgentState {
+  agentId: string;
+  currentTask?: string;
+  queue: Task[];
+  capabilities: string[];
+  lastHeartbeat: string;
+  metrics: AgentMetrics;
+}
+
+interface AgentStatus {
+  status: 'IDLE' | 'BUSY' | 'OFFLINE' | 'ERROR';
+  currentLoad: number;    // 0.0 - 1.0
+  lastActivity: string;
+  upcomingTasks: number;
+}
+```
+
+**State File Locations:**
+```
+~/.openclaw/workspace/memory/
+├── global-state.json      # Shared state
+├── agent-queue.json       # Task queue
+├── ishtar-state.json      # Per-agent state
+├── sterling-state.json
+├── telos-state.json       # TELOS tracking
+└── subagent-architecture.md
+```
+
+### 3.4 Output Capture & Routing
+
+**Capture Points:**
+1. **Session Spawn Results** - `sessions_spawn` returns results
+2. **Hook Outputs** - Triggers on events
+3. **Cron Outputs** - Scheduled task results
+4. **Direct Messages** - Cross-agent communication
+
+**Routing Matrix:**
+```
+┌─────────────┬───────────────────────────────────────┐
+│ Source      │ Output Destinations                   │
+├─────────────┼───────────────────────────────────────┤
+│ Sterling    │ Athena (status), Dis (alerts)         │
+│ Ishtar      │ MEMORY.md, research-log.md            │
+│ Delver      │ Athena (findings), Mnemosyne (archive)│
+│ Squire      │ Dis (reminders), Athena (status)      │
+│ Cisco       │ All agents (notifications)            │
+│ THEMIS      │ Dis (compliance alerts), Athena       │
+│ Apollo      │ Hermes (leads), Sterling (revenue)    │
+│ Hermes      │ Apollo (feedback), Athena (status)    │
+│ Kratos      │ Sterling (trades), Dis (alerts)       │
+│ Chiron      │ Athena (test results), THEMIS         │
+│ Mnemosyne   │ All agents (memory queries)           │
+│ Talia       │ Cisco (content), Dis (drafts)         │
+└─────────────┴───────────────────────────────────────┘
+```
 
 ---
 
-### 8. Voice System
+## 4. IMPLEMENTATION RECOMMENDATIONS
 
-**Integration:** ElevenLabs TTS API
+### 4.1 Immediate Actions (Week 1)
 
-**Architecture:**
-- Voice server at `localhost:8888`
-- Agent-specific voice IDs
-- Extracts `🗣️ {DAIDENTITY.NAME}:` lines for narration
-- Sanitizes content before TTS
+1. **Standardize Agent Configs**
+   - Migrate all agents to JSON configs with consistent schema
+   - Add `latticeAccountability` field to each config
+   - Define spawn triggers for each agent
 
-**Configuration:** Voice IDs stored in `settings.json` under `daidentity.voiceId`
+2. **Create Task Queue System**
+   - Implement `agent-queue.json` with priority ordering
+   - Add queue monitoring to Athena's heartbeat
+   - Create task status dashboard
 
----
+3. **Enable Agent-to-Agent Messaging**
+   - Configure `tools.agentToAgent` in openclaw.json
+   - Set up allowlist for all 13 agents
+   - Test cross-agent communication
 
-### 9. Observability Dashboard
+### 4.2 Short-Term Enhancements (Month 1)
 
-**Components:**
-- Server: `localhost:4000`
-- Client: `localhost:5173`
-- Real-time event streaming
+1. **Build Orchestration Rules Engine**
+   ```javascript
+   // Example rules
+   const orchestrationRules = [
+     {
+       trigger: { type: 'finance', amount: { gt: 1000 } },
+       action: { assignTo: 'Sterling', notify: ['Dis'] }
+     },
+     {
+       trigger: { type: 'research', topic: 'PAI' },
+       action: { assignTo: 'Ishtar', deadline: '4h' }
+     }
+   ];
+   ```
 
-**Events Tracked:**
-- Session lifecycle
-- Tool executions
-- Agent completions
-- User ratings
-- Performance metrics
+2. **Implement State Synchronization**
+   - Create shared state file with TTL
+   - Add heartbeat updates to state
+   - Build conflict resolution for concurrent updates
 
----
+3. **Create Agent Dashboard**
+   - Real-time status of all agents
+   - Task queue visualization
+   - Communication flow diagram
 
-### 10. Terminal Tab State System
+### 4.3 Medium-Term Evolution (Quarter 1)
 
-**Visual Feedback:**
+1. **Dynamic Load Balancing**
+   - Monitor agent workload
+   - Automatically redistribute tasks
+   - Spawn additional instances for high-load agents
 
-| State | Color | Suffix | Meaning |
-|-------|-------|--------|---------|
-| Working | Orange `#B35A00` | `…` | Active processing |
-| Completed | Green `#022800` | (none) | Task done |
-| Awaiting Input | Teal `#0D6969` | `?` | Question asked |
-| Error | Orange `#B35A00` | `!` | Error occurred |
-| Inference | Orange `#B35A00` | `🧠…` | AI thinking |
+2. **Learning Orchestration**
+   - Track successful task completions
+   - Learn optimal agent assignments
+   - Predict task duration
 
-**Active Tab:** Always Dark Blue `#002B80` (state colors only affect inactive tabs)
-
----
-
-## Key Architectural Insights
-
-### 1. Separation of Concerns
-- **Skills** define capabilities
-- **Hooks** handle events
-- **Tools** provide utilities
-- **Memory** stores context
-
-### 2. Graceful Degradation
-- Hooks fail silently
-- Optional services (voice, dashboard) don't block operation
-- Error handling is pervasive
-
-### 3. Async-First Design
-- Hooks launch background processes for slow work
-- Non-blocking execution
-- Quick exit with background continuation
-
-### 4. Single Source of Truth
-- `settings.json` for all configuration
-- `MEMORY/` for all persistent state
-- JSONL for event logs (append-only)
-
-### 5. Extensibility
-- New skills via SKILL.md
-- New hooks via settings.json
-- New agents via Agent skill
+3. **Cross-Agent Memory**
+   - Shared knowledge base
+   - Context handoff between agents
+   - Collective learning from outcomes
 
 ---
 
-## Integration Opportunities for Athena
+## 5. CODE PATTERNS
 
-### Immediate Applications
+### 5.1 Spawning Sub-Agents
 
-1. **Algorithm Integration**
-   - Implement 12-step methodology in Athena's task processing
-   - Add LEARN and ADAPT phases to agent workflows
+```javascript
+// Spawn Apollo for prospect analysis
+const result = await sessions_spawn({
+  task: "Analyze prospect: John Doe from Acme Corp. Score fit for our services.",
+  agentId: "apollo",
+  label: "prospect-analysis-acme",
+  model: "anthropic/claude-3-5-sonnet",
+  runTimeoutSeconds: 300,
+  thread: true
+});
+```
 
-2. **Hook System**
-   - Event-driven architecture for Athena's lifecycle
-   - Voice notifications for task completion
-   - Automatic work capture to memory
+### 5.2 Cross-Agent Messaging
 
-3. **TELOS Integration**
-   - Create Dis's personal TELOS document
-   - Load in main session for context
+```javascript
+// Send task to Sterling
+await sessions_send({
+  sessionKey: "agent:sterling:main",
+  message: JSON.stringify({
+    type: "REQUEST",
+    priority: "HIGH",
+    payload: {
+      action: "evaluate_bid",
+      data: { project_id: "12345", budget: 5000 }
+    }
+  }),
+  timeoutSeconds: 60
+});
+```
 
-4. **Tab State System**
-   - Visual feedback for Athena's agents
-   - Color-coded status in dashboard
+### 5.3 Task Queue Processing
 
-### Medium-Term Enhancements
+```javascript
+// In Athena's heartbeat
+const queue = JSON.parse(fs.readFileSync('memory/agent-queue.json'));
+const pending = queue.tasks.filter(t => t.status === 'PENDING');
 
-1. **Memory System Architecture**
-   - Implement WORK/LEARNING/STATE directory structure
-   - JSONL event logging
-   - Progress tracking
+for (const task of pending) {
+  const assignee = selectAgent(task);
+  await assignTask(assignee, task);
+  task.status = 'ASSIGNED';
+}
 
-2. **Multi-Agent Orchestration**
-   - Agent session mapping
-   - Subagent output capture
-   - Agent-specific configurations
-
-3. **Skill System**
-   - Dynamic skill loading
-   - SKILL.md convention
-   - Lazy loading
-
-### Long-Term Vision
-
-1. **Full PAI Integration**
-   - Port hook system to OpenClaw
-   - Implement observability dashboard
-   - Create CLI tools for Athena
-
-2. **Cross-Platform Compatibility**
-   - Make PAI patterns work with multiple AI backends
-   - Support different LLM providers
-   - Vendor-agnostic architecture
-
----
-
-## Technical Debt & Known Issues
-
-1. **Stop Event Reliability**
-   - Stop events not firing consistently in Claude Code
-   - Workaround: Manual verification gate in response format
-
-2. **Transcript Type Mismatch**
-   - Fixed: Changed `type: "human"` to `type: "user"`
-
-3. **Hook Timeout Management**
-   - Need consistent timeout patterns
-   - Current: 500ms for stdin, 5s max for hooks
+fs.writeFileSync('memory/agent-queue.json', JSON.stringify(queue, null, 2));
+```
 
 ---
 
-## Files Analyzed
+## 6. MONITORING & OBSERVABILITY
 
-1. `Personal_AI_Infrastructure/README.md` - Main overview
-2. `Releases/v3.0/README.md` - v3.0 release notes
-3. `Releases/v3.0/.claude/skills/PAI/SKILL.md` - PAI skill definitions
-4. `Releases/v3.0/.claude/skills/PAI/THEALGORITHM.md` - 12-step methodology
-5. `Releases/v3.0/.claude/skills/PAI/SKILLSYSTEM.md` - Skill system docs
-6. `Releases/v3.0/.claude/skills/PAI/HOOKS.md` - Hook configuration
-7. `Releases/v3.0/.claude/skills/PAI/CLIFIRSTARCHITECTURE.md` - CLI philosophy
-8. `Releases/v3.0/.claude/skills/PAI/PAISYSTEMARCHITECTURE.md` - System architecture
-9. `Releases/v3.0/.claude/skills/Agents/SKILL.md` - Agent orchestration
-10. `Releases/v2.4/.claude/skills/CORE/SYSTEM/THEHOOKSYSTEM.md` - Complete hook system
-11. `Releases/v2.4/.claude/skills/CORE/USER/TELOS/TELOS.md` - Life framework
+### 6.1 Key Metrics
+
+| Metric | Target | Alert Threshold |
+|--------|--------|-----------------|
+| Task Completion Rate | > 95% | < 90% |
+| Average Response Time | < 30s | > 2min |
+| Agent Availability | > 99% | < 95% |
+| Queue Depth | < 10 | > 50 |
+| Error Rate | < 1% | > 5% |
+
+### 6.2 Health Checks
+
+```javascript
+// Agent health check (in heartbeat)
+async function checkAgentHealth() {
+  const agents = ['athena', 'sterling', 'ishtar', 'delver', 'squire', 
+                  'felicity', 'prometheus', 'cisco', 'themis'];
+  
+  const results = {};
+  for (const agentId of agents) {
+    const state = readAgentState(agentId);
+    const lastHeartbeat = new Date(state.lastHeartbeat);
+    const age = Date.now() - lastHeartbeat.getTime();
+    
+    results[agentId] = {
+      status: age < 300000 ? 'HEALTHY' : 'STALE',
+      lastHeartbeat: state.lastHeartbeat,
+      currentTask: state.currentTask
+    };
+  }
+  
+  return results;
+}
+```
 
 ---
 
-## Recommendations for Dis
+## 7. SECURITY CONSIDERATIONS
 
-1. **Adopt the Algorithm** - The 12-step methodology is battle-tested and comprehensive
-2. **Implement Hook System** - Event-driven automation is a game-changer
-3. **Create TELOS Document** - Personal context makes AI significantly more helpful
-4. **Study Memory Architecture** - The WORK/LEARNING/STATE structure is excellent
-5. **Consider Tab State System** - Visual feedback improves UX significantly
+### 7.1 Access Control
+
+- **Agent-to-Agent**: Explicit allowlist required
+- **Tool Restrictions**: Per-agent tool allow/deny lists
+- **Sandbox Isolation**: Critical for untrusted agents
+- **Credential Isolation**: Each agent has own auth profiles
+
+### 7.2 Data Flow Security
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    External World                    │
+└─────────────────────────────────────────────────────┘
+                         │
+                    [Firewall]
+                         │
+┌─────────────────────────────────────────────────────┐
+│                    Gateway Layer                     │
+│  - Message routing                                   │
+│  - Auth validation                                   │
+│  - Rate limiting                                     │
+└─────────────────────────────────────────────────────┘
+                         │
+         ┌───────────────┼───────────────┐
+         │               │               │
+    [Agent: Athena] [Agent: Sterling] [Agent: Ishtar]
+         │               │               │
+    [Sandbox?]      [Sandbox?]      [Sandbox?]
+         │               │               │
+    [Workspace]     [Workspace]     [Workspace]
+```
 
 ---
 
-## Research Duration
+## 8. CONCLUSIONS
 
-- Start: 2026-02-24 19:00 UTC
-- End: 2026-02-24 19:45 UTC
-- Duration: ~45 minutes
+### Key Findings
+
+1. **OpenClaw provides robust multi-agent infrastructure** with isolation, routing, and session tools
+2. **Athena's Lattice Accountability pattern** is a solid foundation for agent communication
+3. **Missing pieces**: Task queue, orchestration rules engine, state synchronization
+4. **Low-hanging fruit**: Enable agent-to-agent messaging, standardize configs
+
+### Recommended Next Steps
+
+1. **Immediate**: Enable `tools.agentToAgent` and test cross-agent messaging
+2. **This Week**: Create `agent-queue.json` and task assignment logic
+3. **This Month**: Build orchestration rules engine and dashboard
+4. **This Quarter**: Implement learning orchestration and cross-agent memory
+
+### Research Complete
+
+This research provides a comprehensive foundation for implementing multi-agent orchestration in Athena. The combination of OpenClaw's native capabilities and the designed patterns enables sophisticated agent coordination.
 
 ---
 
-*Research completed by Ishtar (PAI Architecture Focus Agent)*
+*Research completed: 2026-02-26*
+*Next cycle: Implement orchestration patterns*
