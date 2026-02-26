@@ -28,6 +28,12 @@
 - Planned subagent spawns
 - User appointments (if known)
 
+### 5. Auto-Backup (After Report)
+- ✅ Git commit with timestamp
+- ✅ Knowledge graph update
+- ✅ Memory file sync
+- ✅ Push to GitHub (athena254/athena-live)
+
 ---
 
 ## Silence Rules
