@@ -1,0 +1,224 @@
+{
+  "version": "1.0",
+  "updated": "2026-02-26T19:00:00Z",
+  "rules": [
+    {
+      "id": "rule_finance_auto",
+      "name": "Auto-bid Finance Tasks",
+      "trigger": {
+        "type": "FINANCE",
+        "subType": "auto_bid"
+      },
+      "action": {
+        "assignTo": "sterling",
+        "priority": "HIGH",
+        "notify": []
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_finance_large",
+      "name": "Large Budget Review",
+      "trigger": {
+        "type": "FINANCE",
+        "amount": {"gt": 10000}
+      },
+      "action": {
+        "assignTo": "sterling",
+        "priority": "CRITICAL",
+        "notify": ["dis"]
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_research_pai",
+      "name": "PAI Research to Ishtar",
+      "trigger": {
+        "type": "RESEARCH",
+        "topic": {"regex": "(?i)\\bpai\\b"}
+      },
+      "action": {
+        "assignTo": "ishtar",
+        "priority": "MEDIUM",
+        "deadline": "4h"
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_research_general",
+      "name": "General Research to Delver",
+      "trigger": {
+        "type": "RESEARCH"
+      },
+      "action": {
+        "assignTo": "delver",
+        "priority": "MEDIUM"
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_new_prospect",
+      "name": "New Prospect Routing",
+      "trigger": {
+        "type": "PROSPECTING",
+        "source": "beelancer"
+      },
+      "action": {
+        "assignTo": "apollo",
+        "priority": "HIGH",
+        "notify": ["hermes"]
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_client_comm",
+      "name": "Client Communication",
+      "trigger": {
+        "type": "CLIENT_COMM"
+      },
+      "action": {
+        "assignTo": "hermes",
+        "priority": "HIGH"
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_critical",
+      "name": "Critical Priority Override",
+      "trigger": {
+        "priority": "CRITICAL"
+      },
+      "action": {
+        "assignTo": "athena",
+        "notify": ["dis"]
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_trading",
+      "name": "Crypto/DeFi Trading",
+      "trigger": {
+        "type": "TRADING"
+      },
+      "action": {
+        "assignTo": "kratos",
+        "priority": "HIGH",
+        "notify": ["sterling"]
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_compliance",
+      "name": "Compliance Tasks",
+      "trigger": {
+        "type": "COMPLIANCE"
+      },
+      "action": {
+        "assignTo": "themis",
+        "priority": "HIGH",
+        "notify": ["dis"]
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_support_emotional",
+      "name": "Emotional Support",
+      "trigger": {
+        "type": "SUPPORT"
+      },
+      "action": {
+        "assignTo": "felicity",
+        "priority": "MEDIUM"
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_task_reminder",
+      "name": "Task Reminders",
+      "trigger": {
+        "type": "TASK_MGMT"
+      },
+      "action": {
+        "assignTo": "squire",
+        "priority": "HIGH"
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_content_creation",
+      "name": "Content Creation",
+      "trigger": {
+        "type": "CONTENT"
+      },
+      "action": {
+        "assignTo": "talia",
+        "priority": "MEDIUM"
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_testing",
+      "name": "QA Testing",
+      "trigger": {
+        "type": "TESTING"
+      },
+      "action": {
+        "assignTo": "chiron",
+        "priority": "HIGH"
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_notification",
+      "name": "Notification Broadcast",
+      "trigger": {
+        "type": "NOTIFICATION"
+      },
+      "action": {
+        "assignTo": "cisco",
+        "priority": "HIGH"
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_planning",
+      "name": "Project Planning",
+      "trigger": {
+        "type": "PLANNING"
+      },
+      "action": {
+        "assignTo": "prometheus",
+        "priority": "MEDIUM"
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_memory",
+      "name": "Memory Operations",
+      "trigger": {
+        "type": "MEMORY"
+      },
+      "action": {
+        "assignTo": "mnemosyne",
+        "priority": "LOW"
+      },
+      "enabled": true
+    }
+  ],
+  "defaultAssignments": {
+    "RESEARCH": "delver",
+    "FINANCE": "sterling",
+    "PROSPECTING": "apollo",
+    "CLIENT_COMM": "hermes",
+    "TASK_MGMT": "squire",
+    "CONTENT": "talia",
+    "TESTING": "chiron",
+    "NOTIFICATION": "cisco",
+    "SUPPORT": "felicity",
+    "PLANNING": "prometheus",
+    "TRADING": "kratos",
+    "MEMORY": "mnemosyne",
+    "COMPLIANCE": "themis",
+    "ANALYSIS": "delver"
+  }
+}

@@ -1,6 +1,7 @@
 {
-  "last_check": "2026-02-26T04:38:00Z",
+  "last_check": "2026-02-26T08:10:00Z",
   "pending_bids": 2,
+  "open_gigs_scanned": 12,
   "active_gigs": 0,
   "status": "api_blocked",
   "api_bid_status": "HTTP 405 - Method Not Allowed",

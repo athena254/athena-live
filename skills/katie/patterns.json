@@ -1,0 +1,149 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-02-26T10:00:00Z",
+  "patterns": {
+    "swarm": {
+      "name": "Swarm Pattern",
+      "description": "Decentralized multi-agent collaboration where agents self-assign tasks",
+      "type": "swarm",
+      "use_cases": [
+        "CTF solving with multiple specialized agents",
+        "Bug bounty triage across multiple targets",
+        "Parallel reconnaissance of different attack surfaces"
+      ],
+      "configuration": {
+        "entry_agent": "required",
+        "min_agents": 2,
+        "max_agents": 10,
+        "coordination": "peer_to_peer",
+        "handoff": "dynamic"
+      },
+      "example": "swarm: scan 10 targets in parallel"
+    },
+    "hierarchical": {
+      "name": "Hierarchical Pattern",
+      "description": "Top-down delegation from orchestrator to specialized sub-agents",
+      "type": "hierarchical",
+      "use_cases": [
+        "Full security assessment with clear phases",
+        "Complex penetration test with escalation stages",
+        "Multi-stage research projects"
+      ],
+      "configuration": {
+        "root_agent": "required",
+        "min_agents": 2,
+        "max_agents": 8,
+        "coordination": "centralized",
+        "handoff": "sequential_or_conditional"
+      },
+      "example": "hierarchical: assess target.com with full kill chain"
+    },
+    "sequential": {
+      "name": "Sequential Pattern",
+      "description": "Pipeline execution where each agent passes output to the next",
+      "type": "sequential",
+      "use_cases": [
+        "Recon → Exploit → Report workflow",
+        "Data collection → Analysis → Visualization",
+        "Code → Test → Document pipeline"
+      ],
+      "configuration": {
+        "sequence": "required",
+        "min_agents": 2,
+        "max_agents": 6,
+        "coordination": "pipeline",
+        "handoff": "mandatory_sequential"
+      },
+      "example": "sequential: recon → exploit → report for target.local"
+    },
+    "parallel": {
+      "name": "Parallel Pattern",
+      "description": "Multiple agents execute simultaneously on independent tasks",
+      "type": "parallel",
+      "use_cases": [
+        "Scanning multiple targets at once",
+        "Running different tests on same target",
+        "Independent research on multiple topics"
+      ],
+      "configuration": {
+        "tasks": "required",
+        "min_agents": 2,
+        "max_agents": 10,
+        "coordination": "independent",
+        "handoff": "none_or_final_aggregation"
+      },
+      "example": "parallel: test allOWASP Top 10 on target simultaneously"
+    },
+    "recursive": {
+      "name": "Recursive Pattern",
+      "description": "Single agent iteratively refines its own output",
+      "type": "recursive",
+      "use_cases": [
+        "Code debugging with self-correction",
+        "Report writing with multiple iterations",
+        "Research refinement until satisfaction"
+      ],
+      "configuration": {
+        "agent": "single",
+        "max_iterations": 5,
+        "evaluation": "self_or_external",
+        "handoff": "internal_self_reference"
+      },
+      "example": "recursive: debug this code until it passes all tests"
+    },
+    "conditional": {
+      "name": "Conditional Pattern",
+      "description": "Dynamic routing based on output/conditions",
+      "type": "conditional",
+      "use_cases": [
+        "Vulnerability found → escalate, else → continue",
+        "Test passed → merge, failed → debug",
+        "Threat detected → alert, else → log"
+      ],
+      "configuration": {
+        "conditions": "required",
+        "default_path": "required",
+        "evaluation": "per_step",
+        "handoff": "conditional"
+      },
+      "example": "conditional: if SQLi found → exploit artist, else → continue scan"
+    }
+  },
+  "kill_chain_integration": {
+    "reconnaissance": ["recon_scout", "deep_diver", "data_miner"],
+    "weaponization": ["code_artisan", "exploit_artist"],
+    "exploitation": ["exploit_artist", "web_pentester", "api_tester"],
+    "escalation": ["red_raider", "blue_guardian"],
+    "lateral_movement": ["red_raider", "bug_hunter"],
+    "exfiltration": ["data_miner", "analyst"],
+    "control": ["flag_discriminator", "bug_hunter"],
+    "defense": ["blue_guardian", "analyst"]
+  },
+  "recommended_workflows": {
+    "full_pentest": {
+      "pattern": "hierarchical",
+      "agents": ["recon_scout", "web_pentester", "exploit_artist", "red_raider", "doc_writer"],
+      "phases": ["reconnaissance", "scanning", "exploitation", "post_exploitation", "reporting"]
+    },
+    "bug_bounty": {
+      "pattern": "swarm",
+      "agents": ["recon_scout", "bug_hunter", "api_tester", "web_pentester"],
+      "phases": ["reconnaissance", "discovery", "testing", "reporting"]
+    },
+    "ctf": {
+      "pattern": "swarm",
+      "agents": ["recon_scout", "exploit_artist", "flag_discriminator"],
+      "phases": ["analysis", "exploitation", "flag_capture"]
+    },
+    "code_review": {
+      "pattern": "sequential",
+      "agents": ["code_artisan", "test_engineer", "doc_writer"],
+      "phases": ["implementation", "testing", "documentation"]
+    },
+    "research": {
+      "pattern": "parallel",
+      "agents": ["deep_diver", "data_miner", "analyst"],
+      "phases": ["collection", "analysis", "synthesis"]
+    }
+  }
+}

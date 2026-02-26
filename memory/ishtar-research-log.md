@@ -548,3 +548,198 @@ This research provides a comprehensive foundation for implementing multi-agent o
 
 *Research completed: 2026-02-26*
 *Next cycle: Implement orchestration patterns*
+
+---
+
+## 9. TELOS Integration for Dis (2026-02-26)
+
+### Key Findings (PAI Telos skill)
+- **Mandatory notification**: Telos skill requires a voice + text notification *before* any workflow action.
+- **Personal TELOS location**: `~/.claude/skills/PAI/USER/TELOS/` (CORE USER directory).
+- **Update workflow only**: No manual edits. Must use `Workflows/Update.md` → `bun ~/.claude/commands/update-telos.ts "FILE" "CONTENT" "DESCRIPTION"`.
+- **Backups & changelog**: Automatic timestamped backups in `Backups/` and log to `updates.md`.
+- **Valid files**: BELIEFS, BOOKS, CHALLENGES, FRAMES, GOALS, LEARNED/LESSONS, MISSION, MODELS, MOVIES, NARRATIVES, PREDICTIONS, PROBLEMS, PROJECTS, STRATEGIES, TELOS, TRAUMAS, WISDOM, WRONG.
+
+### Existing Automation (already in place)
+- `scripts/ishtar_telos_capture.py` → snapshots TELOS headings into `memory/telos-snapshot.md` (cron via `pai_repo_scan.sh`).
+- `scripts/ishtar_telos_update_helper.py` → validates update request, logs to `memory/ishtar-telos-update.log`, prints exact update-telos command.
+- `memory/state/telos-state.json` → summary KPIs + upcoming deadlines for dashboards/alerts.
+
+### Integration Blueprint for Dis
+1. **Trigger routing**: When Dis requests TELOS update, route through Update workflow (with voice/text notification) and use update helper to ensure compliance.
+2. **Change capture**: On successful update, append summary to `memory/ishtar-research-log.md` and update `telos-state.json` (goals/projects counts + recentActivity).
+3. **Dashcard**: Generate/refresh `athena-live` TELOS card from `telos-state.json` and `telos-snapshot.md`.
+4. **Notification**: Cisco posts a short confirmation to Dis (or Athena sends via main channel) with file + description; do not expose private content unless asked.
+
+---
+
+## 10. Agent Queue Implementation Plan (agent-queue.json)
+
+### File Structure
+```json
+{
+  "version": "1.1",
+  "updated": "<ISO8601>",
+  "tasks": [],
+  "stats": {
+    "totalProcessed": 0,
+    "avgCompletionTime": 0,
+    "lastProcessedAt": null
+  },
+  "indexes": {
+    "byStatus": {"PENDING": [], "ASSIGNED": [], "IN_PROGRESS": [], "COMPLETED": [], "FAILED": []},
+    "byAssignee": {}
+  }
+}
+```
+
+### Task Schema (additions)
+```ts
+interface Task {
+  id: string;
+  type: TaskType;
+  status: 'PENDING' | 'ASSIGNED' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+  priority: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  created: string;
+  deadline?: string;
+  assignee?: string;
+  requester: string;
+  input: any;
+  output?: any;
+  error?: string;
+  retryCount: number;
+  maxRetries: number;
+  dependencies: string[];
+  tags?: string[];
+  context?: Record<string, any>;
+  lease?: { owner: string; expiresAt: string };
+  history?: Array<{ at: string; event: string; by?: string }>;
+}
+```
+
+### Processing Rules
+1. **Ordering**: CRITICAL → HIGH → MEDIUM → LOW, then earliest deadline first.
+2. **Assignment**: Athena selects assignee by rules engine + agent availability.
+3. **Locking**: Use `lease` to avoid duplicate pickup (TTL 5–10 min).
+4. **State transitions**: PENDING → ASSIGNED → IN_PROGRESS → (COMPLETED|FAILED). Retries move FAILED → PENDING when `retryCount < maxRetries`.
+5. **Telemetry**: Update `stats`, `indexes`, and per-agent queue depth in `agent-status.json`.
+
+### Implementation Steps
+1. Create base `agent-queue.json` in `memory/` with empty arrays + stats.
+2. Add Athena heartbeat handler to:
+   - Load queue
+   - Assign eligible tasks
+   - Update status/lease
+   - Write back queue + agent-status
+3. Add periodic cleanup: drop expired leases, move stuck tasks back to PENDING, archive COMPLETED tasks to `memory/state/task-archive-YYYY-MM.json`.
+4. Add simple CLI helper (`scripts/queue_add_task.py`) for manual task insertions.
+
+---
+
+## 11. ORCHESTRATION IMPLEMENTATION (2026-02-26 Night Cycle)
+*In Progress - Ishtar*
+
+### Implementation Status
+
+**Completed:**
+1. ✅ Created `memory/agent-queue.json` - Full task queue with indexes and stats
+2. ✅ Created `memory/agent-status.json` - 15 agents with capabilities, status, lattice accountability
+3. ✅ Created `memory/global-state.json` - System-wide state tracking
+4. ✅ Created `memory/orchestration-rules.json` - 16 routing rules
+
+**Scripts Created:**
+1. ✅ `scripts/queue_manager.py` - Full task queue operations
+   - `add` - Create and add tasks
+   - `next` - Get next pending task (priority + deadline ordered)
+   - `assign/start/complete/fail` - Lifecycle operations
+   - `stats/list/cleanup` - Utilities
+
+2. ✅ `scripts/orchestration_rules.py` - Rules engine
+   - Pattern-based trigger matching
+   - Agent selection by capability and load
+   - Route requests to appropriate agents
+   - Default assignments per task type
+
+3. ✅ `scripts/task_coordinator.py` - Athena's main orchestration loop
+   - `process` - Process pending tasks from queue
+   - `status` - Get system status
+   - `health` - Check agent health
+   - `balance` - Load balancing analysis
+   - `summary` - Daily activity summary
+   - `handoff` - Agent-to-agent handoff coordination
+
+### Architecture Decisions
+
+**1. Task Queue Design**
+- In-memory JSON for simplicity (can migrate to SQLite/Redis later)
+- Priority ordering: CRITICAL → HIGH → MEDIUM → LOW
+- Lease-based locking (10 min TTL) to prevent duplicate pickup
+- Full history trail for each task
+
+**2. Agent Selection**
+- Rules engine evaluates triggers first
+- Falls back to capability-based defaults
+- Load-aware: prefers least-loaded agents
+- Supports explicit assignee preference
+
+**3. State Management**
+- `agent-queue.json` - Task queue + indexes
+- `agent-status.json` - Agent health + current tasks
+- `global-state.json` - System-wide metrics
+- `orchestration-rules.json` - Routing rules
+
+**4. Lattice Accountability Integration**
+- Each agent has `receivesFrom`, `outputsTo`, `accountableTo`
+- Handoffs tracked in global-state coordination metrics
+- Supports compliance oversight via THEMIS
+
+### Test Results
+
+```
+$ python3 scripts/task_coordinator.py status
+{
+  "timestamp": "2026-02-26T19:22:07.716472Z",
+  "queue": {
+    "pending": 0,
+    "assigned": 0,
+    "inProgress": 0,
+    "completed": 0,
+    "failed": 0
+  },
+  "agents": {
+    "total": 15,
+    "healthy": 15,
+    "idle": 14,
+    "busy": 1,
+    "error": 0,
+    "offline": 0
+  },
+  "health": "HEALTHY"
+}
+```
+
+### Remaining Work
+
+1. **Hook Integration** - Connect queue to OpenClaw hooks
+2. **Athena Heartbeat** - Auto-process queue on heartbeat
+3. **Agent Polling** - Agents pick up assigned tasks
+4. **Dashboard API** - Expose queue stats to athena-live
+5. **Persistence** - Archive completed tasks monthly
+
+### Files Created
+
+| File | Purpose | Lines |
+|------|---------|-------|
+| `memory/agent-queue.json` | Task queue + indexes | 35 |
+| `memory/agent-status.json` | Agent registry + health | 220 |
+| `memory/global-state.json` | System state | 25 |
+| `memory/orchestration-rules.json` | Routing rules | 160 |
+| `scripts/queue_manager.py` | Queue operations | 350 |
+| `scripts/orchestration_rules.py` | Rules engine | 280 |
+| `scripts/task_coordinator.py` | Main coordinator | 250 |
+
+---
+
+*Implementation ongoing - 2026-02-26*
+
+---

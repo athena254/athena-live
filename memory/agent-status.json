@@ -1,0 +1,446 @@
+{
+  "version": "1.0",
+  "updated": "2026-02-26T19:25:23.940386Z",
+  "agents": {
+    "athena": {
+      "name": "Athena",
+      "role": "Primary Orchestrator",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "routing",
+        "task_assignment",
+        "monitoring",
+        "coordination"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "all"
+        ],
+        "outputsTo": [
+          "sterling",
+          "ishtar",
+          "delver",
+          "squire",
+          "cisco",
+          "themis"
+        ],
+        "accountableTo": [
+          "dis"
+        ]
+      }
+    },
+    "sterling": {
+      "name": "Sterling",
+      "role": "Finance Agent",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "auto_bidding",
+        "finance_analysis",
+        "budget_tracking",
+        "beelancer_integration"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "autoBiddingEnabled": true,
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena",
+          "apollo"
+        ],
+        "outputsTo": [
+          "athena",
+          "dis"
+        ],
+        "accountableTo": [
+          "athena",
+          "themis"
+        ]
+      }
+    },
+    "ishtar": {
+      "name": "Ishtar",
+      "role": "PAI Architecture Research",
+      "status": "BUSY",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": "orchestration_implementation",
+      "queueDepth": 1,
+      "load": 0.8,
+      "capabilities": [
+        "research",
+        "architecture_design",
+        "pai_integration",
+        "documentation"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena"
+        ],
+        "outputsTo": [
+          "memory",
+          "athena"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    },
+    "delver": {
+      "name": "Delver",
+      "role": "Deep Research Agent",
+      "status": "BUSY",
+      "lastHeartbeat": "2026-02-26T19:25:23.940370Z",
+      "currentTask": "task_20260226_192523_23b21961",
+      "queueDepth": 0,
+      "load": 0.2,
+      "capabilities": [
+        "deep_research",
+        "knowledge_exploration",
+        "web_search",
+        "analysis"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena"
+        ],
+        "outputsTo": [
+          "athena",
+          "mnemosyne"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    },
+    "squire": {
+      "name": "Squire",
+      "role": "Task Management",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "task_tracking",
+        "reminders",
+        "scheduling",
+        "follow_ups"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena",
+          "dis"
+        ],
+        "outputsTo": [
+          "dis",
+          "athena"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    },
+    "felicity": {
+      "name": "Felicity",
+      "role": "Emotional Support",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "emotional_support",
+        "wellness_check",
+        "motivation",
+        "listening"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena",
+          "dis"
+        ],
+        "outputsTo": [
+          "dis"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    },
+    "prometheus": {
+      "name": "Prometheus",
+      "role": "Project Planning",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "project_planning",
+        "milestone_tracking",
+        "roadmap",
+        "estimation"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena"
+        ],
+        "outputsTo": [
+          "athena",
+          "squire"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    },
+    "cisco": {
+      "name": "Cisco",
+      "role": "Communication & Notifications",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "notifications",
+        "messaging",
+        "alerts",
+        "broadcasting"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "all"
+        ],
+        "outputsTo": [
+          "dis",
+          "athena"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    },
+    "themis": {
+      "name": "THEMIS",
+      "role": "Oversight & Compliance",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "compliance",
+        "oversight",
+        "audit",
+        "policy_enforcement"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "all"
+        ],
+        "outputsTo": [
+          "dis",
+          "athena"
+        ],
+        "accountableTo": [
+          "dis"
+        ]
+      }
+    },
+    "apollo": {
+      "name": "Apollo",
+      "role": "Prospecting Agent",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "prospect_search",
+        "lead_scoring",
+        "outreach",
+        "pipeline_management"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena",
+          "beelancer"
+        ],
+        "outputsTo": [
+          "hermes",
+          "sterling"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    },
+    "hermes": {
+      "name": "Hermes",
+      "role": "Client Relations",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "client_communication",
+        "relationship_management",
+        "onboarding",
+        "support"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena",
+          "apollo"
+        ],
+        "outputsTo": [
+          "athena",
+          "apollo"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    },
+    "kratos": {
+      "name": "Kratos",
+      "role": "Crypto/DeFi Trading",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "trading",
+        "defi_analysis",
+        "portfolio_management",
+        "risk_assessment"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena",
+          "sterling"
+        ],
+        "outputsTo": [
+          "sterling",
+          "dis"
+        ],
+        "accountableTo": [
+          "athena",
+          "themis"
+        ]
+      }
+    },
+    "chiron": {
+      "name": "Chiron",
+      "role": "QA Testing",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "testing",
+        "validation",
+        "qa",
+        "bug_tracking"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena"
+        ],
+        "outputsTo": [
+          "athena",
+          "mnemosyne"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    },
+    "mnemosyne": {
+      "name": "Mnemosyne",
+      "role": "Memory Management",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "memory_management",
+        "archival",
+        "knowledge_base",
+        "retrieval"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "all"
+        ],
+        "outputsTo": [
+          "all"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    },
+    "talia": {
+      "name": "Talia",
+      "role": "Content Creation",
+      "status": "IDLE",
+      "lastHeartbeat": "2026-02-26T19:00:00Z",
+      "currentTask": null,
+      "queueDepth": 0,
+      "load": 0.0,
+      "capabilities": [
+        "content_creation",
+        "social_media",
+        "copywriting",
+        "editing"
+      ],
+      "preferredModel": "anthropic/claude-3-5-sonnet",
+      "latticeAccountability": {
+        "receivesFrom": [
+          "athena",
+          "dis"
+        ],
+        "outputsTo": [
+          "cisco",
+          "dis"
+        ],
+        "accountableTo": [
+          "athena"
+        ]
+      }
+    }
+  },
+  "healthMetrics": {
+    "totalAgents": 15,
+    "activeAgents": 14,
+    "idleAgents": 13,
+    "busyAgents": 2,
+    "errorAgents": 0,
+    "offlineAgents": 0
+  }
+}

@@ -1,0 +1,98 @@
+// agent.proto - gRPC schema for agent communication
+
+syntax = "proto3";
+
+package agent;
+
+option go_package = "github.com/openclaw/agent-proto/gen/go/agent";
+option java_multiple_files = true;
+option java_package = "com.openclaw.agent";
+option objc_class_prefix = "AGT";
+
+// AgentMessage represents a message exchanged between agents
+message AgentMessage {
+  string id = 1;
+  string sender_id = 2;
+  string receiver_id = 3;
+  MessageType type = 4;
+  bytes payload = 5;
+  int64 timestamp = 6;
+  map<string, string> metadata = 7;
+}
+
+enum MessageType {
+  MESSAGE_TYPE_UNSPECIFIED = 0;
+  MESSAGE_TYPE_REQUEST = 1;
+  MESSAGE_TYPE_RESPONSE = 2;
+  MESSAGE_TYPE_STREAM = 3;
+  MESSAGE_TYPE_HEARTBEAT = 4;
+  MESSAGE_TYPE_ERROR = 5;
+}
+
+// TaskRequest represents a task assigned to an agent
+message TaskRequest {
+  string task_id = 1;
+  string agent_id = 2;
+  string description = 3;
+  map<string, string> parameters = 4;
+  int32 priority = 5;
+  int64 deadline = 6;
+}
+
+// TaskResponse represents the result of a task
+message TaskResponse {
+  string task_id = 1;
+  string agent_id = 2;
+  TaskStatus status = 3;
+  bytes result = 4;
+  string error_message = 5;
+  int64 completed_at = 6;
+}
+
+enum TaskStatus {
+  TASK_STATUS_UNSPECIFIED = 0;
+  TASK_STATUS_PENDING = 1;
+  TASK_STATUS_RUNNING = 2;
+  TASK_STATUS_COMPLETED = 3;
+  TASK_STATUS_FAILED = 4;
+  TASK_STATUS_CANCELLED = 5;
+}
+
+// StreamMessage for bidirectional streaming
+message StreamMessage {
+  string stream_id = 1;
+  string agent_id = 2;
+  bytes data = 3;
+  bool is_final = 4;
+}
+
+// HealthCheckRequest for health monitoring
+message HealthCheckRequest {
+  string agent_id = 1;
+}
+
+// HealthCheckResponse for health monitoring
+message HealthCheckResponse {
+  string agent_id = 1;
+  bool healthy = 2;
+  string status = 3;
+  int64 last_heartbeat = 4;
+}
+
+// Agent service for inter-agent communication
+service AgentService {
+  // Send a single message
+  rpc SendMessage(AgentMessage) returns (AgentMessage);
+  
+  // Submit a task and get response
+  rpc SubmitTask(TaskRequest) returns (TaskResponse);
+  
+  // Bidirectional streaming for continuous communication
+  rpc StreamMessages(stream StreamMessage) returns (stream StreamMessage);
+  
+  // Server-side streaming for task updates
+  rpc StreamTaskUpdates(TaskRequest) returns (stream TaskResponse);
+  
+  // Health check
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+}

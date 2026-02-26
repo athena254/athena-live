@@ -1,0 +1,22 @@
+{
+  "name": "agent-proto",
+  "version": "1.0.0",
+  "description": "gRPC scaffold for agent communication",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "client": "node client.js",
+    "docker:build": "docker build -t agent-grpc .",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:test": "docker-compose --profile test up agent-client"
+  },
+  "keywords": ["grpc", "agent", "communication", "proto"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.12.0",
+    "@grpc/proto-loader": "^0.7.13",
+    "protobufjs": "^7.4.0"
+  }
+}

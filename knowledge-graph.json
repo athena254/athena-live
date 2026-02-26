@@ -1,0 +1,783 @@
+{
+  "metadata": {
+    "generated": "2026-02-26T19:52:56.599819",
+    "source": "/root/.openclaw/workspace/memory",
+    "entity_count": 72,
+    "relation_count": 11
+  },
+  "nodes": [
+    {
+      "id": "subagent",
+      "name": "Subagent",
+      "type": "Project",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 30
+    },
+    {
+      "id": "cisco",
+      "name": "Cisco",
+      "type": "Agent",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 12
+    },
+    {
+      "id": "beelancer",
+      "name": "Beelancer",
+      "type": "Project",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 50
+    },
+    {
+      "id": "felicity",
+      "name": "Felicity",
+      "type": "Agent",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 14
+    },
+    {
+      "id": "researcher",
+      "name": "Researcher",
+      "type": "Agent",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 2
+    },
+    {
+      "id": "finance",
+      "name": "Finance",
+      "type": "Agent",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 16
+    },
+    {
+      "id": "butler",
+      "name": "Butler",
+      "type": "Agent",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 2
+    },
+    {
+      "id": "themis",
+      "name": "Themis",
+      "type": "Agent",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 12
+    },
+    {
+      "id": "prometheus",
+      "name": "Prometheus",
+      "type": "Agent",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 16
+    },
+    {
+      "id": "openclaw",
+      "name": "OpenClaw",
+      "type": "Project",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 40
+    },
+    {
+      "id": "bmad",
+      "name": "BMAD",
+      "type": "Project",
+      "properties": {
+        "context": "Nightly Subagent Validation Test (22:00 UTC)",
+        "source": "2026-02-20"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-morning-report-delivered",
+      "name": "Event: Morning Report Delivered",
+      "type": "Event",
+      "properties": {
+        "time": "04:00",
+        "source": "2026-02-21"
+      },
+      "occurrences": 2
+    },
+    {
+      "id": "sterling",
+      "name": "Sterling",
+      "type": "Agent",
+      "properties": {
+        "context": "\ud83c\udf05 Morning (04:00 - 12:00 UTC)",
+        "source": "2026-02-21"
+      },
+      "occurrences": 39
+    },
+    {
+      "id": "event:-weather-check",
+      "name": "Event: Weather Check",
+      "type": "Event",
+      "properties": {
+        "time": "04:08",
+        "source": "2026-02-21"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "ishtar",
+      "name": "Ishtar",
+      "type": "Agent",
+      "properties": {
+        "context": "\ud83c\udf05 Morning (04:00 - 12:00 UTC)",
+        "source": "2026-02-21"
+      },
+      "occurrences": 52
+    },
+    {
+      "id": "event:-ishtar-day-cycle-assigned",
+      "name": "Event: Ishtar Day Cycle Assigned",
+      "type": "Event",
+      "properties": {
+        "time": "04:08",
+        "source": "2026-02-21"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "pai",
+      "name": "PAI",
+      "type": "Project",
+      "properties": {
+        "context": "\ud83c\udf05 Morning (04:00 - 12:00 UTC)",
+        "source": "2026-02-21"
+      },
+      "occurrences": 31
+    },
+    {
+      "id": "athena",
+      "name": "Athena",
+      "type": "Agent",
+      "properties": {
+        "context": "\ud83d\ude80 Project Built (09:24 UTC)",
+        "source": "2026-02-21"
+      },
+      "occurrences": 85
+    },
+    {
+      "id": "athena-status-dashboard",
+      "name": "Athena Status Dashboard",
+      "type": "Project",
+      "properties": {
+        "context": "\ud83d\ude80 Project Built (09:24 UTC)",
+        "source": "2026-02-21"
+      },
+      "occurrences": 2
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard",
+      "type": "Project",
+      "properties": {
+        "context": "\ud83d\ude80 Project Built (09:24 UTC)",
+        "source": "2026-02-21"
+      },
+      "occurrences": 85
+    },
+    {
+      "id": "vercel",
+      "name": "Vercel",
+      "type": "Project",
+      "properties": {
+        "context": "\ud83d\ude80 Project Built (09:24 UTC)",
+        "source": "2026-02-21"
+      },
+      "occurrences": 5
+    },
+    {
+      "id": "github-pages",
+      "name": "GitHub Pages",
+      "type": "Project",
+      "properties": {
+        "context": "\ud83d\ude80 Project Built (09:24 UTC)",
+        "source": "2026-02-21"
+      },
+      "occurrences": 8
+    },
+    {
+      "id": "daily-build",
+      "name": "Daily Build",
+      "type": "Project",
+      "properties": {
+        "context": "\ud83c\udf19 Night Protocol Shift (22:20 UTC)",
+        "source": "2026-02-21"
+      },
+      "occurrences": 2
+    },
+    {
+      "id": "event:-naming-update",
+      "name": "Event: Naming update",
+      "type": "Event",
+      "properties": {
+        "time": "15:50",
+        "source": "2026-02-22"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-beelancer-status-check",
+      "name": "Event: Beelancer Status Check",
+      "type": "Event",
+      "properties": {
+        "time": "04:20",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-sterling-auto-bidder-cycle",
+      "name": "Event: Sterling Auto-Bidder Cycle",
+      "type": "Event",
+      "properties": {
+        "time": "04:30",
+        "source": "2026-02-23"
+      },
+      "occurrences": 3
+    },
+    {
+      "id": "event:-autonomous-update-cycle",
+      "name": "Event: Autonomous Update Cycle",
+      "type": "Event",
+      "properties": {
+        "time": "06:04",
+        "source": "2026-02-23"
+      },
+      "occurrences": 6
+    },
+    {
+      "id": "event:-context-reset-&-identity-confirmation",
+      "name": "Event: Context Reset & Identity Confirmation",
+      "type": "Event",
+      "properties": {
+        "time": "12:32",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-post-compaction-audit-complete",
+      "name": "Event: Post-Compaction Audit Complete",
+      "type": "Event",
+      "properties": {
+        "time": "12:39",
+        "source": "2026-02-23"
+      },
+      "occurrences": 2
+    },
+    {
+      "id": "event:-cross-bot-observation:-group-policy-conf",
+      "name": "Event: Cross-Bot Observation: Group Policy Conf",
+      "type": "Event",
+      "properties": {
+        "time": "12:44",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-group-policy-config:-amaya28_bot",
+      "name": "Event: Group Policy Config: Amaya28_Bot",
+      "type": "Event",
+      "properties": {
+        "time": "12:47",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-daily-build:-beelancer-bid-analytics-das",
+      "name": "Event: Daily Build: Beelancer Bid Analytics Das",
+      "type": "Event",
+      "properties": {
+        "time": "15:32",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-dashboard-refresh-+-audit-complete",
+      "name": "Event: Dashboard Refresh + Audit Complete",
+      "type": "Event",
+      "properties": {
+        "time": "16:19",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-dashboard-check-request",
+      "name": "Event: Dashboard Check Request",
+      "type": "Event",
+      "properties": {
+        "time": "16:33",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-dashboard-refresh-+-audit-cycle",
+      "name": "Event: Dashboard Refresh + Audit Cycle",
+      "type": "Event",
+      "properties": {
+        "time": "17:19",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-dashboard-refresh-cycle",
+      "name": "Event: Dashboard Refresh Cycle",
+      "type": "Event",
+      "properties": {
+        "time": "17:39",
+        "source": "2026-02-23"
+      },
+      "occurrences": 2
+    },
+    {
+      "id": "event:-dashboard-refresh-+-post-compaction-audi",
+      "name": "Event: Dashboard Refresh + Post-Compaction Audi",
+      "type": "Event",
+      "properties": {
+        "time": "18:24",
+        "source": "2026-02-23"
+      },
+      "occurrences": 4
+    },
+    {
+      "id": "event:-dashboard-refresh-+-audit",
+      "name": "Event: Dashboard Refresh + Audit",
+      "type": "Event",
+      "properties": {
+        "time": "18:44",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-overnight-sprint-activated-\ud83d\ude80",
+      "name": "Event: OVERNIGHT SPRINT ACTIVATED \ud83d\ude80",
+      "type": "Event",
+      "properties": {
+        "time": "19:13",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "decision:-9.-**themis**-\u2014-decision-history-visualization",
+      "name": "Decision: 9. **THEMIS** \u2014 Decision history visualization",
+      "type": "Decision",
+      "properties": {
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-scheduled-dashboard-refresh-triggered",
+      "name": "Event: Scheduled Dashboard Refresh Triggered",
+      "type": "Event",
+      "properties": {
+        "time": "18:56",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-whatsapp-gateway-blip-+-sterling-auto-bi",
+      "name": "Event: WhatsApp Gateway Blip + Sterling Auto-Bi",
+      "type": "Event",
+      "properties": {
+        "time": "19:17",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-overnight-sprint-dashboard-builds",
+      "name": "Event: Overnight Sprint Dashboard Builds",
+      "type": "Event",
+      "properties": {
+        "time": "20:13",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "decision:---`decision-history.html`-\u2014-themis-decision-log",
+      "name": "Decision: - `decision-history.html` \u2014 THEMIS decision log",
+      "type": "Decision",
+      "properties": {
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-whatsapp-\u2192-ishtar-routing-configured",
+      "name": "Event: WhatsApp \u2192 Ishtar Routing Configured",
+      "type": "Event",
+      "properties": {
+        "time": "21:12",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-pre-compaction-memory-flush",
+      "name": "Event: Pre-Compaction Memory Flush",
+      "type": "Event",
+      "properties": {
+        "time": "21:58",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "decision:---**dashboard-sprint-status:**-9-new-pages-built-(",
+      "name": "Decision: - **Dashboard sprint status:** 9 new pages built (",
+      "type": "Decision",
+      "properties": {
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-dashboard-refresh-(cron-triggered)",
+      "name": "Event: Dashboard Refresh (Cron Triggered)",
+      "type": "Event",
+      "properties": {
+        "time": "22:05",
+        "source": "2026-02-23"
+      },
+      "occurrences": 2
+    },
+    {
+      "id": "event:-ishtar-persistent-memory-created-\u2705",
+      "name": "Event: Ishtar Persistent Memory Created \u2705",
+      "type": "Event",
+      "properties": {
+        "time": "22:35",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-sterling-auto-bidder-cron-triggered",
+      "name": "Event: Sterling Auto-Bidder Cron Triggered",
+      "type": "Event",
+      "properties": {
+        "time": "22:58",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-sterling-auto-bidder-spawned",
+      "name": "Event: Sterling Auto-Bidder Spawned",
+      "type": "Event",
+      "properties": {
+        "time": "23:01",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-qwen-nvidia-naming-agent:-existential-cr",
+      "name": "Event: Qwen-Nvidia Naming Agent: Existential Cr",
+      "type": "Event",
+      "properties": {
+        "time": "23:16",
+        "source": "2026-02-23"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "nexus",
+      "name": "Nexus",
+      "type": "Agent",
+      "properties": {
+        "context": "2026-02-24 - Lattice Mission Control Build Session",
+        "source": "2026-02-24"
+      },
+      "occurrences": 7
+    },
+    {
+      "id": "event:-pre-compaction-flush",
+      "name": "Event: Pre-compaction flush",
+      "type": "Event",
+      "properties": {
+        "time": "22:02",
+        "source": "2026-02-24"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-research-initiated",
+      "name": "Event: Research Initiated",
+      "type": "Event",
+      "properties": {
+        "time": "04:03",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-research-complete",
+      "name": "Event: Research Complete",
+      "type": "Event",
+      "properties": {
+        "time": "05:30",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "decision:---**task-delegation-engine**:-decision-tree-for-ro",
+      "name": "Decision: - **Task Delegation Engine**: Decision tree for ro",
+      "type": "Decision",
+      "properties": {
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-overnight-report-delivered",
+      "name": "Event: Overnight Report Delivered",
+      "type": "Event",
+      "properties": {
+        "time": "05:35",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-status-check",
+      "name": "Event: Status Check",
+      "type": "Event",
+      "properties": {
+        "time": "05:57",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-pre-compaction-flush",
+      "name": "Event: Pre-Compaction Flush",
+      "type": "Event",
+      "properties": {
+        "time": "06:01",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-scheduled-dashboard-refresh",
+      "name": "Event: Scheduled Dashboard Refresh",
+      "type": "Event",
+      "properties": {
+        "time": "06:27",
+        "source": "2026-02-26"
+      },
+      "occurrences": 4
+    },
+    {
+      "id": "event:-new-security-skill-deployed",
+      "name": "Event: New Security Skill Deployed",
+      "type": "Event",
+      "properties": {
+        "time": "08:15",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-post-compaction-audit",
+      "name": "Event: Post-Compaction Audit",
+      "type": "Event",
+      "properties": {
+        "time": "08:17",
+        "source": "2026-02-26"
+      },
+      "occurrences": 2
+    },
+    {
+      "id": "event:-shannon-scan-complete",
+      "name": "Event: Shannon Scan Complete",
+      "type": "Event",
+      "properties": {
+        "time": "08:23",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-whatsapp-gateway-reconnected",
+      "name": "Event: WhatsApp Gateway Reconnected",
+      "type": "Event",
+      "properties": {
+        "time": "08:34",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-dashboard-refresh-+-browser-issue",
+      "name": "Event: Dashboard Refresh + Browser Issue",
+      "type": "Event",
+      "properties": {
+        "time": "08:37",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-memory-flush",
+      "name": "Event: Memory Flush",
+      "type": "Event",
+      "properties": {
+        "time": "08:39",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-scheduled-autonomous-update-(cron)",
+      "name": "Event: Scheduled Autonomous Update (Cron)",
+      "type": "Event",
+      "properties": {
+        "time": "09:03",
+        "source": "2026-02-26"
+      },
+      "occurrences": 3
+    },
+    {
+      "id": "event:-post-compaction-audit-+-dashboard-refres",
+      "name": "Event: Post-Compaction Audit + Dashboard Refres",
+      "type": "Event",
+      "properties": {
+        "time": "09:07",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-shannon-mut-pentest-complete",
+      "name": "Event: Shannon MUT Pentest Complete",
+      "type": "Event",
+      "properties": {
+        "time": "09:19",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-sterling-bidding-cycle-active",
+      "name": "Event: Sterling Bidding Cycle Active",
+      "type": "Event",
+      "properties": {
+        "time": "09:19",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    },
+    {
+      "id": "event:-shannon-deep-db-scan-launched",
+      "name": "Event: Shannon Deep DB Scan Launched",
+      "type": "Event",
+      "properties": {
+        "time": "09:20",
+        "source": "2026-02-26"
+      },
+      "occurrences": 1
+    }
+  ],
+  "edges": [
+    {
+      "source": "cisco",
+      "target": "subagent",
+      "type": "works_on"
+    },
+    {
+      "source": "felicity",
+      "target": "subagent",
+      "type": "works_on"
+    },
+    {
+      "source": "researcher",
+      "target": "subagent",
+      "type": "works_on"
+    },
+    {
+      "source": "finance",
+      "target": "subagent",
+      "type": "works_on"
+    },
+    {
+      "source": "butler",
+      "target": "subagent",
+      "type": "works_on"
+    },
+    {
+      "source": "themis",
+      "target": "subagent",
+      "type": "works_on"
+    },
+    {
+      "source": "prometheus",
+      "target": "subagent",
+      "type": "works_on"
+    },
+    {
+      "source": "sterling",
+      "target": "subagent",
+      "type": "works_on"
+    },
+    {
+      "source": "ishtar",
+      "target": "subagent",
+      "type": "works_on"
+    },
+    {
+      "source": "athena",
+      "target": "subagent",
+      "type": "works_on"
+    },
+    {
+      "source": "nexus",
+      "target": "subagent",
+      "type": "works_on"
+    }
+  ]
+}

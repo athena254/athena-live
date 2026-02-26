@@ -1,0 +1,97 @@
+{
+  "version": "1.1",
+  "updated": "2026-02-26T19:25:23.939683Z",
+  "tasks": [
+    {
+      "id": "task_20260226_192523_23b21961",
+      "type": "RESEARCH",
+      "status": "ASSIGNED",
+      "priority": "MEDIUM",
+      "created": "2026-02-26T19:25:23.938943Z",
+      "deadline": null,
+      "assignee": "delver",
+      "requester": "dis",
+      "input": {
+        "message": "research the latest AI agents framework",
+        "channel": "telegram",
+        "event": {
+          "message": {
+            "from": "dis",
+            "text": "research the latest AI agents framework"
+          },
+          "channel": "telegram"
+        }
+      },
+      "output": null,
+      "error": null,
+      "retryCount": 0,
+      "maxRetries": 3,
+      "dependencies": [],
+      "tags": [],
+      "context": {
+        "source": "hook",
+        "channel": "telegram"
+      },
+      "history": [
+        {
+          "at": "2026-02-26T19:25:23.938943Z",
+          "event": "CREATED",
+          "by": "dis"
+        },
+        {
+          "at": "2026-02-26T19:25:23.939675Z",
+          "event": "ASSIGNED",
+          "by": "delver"
+        }
+      ],
+      "lease": {
+        "owner": "delver",
+        "expiresAt": "2026-02-26T19:35:23.939666Z"
+      }
+    }
+  ],
+  "stats": {
+    "totalProcessed": 0,
+    "avgCompletionTimeMs": 0,
+    "lastProcessedAt": null,
+    "byPriority": {
+      "CRITICAL": 0,
+      "HIGH": 0,
+      "MEDIUM": 1,
+      "LOW": 0
+    },
+    "byStatus": {
+      "PENDING": 0,
+      "ASSIGNED": 1,
+      "IN_PROGRESS": 0,
+      "COMPLETED": 0,
+      "FAILED": 0,
+      "CANCELLED": 0
+    }
+  },
+  "indexes": {
+    "byStatus": {
+      "PENDING": [],
+      "ASSIGNED": [
+        "task_20260226_192523_23b21961"
+      ],
+      "IN_PROGRESS": [],
+      "COMPLETED": [],
+      "FAILED": [],
+      "CANCELLED": []
+    },
+    "byAssignee": {
+      "delver": [
+        "task_20260226_192523_23b21961"
+      ]
+    },
+    "byPriority": {
+      "CRITICAL": [],
+      "HIGH": [],
+      "MEDIUM": [
+        "task_20260226_192523_23b21961"
+      ],
+      "LOW": []
+    }
+  }
+}
