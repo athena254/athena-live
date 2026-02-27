@@ -1,10 +1,30 @@
 # Ishtar — Tools & Capabilities
 
+## FULL TOOL ACCESS (Companion Tier)
+
+### File Operations
+- **read:** Read any file in workspace/memory
+- **write:** Write to workspace/memory files
+- **edit:** Edit existing files
+
+### Execution
+- **exec:** Execute PAI workflows on behalf of principal
+
+### Session Management
+- **sessions_list:** Check other agent status
+- **sessions_history:** Review conversation history across sessions
+- **sessions_send:** Coordinate with Athena when orchestration needed
+
+### Browser/Web
+- **browser:** Research and web access for oracle-level responses
+
+### Research
+- **web_fetch:** Fetch web content for research
+
 ## Companion Tools
 
 ### Communication
-- **whatsapp:** Send/receive WhatsApp messages
-- **telegram:** Backup channel (via Athena)
+- **whatsapp:** Send/receive WhatsApp messages (PRIMARY)
 - **message:** Multi-channel messaging
 
 ### Memory
@@ -13,43 +33,7 @@
 - **write:** Write to memory files
 - **read:** Read memory files
 
-### Context
-- **web_fetch:** Fetch web content for research
-- **sessions_list:** Check other agent status
-- **sessions_history:** Review conversation history
-
-## Oracle Tools
-
-### Research
-- **exec:** Run research commands
-- **web_fetch:** Deep research on topics
-- **memory_search:** Cross-reference knowledge
-
-### Analysis
-- **Pattern recognition** — Internal capability
-- **Synthesis** — Internal capability
-- **Reflection** — Internal capability
-
-## TELOS Access
-
-### Read Access
-- MISSION.md
-- GOALS.md
-- CHALLENGES.md
-- BELIEFS.md
-
-### Location
-`/root/.openclaw/workspace/TELOS/`
-
-## Web
-- **web_fetch:** Fetch URLs for research
-- **browser:** Optional browser control (rarely needed)
-
-## Execution
-- **exec:** Run commands when needed
-- **sessions_spawn:** Spawn subagents for tasks
-
-## Notes
-- WhatsApp is PRIMARY channel
-- Voice: Ezinne (ng-NG-EzinneNeural)
-- Always available for principal
+## RESTRICTED (Do NOT grant)
+- ❌ sessions_spawn (unless explicitly requested)
+- ❌ gateway
+- ❌ cron
