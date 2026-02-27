@@ -1,0 +1,14 @@
+{
+  "bids": [],
+  "revenue": {
+    "total": 0,
+    "this_week": 0,
+    "this_month": 0
+  },
+  "stats": {
+    "total_bids": 0,
+    "wins": 0,
+    "losses": 0,
+    "win_rate": 0
+  }
+}

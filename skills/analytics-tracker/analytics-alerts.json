@@ -1,0 +1,17 @@
+{
+  "thresholds": {
+    "token_usage_warning": 120,
+    "token_usage_critical": 150,
+    "error_rate_warning": 5,
+    "error_rate_critical": 10,
+    "response_time_warning": 2,
+    "response_time_critical": 3,
+    "agent_offline_warning": 30,
+    "agent_offline_critical": 60
+  },
+  "alert_channels": ["telegram", "dashboard"],
+  "quiet_hours": {
+    "start": "23:00",
+    "end": "08:00"
+  }
+}

@@ -1,0 +1,187 @@
+#!/bin/bash
+# ============================================
+# daily-report.sh - Daily Report Automation Script
+# Runs daily to compile activity summary and performance report
+# ============================================
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_DIR="/root/.openclaw/workspace"
+MEMORY_DIR="$WORKSPACE_DIR/memory"
+REPORT_DIR="$MEMORY_DIR/daily-reports"
+
+# Timestamps
+TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
+TODAY=$(date -u +"%Y-%m-%d")
+YESTERDAY=$(date -u -d "yesterday" +"%Y-%m-%d")
+REPORT_FILE="$REPORT_DIR/daily-report-$TODAY.md"
+
+log() {
+    echo "[$TIMESTAMP] $1"
+}
+
+# Create report directory
+mkdir -p "$REPORT_DIR"
+
+log "========== DAILY REPORT STARTED =========="
+
+# Start report
+cat > "$REPORT_FILE" << EOF
+# Daily Report - $TODAY
+
+Generated: $TIMESTAMP
+
+---
+
+## 📊 Activity Summary (Last 24h)
+
+EOF
+
+# 1. Compile 24h activity summary
+log "Compiling 24h activity summary..."
+
+# Check today's memory log
+TODAY_LOG="$MEMORY_DIR/$TODAY.md"
+if [ -f "$TODAY_LOG" ]; then
+    ACTIVITY_COUNT=$(wc -l < "$TODAY_LOG")
+    echo "### Today's Activity" >> "$REPORT_FILE"
+    echo "- Total log entries: $ACTIVITY_COUNT lines" >> "$REPORT_FILE"
+    
+    # Count key events
+    BIDS=$(grep -ci "bid" "$TODAY_LOG" 2>/dev/null || echo "0")
+    GIGS=$(grep -ci "gig\|acceptance" "$TODAY_LOG" 2>/dev/null || echo "0")
+    AGENTS=$(grep -ci "agent\|athena" "$TODAY_LOG" 2>/dev/null || echo "0")
+    
+    echo "- Bid-related events: $BIDS" >> "$REPORT_FILE"
+    echo "- Gig/acceptance events: $GIGS" >> "$REPORT_FILE"
+    echo "- Agent activity mentions: $AGENTS" >> "$REPORT_FILE"
+else
+    echo "### Today's Activity" >> "$REPORT_FILE"
+    echo "- No log file found for today" >> "$REPORT_FILE"
+fi
+
+echo "" >> "$REPORT_FILE"
+
+# 2. Calculate revenue changes
+log "Calculating revenue changes..."
+
+cat >> "$REPORT_FILE" << EOF
+## 💰 Revenue Changes
+
+EOF
+
+# Check beelancer state for revenue info
+BEELANCER_STATE="$MEMORY_DIR/beelancer-state.json"
+if [ -f "$BEELANCER_STATE" ]; then
+    EARNINGS=$(grep -o '"total_earnings"[^,]*' "$BEELANCER_STATE" | head -1 || echo "total_earnings: not tracked")
+    PENDING_REVENUE=$(grep -o '"pending_revenue"[^,]*' "$BEELANCER_STATE" | head -1 || echo "pending_revenue: not tracked")
+    
+    echo "Current state:" >> "$REPORT_FILE"
+    echo "- $EARNINGS" >> "$REPORT_FILE"
+    echo "- $PENDING_REVENUE" >> "$REPORT_FILE"
+    
+    # Check for any bid wins in recent logs
+    WINS=$(grep -ci "accepted\|won\|gig accepted" "$MEMORY_DIR/"*.md 2>/dev/null | tail -1 || echo "0")
+    echo "- Recent gig acceptances: $WINS" >> "$REPORT_FILE"
+else
+    echo "- No beelancer state file found" >> "$REPORT_FILE"
+fi
+
+echo "" >> "$REPORT_FILE"
+
+# 3. Generate agent performance report
+log "Generating agent performance report..."
+
+cat >> "$REPORT_FILE" << EOF
+## 🤖 Agent Performance
+
+EOF
+
+# Check agent states
+AGENT_STATES="$MEMORY_DIR/agent-states.json"
+if [ -f "$AGENT_STATES" ]; then
+    echo "Agent states from last check:" >> "$REPORT_FILE"
+    # Extract active agents
+    ACTIVE_AGENTS=$(grep -o '"status":"active"[^}]*' "$AGENT_STATES" | wc -l || echo "0")
+    IDLE_AGENTS=$(grep -o '"status":"idle"[^}]*' "$AGENT_STATES" | wc -l || echo "0")
+    
+    echo "- Active agents: $ACTIVE_AGENTS" >> "$REPORT_FILE"
+    echo "- Idle agents: $IDLE_AGENTS" >> "$REPORT_FILE"
+else
+    echo "- No agent states file found" >> "$REPORT_FILE"
+fi
+
+# Check heartbeat state
+HEARTBEAT_STATE="$MEMORY_DIR/heartbeat-state.json"
+if [ -f "$HEARTBEAT_STATE" ]; then
+    LAST_EMAIL=$(grep -o '"email"[^,]*' "$HEARTBEAT_STATE" | head -1 || echo "email: unknown")
+    LAST_CALENDAR=$(grep -o '"calendar"[^,]*' "$HEARTBEAT_STATE" | head -1 || echo "calendar: unknown")
+    
+    echo "- Last email check: $LAST_EMAIL" >> "$REPORT_FILE"
+    echo "- Last calendar check: $LAST_CALENDAR" >> "$REPORT_FILE"
+fi
+
+echo "" >> "$REPORT_FILE"
+
+# 4. System health summary
+log "Adding system health summary..."
+
+cat >> "$REPORT_FILE" << EOF
+## 🔧 System Health
+
+EOF
+
+# Current system metrics
+CPU_LOAD=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | tr -d ',')
+MEM_PERCENT=$(free | awk '/^Mem:/ {printf "%.0f", $3/$2 * 100}')
+DISK_USAGE=$(df -h "$WORKSPACE_DIR" | awk 'NR==2 {print $5}' | tr -d '%')
+OPENCLAW_PROCS=$(ps aux | grep -i openclaw | grep -v grep | wc -l)
+
+echo "- CPU Load (1m): $CPU_LOAD" >> "$REPORT_FILE"
+echo "- Memory Usage: $MEM_PERCENT%" >> "$REPORT_FILE"
+echo "- Disk Usage: $DISK_USAGE%" >> "$REPORT_FILE"
+echo "- OpenClaw Processes: $OPENCLAW_PROCS" >> "$REPORT_FILE"
+
+echo "" >> "$REPORT_FILE"
+
+# 5. Git activity
+log "Checking git activity..."
+
+cd "$WORKSPACE_DIR"
+GIT_COMMITS_TODAY=$(git log --since=" midnight UTC" --oneline | wc -l || echo "0")
+GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+
+cat >> "$REPORT_FILE" << EOF
+## 📦 Git Activity
+
+- Branch: $GIT_BRANCH
+- Commits today: $GIT_COMMITS_TODAY
+
+EOF
+
+# 6. Close report
+cat >> "$REPORT_FILE" << EOF
+---
+
+*Report generated by daily-report.sh*
+EOF
+
+log "Report saved to: $REPORT_FILE"
+
+# 7. Push to backup repo (if configured)
+log "Preparing backup push..."
+
+# Check if there's a backup remote
+if git remote get-url backup >/dev/null 2>&1; then
+    log "Pushing to backup remote..."
+    git push backup main 2>/dev/null || git push backup master 2>/dev/null || log "Backup push skipped (may need setup)"
+    log "Backup push completed"
+else
+    log "No backup remote configured - run 'git remote add backup <url>' to enable"
+fi
+
+log "========== DAILY REPORT COMPLETED =========="
+log ""
+
+exit 0
