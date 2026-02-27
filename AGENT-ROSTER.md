@@ -1,7 +1,7 @@
 # 🦉 Agent Roster - Divine Council
 
-**Last Updated:** 2026-02-20 22:57 UTC  
-**Total Agents:** 10 active identities
+**Last Updated:** 2026-02-27 09:29 UTC  
+**Total Agents:** 14 active identities
 
 ---
 
@@ -158,6 +158,72 @@
   - Research synthesis
 - **Usage:** Spawned via `@Nexus` mention for synthesis tasks
 - **Tools:** Full access to exec, read, write, browser, memory tools
+
+---
+
+### **Kratos** 🪙 - Crypto/DeFi Intelligence
+- **Role:** Cryptocurrency & DeFi intelligence, market analysis
+- **Model:** `custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8` (GLM-5 key #1)
+- **Fallback:** `custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b` (qwen_nvidia)
+- **Voice:** Ryan (British male, analytical, `en-GB-RyanNeural`)
+- **Responsibilities:**
+  - DeFi protocol analysis (TVL, yields, risk)
+  - On-chain intelligence (whale tracking, smart money)
+  - Token research (tokenomics, holders, unlocks)
+  - Trading signals (technical + on-chain)
+  - Memecoin intelligence (honeypot detection)
+  - Cross-chain arbitrage opportunities
+- **Data Sources:** CoinGecko, DexScreener, DefiLlama, Etherscan, Solscan
+- **Usage:** Spawned via `@Kratos` mention for crypto tasks
+
+---
+
+### **Apollo** 📞 - Client Relations
+- **Role:** Client communication, satisfaction tracking, relationship management
+- **Model:** `custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8` (GLM-5)
+- **Fallback:** `custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b` (qwen_nvidia)
+- **Voice:** Not assigned
+- **Responsibilities:**
+  - Client communication & follow-ups
+  - Satisfaction tracking
+  - Relationship management
+  - Client onboarding
+  - Feedback collection
+- **Usage:** Spawned via `@Apollo` mention for client tasks
+
+---
+
+### **Hermes** 📣 - Outreach & Marketing
+- **Role:** Lead generation, outreach campaigns, brand awareness
+- **Model:** `custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8` (GLM-5)
+- **Fallback:** `custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b` (qwen_nvidia)
+- **Voice:** Not assigned
+- **Responsibilities:**
+  - Lead generation
+  - Outreach campaigns
+  - Brand awareness
+  - Social media management
+  - Content promotion
+- **Usage:** Spawned via `@Hermes` mention for marketing tasks
+
+---
+
+### **Ghost** 👻 - Browser Automation & Manual Bidding
+- **Name:** Ghost (formerly "Browser")
+- **Personality:** Hacker/Spy - operates in shadows, gets things done
+- **Role:** Browser automation, Chrome extension management, manual Beelancer bidding
+- **Model:** `custom-api-us-west-2-modal-direct/zai-org/GLM-5-FP8` (GLM-5 Key #1)
+- **Fallback:** `custom-integrate-api-nvidia-com/qwen/qwen3.5-397b-a17b` (qwen_nvidia)
+- **Voice:** Not assigned yet
+- **Responsibilities:**
+  - Attach Chrome extension for browser relay
+  - Navigate Beelancer platform
+  - Submit manual bids (fallback for auto-bidder when API blocked)
+  - Check gig status and verify outcomes
+  - Form filling and browser automation
+- **Skill:** `/root/.openclaw/workspace/skills/browser-agent/`
+- **Dashboard:** `/athena-live/browser-mission.html`
+- **Usage:** Spawned via `@Ghost` or `@Browser` mention, or invoked by Sterling for manual bidding
 
 ---
 
