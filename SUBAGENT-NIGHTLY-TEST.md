@@ -1,116 +1,118 @@
-## Test Run: 2026-02-20
+# Subagent Nightly Validation Test
 
-**Run Time:** 22:00 UTC - 22:18 UTC (18 minutes)
-**Total Agents Tested:** 7
-**Pass Rate:** 4/7 (57%)
+## Test Run: 2026-02-27
 
-### Individual Results
-
-| Agent | Task | Status | Duration | Notes |
-|-------|------|--------|----------|-------|
-| Cisco | CBT App PRD | ✅ Pass | 6m28s | Comprehensive PRD template with HIPAA considerations |
-| Felicity | Email Validator | ✅ Pass | 30s | 11 unit tests (exceeded 5 minimum), clean documented code |
-| Researcher | AI Memory Research | ❌ Fail | N/A | API rate limit (multiple retry attempts) |
-| Finance | Beelancer Analysis | ❌ Fail | N/A | API rate limit (multiple retry attempts) |
-| Butler | Status Card | ❌ Fail | N/A | API rate limit |
-| THEMIS | Council Deliberation | ✅ Pass | 4m14s | Strategic debate on Beelancer gig prioritization |
-| Prometheus | BMAD Directory | ✅ Pass | ~2m | All folders created, comprehensive README.md |
-
-### Detailed Results
-
-#### ✅ Cisco (BMAD Development)
-**Task:** Create CBT App PRD outline  
-**Result:** Comprehensive PRD template created. Beelancer.com was discovered to be a parked domain, so Cisco adapted by creating a template PRD based on industry-standard CBT app requirements including:
-- Problem Statement with market opportunity
-- Target Users segmentation
-- Top 5 Core Features (Guided Modules, Thought Journal, AI Coach, Progress Dashboard, Therapist Portal)
-- Detailed HIPAA Technical Constraints with architecture diagram
-- Success Metrics
-
-#### ✅ Felicity (Code Artisan)
-**Task:** Email validation utility with tests  
-**Result:** Created `/root/.openclaw/workspace-coder/email_validator.py` with:
-- Main `validate_email()` function with full docstring
-- **11 unit tests** (exceeded 5 minimum requirement)
-- Regex pattern explanation
-- Edge case handling (None, empty, non-string inputs)
-- All tests passed
-
-#### ✅ Prometheus (Tactical Execution)
-**Task:** Create BMAD project directory structure  
-**Result:** Successfully created at `/root/.openclaw/workspace/test-bmad-project/`:
-```
-test-bmad-project/
-├── _bmad/              # BMAD methodology documents
-├── _bmad-output/       # Generated outputs
-├── src/                # Source code
-├── tests/              # Test files
-├── docs/               # Documentation
-└── README.md           # Project documentation
-```
-
-#### ✅ THEMIS (Council Deliberation)
-**Task:** Debate high-value vs low-competition Beelancer gigs
-**Result:** Council of 3 voices deliberated over 2 rounds:
-- **Buzzworth the Pragmatist:** Advocated for high-value (🍯1000+) gigs
-- **Honig the Optimizer:** Advocated for low-competition (0-2 competitors) gigs
-- **Stinger the Challenger:** Proposed hybrid/phased approach
-**Final Recommendation:** Phased Hybrid Strategy - start low-competition (80%), transition to 50/50, then graduate to high-value (70%)
-
-#### ❌ Failed Agents (API Rate Limit)
-The following agents failed due to API rate limiting:
-- **Researcher:** Multiple spawn attempts hit rate limits
-- **Finance:** Multiple spawn attempts hit rate limits
-- **Butler:** Multiple spawn attempts hit rate limits
-
-### Butler's Task Completed Manually
-
-Since Butler failed, the status card was generated manually:
-
-```
-╔══════════════════════════════════════════════════════════╗
-║                    📊 STATUS CARD                         ║
-╠══════════════════════════════════════════════════════════╣
-║  🌤️  WEATHER - Murang'a, Kenya                           ║
-║  ─────────────────────────────────────────────────────── ║
-║  Temperature:  18°C (65°F)                               ║
-║  Conditions:   Partly Cloudy ☁️                          ║
-║  Humidity:     73%                                       ║
-║  Wind:         4 km/h NNW                                ║
-║  Feels Like:   18°C                                      ║
-╠══════════════════════════════════════════════════════════╣
-║  💻 SYSTEM                                                ║
-║  ─────────────────────────────────────────────────────── ║
-║  Uptime:       3 days, 19 hours, 16 minutes              ║
-║  Load Avg:     0.64, 0.63, 0.61                          ║
-║  Users:        1                                         ║
-╠══════════════════════════════════════════════════════════╣
-║  📁 WORKSPACE                                             ║
-║  ─────────────────────────────────────────────────────── ║
-║  Files:         7 files in /root/.openclaw/workspace/    ║
-╚══════════════════════════════════════════════════════════╝
-```
-
-### Summary
-
-**Overall:** 🟡 Partial Success
-
-**Highlights:**
-- Cisco demonstrated excellent adaptability when Beelancer was unavailable
-- Felicity over-delivered with 11 tests instead of 5 minimum
-- Prometheus completed despite initial timeout error
-- THEMIS delivered comprehensive council debate with synthesized recommendation
-
-**Issues:**
-- API rate limiting caused 3/7 agents to fail
-- Consider staggering agent spawns to avoid rate limits
-- Beelancer.com appears to be parked - cannot access actual gigs
-
-**Recommendations:**
-1. Implement sequential spawn with delays during high-traffic periods
-2. Add retry logic with exponential backoff for rate-limited requests
-3. Consider local fallback tasks when external APIs are unavailable
+**Run Time:** 22:00 UTC - 22:15 UTC (15 minutes total)
+**Total Agents Tested:** 5 (spawned), 2 (blocked by constraints)
+**Pass Rate:** 3/7 (43%)
 
 ---
 
-**Test Completed:** 2026-02-20 22:18 UTC
+## Individual Results
+
+| Agent | Task | Status | Duration | Tokens | Notes |
+|-------|------|--------|----------|--------|-------|
+| Butler | System Status Card | ✅ Pass | 1m | 6.5k | Completed weather, uptime, file count |
+| Finance | Beelancer Bid Analysis | ✅ Pass | 4m | 219k | Analyzed pending bids |
+| Researcher | AI Memory Systems Research | ✅ Pass | 5m | 358k | Deep research completed |
+| Cisco | CBT App PRD | ⚠️ Timeout | 8m | 23k | Hit 10-min limit, no output |
+| THEMIS | Council Deliberation | ❌ Fail | 0s | 0 | HTTP 401: User not found |
+| Felicity | Email Validator Code | ❌ Blocked | - | - | Agent not in allowed list |
+| Prometheus | BMAD Project Setup | ❌ Blocked | - | - | Max 5 children limit reached |
+
+---
+
+## Detailed Agent Analysis
+
+### ✅ Butler (Routine Tasks)
+- **Task:** Check weather, uptime, file count → Status card
+- **Result:** Successfully executed all commands
+- **Model Used:** minimax-portal/gemini
+- **Efficiency:** Excellent (26s actual runtime)
+
+### ✅ Finance (Financial Tracking)
+- **Task:** Analyze 6 pending Beelancer bids
+- **Result:** Completed analysis
+- **Model Used:** minimax-portal/gemini
+- **Token Usage:** 219k (high but acceptable for analysis)
+
+### ✅ Researcher (Deep Analysis)
+- **Task:** Research "AI agent memory systems 2026"
+- **Result:** Completed research with findings
+- **Model Used:** minimax-portal/gemini
+- **Token Usage:** 358k (highest - deep research task)
+
+### ⚠️ Cisco (BMAD Development)
+- **Task:** CBT App PRD outline
+- **Result:** Timed out at 8 minutes
+- **Model Used:** zai-org/GLM-5-FP8
+- **Issue:** Task likely too complex for 10-min window with Beelancer access
+
+### ❌ THEMIS (Council Deliberation)
+- **Task:** Convene council on Beelancer strategy
+- **Result:** Failed immediately
+- **Error:** HTTP 401: User not found
+- **Issue:** Authentication/identity problem - agent not recognized
+
+### ❌ Felicity (Code Artisan)
+- **Task:** Email validator with tests
+- **Result:** Blocked at spawn
+- **Error:** Agent not in allowed agents list
+- **Issue:** Missing from subagent allowlist configuration
+
+### ❌ Prometheus (Tactical Execution)
+- **Task:** Create BMAD project directory structure
+- **Result:** Blocked at spawn
+- **Error:** Max 5 children limit reached
+- **Issue:** Architecture constraint - can only spawn 5 concurrent subagents
+
+---
+
+## Issues Identified
+
+### Critical Issues
+1. **THEMIS Authentication Failure** - HTTP 401 error indicates identity/account problem
+2. **Felicity Missing from Allowlist** - Agent exists but not permitted for subagent spawning
+
+### Architecture Constraints
+1. **5-Child Limit** - Cannot spawn more than 5 subagents simultaneously
+   - Workaround: Spawn sequentially or increase limit in configuration
+2. **10-Minute Timeout** - Complex tasks (like Beelancer browsing + PRD) may exceed
+
+### Recommendations
+1. **Fix THEMIS** - Verify agent credentials/identity configuration
+2. **Add Felicity to Allowlist** - Update subagent allowed agents configuration
+3. **Sequential Spawning** - For full 7-agent tests, run in batches of 5
+4. **Longer Timeout for Cisco** - Complex BMAD tasks need 15-20 minutes
+
+---
+
+## Summary
+
+**Overall:** 🟡 Mixed Results
+
+**Highlights:**
+- Butler: Fast, efficient execution (1m)
+- Researcher: Deep research completed successfully
+- Finance: Comprehensive analysis delivered
+
+**Issues:**
+- THEMIS needs authentication fix
+- Felicity needs allowlist addition
+- Architecture limits (5 children, 10-min timeout) constrain testing
+
+**Next Steps:**
+1. Investigate THEMIS HTTP 401 error
+2. Add Felicity to allowed agents configuration
+3. Consider sequential spawning for future 7-agent tests
+4. Extend timeout for complex tasks (Cisco BMAD work)
+
+---
+
+## Test Environment
+
+- **Host:** localhost
+- **Channel:** Telegram (cron triggered)
+- **Models Used:** minimax-portal/gemini, zai-org/GLM-5-FP8
+- **Total Tokens Consumed:** ~607k (all agents combined)
+- **Total Runtime:** ~15 minutes
