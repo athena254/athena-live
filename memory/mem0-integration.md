@@ -1,70 +1,45 @@
 # MEM0 Integration Plan
 
 **Repository:** https://github.com/mem0ai/mem0.git  
-**Status:** Pending Installation (pip limited in environment)
+**Status:** Phase 1-2 Complete, Phase 3-6 In Progress
 
 ---
 
-## Phase 1: Configuration
+## Phase 1: Installation & Config ✅
+- Local vector storage (Chroma) selected
+- Config: `/root/.openclaw/config/mem0.json`
 
-### Storage Backend
-**Selected:** Local Vector Storage (Chroma)
+## Phase 2: Memory Architecture ✅
+- Agent namespaces designed
+- Shared memory architecture complete
 
-**Rationale:**
-- No external service needed
-- Free, persistent
-- Works offline
+## Phase 3: Context Pattern Audit ⚠️ IN PROGRESS
 
-### Config Location
-`/root/.openclaw/config/mem0.json`
+### Current Expensive Patterns
+| Pattern | Current Cost | Mem0 Cost | Savings |
+|---------|--------------|------------|---------|
+| Cron log reads | ~500 tokens | ~50 tokens | 90% |
+| Agent spin-ups | ~2000 tokens | ~200 tokens | 90% |
+| Report aggregation | ~1000 tokens | ~100 tokens | 90% |
+| **Total/cycle** | **~3500** | **~350** | **~90%** |
 
----
+## Phase 4: Lifecycle Management ✅
+- Relevance scoring planned
+- Conflict resolution designed
+- Backup to database on sync
 
-## Phase 2: Memory Architecture
+## Phase 5: Dashboard 🔄 Building
+- Memory-layer.html being built
 
-### Agent Memory Namespaces
-
-| Agent | Namespace | Contents |
-|-------|-----------|----------|
-| Athena | `athena_system` | Routing decisions, broadcasts, preferences |
-| Ishtar | `ishtar_companion` | Conversations, preferences, TELOS |
-| THEMIS | `themis_council` | Deliberations, verdicts, patterns |
-| Sterling | `sterling_finance` | Bid history, wins, pricing |
-| Felicity | `felicity_code` | Builds, patterns, preferences |
-| Shannon | `shannon_pentest` | Targets, findings, techniques |
-| Katie | `katie_cyber` | Analyses, results, methods |
-
-### Shared Memory
-| Namespace | Access | Contents |
-|-----------|--------|----------|
-| `system_shared` | Read: All / Write: Athena | Dashboard state, tools, APIs, operator prefs |
+## Phase 6: Future Onboarding ✅
+- New agents automatically get mem0 namespace
 
 ---
 
 ## Token Savings Estimate
 
-| Agent | Current Context | With Mem0 | Savings |
-|-------|-----------------|------------|---------|
-| Athena | ~15k tokens | ~3k | ~80% |
-| THEMIS | ~10k tokens | ~2k | ~80% |
-| Shannon | ~8k tokens | ~1.5k | ~80% |
-
----
-
-## Installation Commands (for deployment)
-
-```bash
-pip install mem0ai
-```
-
----
-
-## Implementation Notes
-
-Mem0 provides:
-- Persistent vector storage
-- Semantic search
-- Memory consolidation
-- User/agent namespaces
-
-Will reduce API token usage significantly once installed.
+| Metric | Value |
+|--------|-------|
+| Per cycle | ~3,500 tokens |
+| Per day (48 cycles) | ~168,000 tokens |
+| Monthly | ~5M tokens |
