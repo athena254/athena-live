@@ -1,988 +1,351 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🦉 Athena Live Dashboard</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
-        
-        :root {
-            --cyan: #00f0ff;
-            --magenta: #ff00aa;
-            --green: #00ff88;
-            --yellow: #ffcc00;
-            --red: #ff3366;
-            --purple: #aa00ff;
-            --bg-dark: #0a0e17;
-            --bg-card: #111827;
-            --bg-card-light: #1a2332;
-            --border: #2d3a4f;
-            --text-primary: #ffffff;
-            --text-secondary: #8b9cb3;
-            --text-muted: #6b7c93;
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: linear-gradient(135deg, #0a0e17 0%, #16213e 100%);
-            min-height: 100vh;
-            color: var(--text-primary);
-            overflow-x: hidden;
-        }
-        
-        /* Starfield Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.7), transparent),
-                radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.6), transparent);
-            background-size: 200px 200px;
-            animation: stars 60s linear infinite;
-            z-index: -1;
-            opacity: 0.5;
-        }
-        
-        @keyframes stars {
-            from { transform: translateY(0); }
-            to { transform: translateY(-200px); }
-        }
-        
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 30px 20px;
-        }
-        
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 30px;
-            background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(10, 14, 23, 0.95) 100%);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-        }
-        
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            background: linear-gradient(90deg, var(--cyan), var(--magenta));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 10px rgba(0,240,255,0.5)); }
-            to { filter: drop-shadow(0 0 20px rgba(255,0,170,0.5)); }
-        }
-        
-        .subtitle {
-            color: var(--cyan);
-            font-size: 1.1rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-        
-        /* Real-Time Metrics Panel */
-        .metrics-panel {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        
-        .metric-card {
-            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-light) 100%);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 25px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: linear-gradient(90deg, var(--metric-color, var(--cyan)), transparent);
-        }
-        
-        .metric-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--metric-color, var(--cyan));
-            box-shadow: 0 10px 40px rgba(0, 240, 255, 0.15);
-        }
-        
-        .metric-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            display: block;
-        }
-        
-        .metric-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.2rem;
-            color: var(--metric-color, var(--cyan));
-            margin-bottom: 5px;
-        }
-        
-        .metric-label {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .metric-trend {
-            font-size: 0.8rem;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .metric-trend.up { color: var(--green); }
-        .metric-trend.down { color: var(--red); }
-        .metric-trend.stable { color: var(--yellow); }
-        
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-        
-        .action-btn {
-            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-light) 100%);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .action-btn:hover {
-            border-color: var(--action-color, var(--cyan));
-            transform: scale(1.05);
-            box-shadow: 0 10px 40px rgba(0, 240, 255, 0.2);
-        }
-        
-        .action-btn:active {
-            transform: scale(0.98);
-        }
-        
-        .action-btn .icon {
-            font-size: 2rem;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
-        }
-        
-        .action-btn span {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .action-btn.active {
-            border-color: var(--green);
-            background: rgba(0, 255, 136, 0.1);
-        }
-        
-        .action-btn.active span {
-            color: var(--green);
-        }
-        
-        /* Dashboard Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        
-        .card {
-            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-light) 100%);
-            padding: 25px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: linear-gradient(90deg, var(--card-color, var(--cyan)), transparent);
-        }
-        
-        .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: var(--card-color, var(--cyan));
-            box-shadow: 0 20px 60px rgba(0, 240, 255, 0.2);
-        }
-        
-        .card h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-            color: var(--card-color, var(--cyan));
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        
-        /* Activity Section */
-        .activity-section {
-            background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(10, 14, 23, 0.95) 100%);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 40px;
-        }
-        
-        .activity-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .activity-header h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            color: var(--cyan);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .activity-tabs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .activity-tab {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text-secondary);
-        }
-        
-        .activity-tab:hover {
-            border-color: var(--cyan);
-            color: var(--cyan);
-        }
-        
-        .activity-tab.active {
-            background: rgba(0, 240, 255, 0.15);
-            border-color: var(--cyan);
-            color: var(--cyan);
-        }
-        
-        .activity-list {
-            list-style: none;
-        }
-        
-        .activity-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
-            border-radius: 8px;
-            margin-bottom: 5px;
-        }
-        
-        .activity-item:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
-        
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-        
-        .activity-icon {
-            font-size: 1.5rem;
-            min-width: 2.5rem;
-            text-align: center;
-        }
-        
-        .activity-content {
-            flex: 1;
-        }
-        
-        .activity-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-        
-        .activity-detail {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        
-        .activity-time {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .activity-item.success { border-left: 3px solid var(--green); }
-        .activity-item.warning { border-left: 3px solid var(--yellow); }
-        .activity-item.info { border-left: 3px solid var(--cyan); }
-        .activity-item.error { border-left: 3px solid var(--red); }
-        
-        .pulse-dot {
-            width: 10px;
-            height: 10px;
-            background: var(--green);
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse 2s infinite;
-            box-shadow: 0 0 10px var(--green);
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-        }
-        
-        /* API Rate Limit Indicators */
-        .rate-limit-bar {
-            height: 6px;
-            background: var(--bg-card);
-            border-radius: 3px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        
-        .rate-limit-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
-            h1 { font-size: 2.5rem; }
-        }
-        
-        @media (max-width: 768px) {
-            .container { padding: 15px; }
-            h1 { font-size: 2rem; }
-            .metrics-panel { grid-template-columns: repeat(2, 1fr); }
-            .grid { grid-template-columns: 1fr; }
-            .activity-header { flex-direction: column; align-items: flex-start; }
-            .activity-tabs { width: 100%; overflow-x: auto; }
-            .metric-value { font-size: 1.8rem; }
-        }
-        
-        @media (max-width: 480px) {
-            .metrics-panel { grid-template-columns: 1fr; }
-            .quick-actions { grid-template-columns: repeat(2, 1fr); }
-            header { padding: 20px; }
-            h1 { font-size: 1.8rem; }
-        }
-        
-        /* Loading Animation */
-        .loading {
-            animation: shimmer 1.5s infinite;
-            background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-light) 50%, var(--bg-card) 75%);
-            background-size: 200% 100%;
-        }
-        
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        /* Toast Notifications */
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-        
-        .toast {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            animation: slideIn 0.3s ease;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
-        
-        .toast.success { border-color: var(--green); }
-        .toast.error { border-color: var(--red); }
-        .toast.info { border-color: var(--cyan); }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        /* Silent Mode Indicator */
-        .silent-mode {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 10px 20px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            z-index: 100;
-        }
-        
-        .silent-mode.active {
-            display: flex;
-            border-color: var(--yellow);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Athena Live | Multi-Agent AI Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    [data-theme="dark"] { --bg-base: #0c0f1a; --bg-surface: #111827; --bg-elevated: #1f2937; --border: #1f2937; --text-primary: #f9fafb; --text-secondary: #d1d5db; --text-muted: #9ca3af; }
+    [data-theme="light"] { --bg-base: #f8fafc; --bg-surface: #ffffff; --bg-elevated: #f1f5f9; --border: #e2e8f0; --text-primary: #0f172a; --text-secondary: #334155; --text-muted: #64748b; }
+    
+    /* Agent Dashboard Grid */
+    .agent-dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-2xl); }
+    .agent-dashboard-card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-lg); transition: var(--transition-base); text-decoration: none; color: inherit; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+    .agent-dashboard-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--agent-color, var(--primary)); opacity: 0.6; transition: var(--transition-base); }
+    .agent-dashboard-card:hover { transform: translateY(-4px); border-color: var(--agent-color, var(--primary)); box-shadow: var(--shadow-glow); }
+    .agent-dashboard-card:hover::before { opacity: 1; }
+    .agent-dashboard-header { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md); }
+    .agent-dashboard-avatar { width: 52px; height: 52px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--agent-color), var(--agent-color-light)); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; flex-shrink: 0; }
+    .agent-dashboard-info { flex: 1; min-width: 0; }
+    .agent-dashboard-name { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+    .agent-dashboard-role { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .agent-dashboard-status { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; font-size: 0.625rem; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
+    .agent-dashboard-status.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    .agent-dashboard-status.idle { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .agent-dashboard-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .agent-dashboard-status.active .agent-dashboard-dot { animation: pulse 2s infinite; }
+    .agent-dashboard-footer { margin-top: auto; padding-top: var(--space-md); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .agent-dashboard-link { font-size: 0.8125rem; color: var(--agent-color, var(--primary-light)); font-weight: 500; display: flex; align-items: center; gap: var(--space-xs); }
+    .agent-dashboard-card:hover .agent-dashboard-link { color: var(--agent-color-light); }
+    .agent-dashboard-arrow { transition: transform var(--transition-fast); }
+    .agent-dashboard-card:hover .agent-dashboard-arrow { transform: translateX(4px); }
+    .agent-dashboard-tasks { font-size: 0.75rem; color: var(--text-subtle); }
+    
+    .revenue-tracker { background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-xl); margin-bottom: var(--space-2xl); position: relative; }
+    .revenue-tracker::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #f59e0b, #10b981, #6366f1); }
+    .revenue-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-lg); }
+    .revenue-title { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); }
+    .revenue-title::before { content: "🍯"; margin-right: 8px; }
+    .revenue-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); }
+    .revenue-item { text-align: center; padding: var(--space-lg); background: var(--bg-elevated); border-radius: var(--radius-lg); transition: var(--transition-base); }
+    .revenue-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow); }
+    .revenue-item .icon { font-size: 2rem; margin-bottom: var(--space-sm); display: block; }
+    .revenue-item .value { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
+    .revenue-item .label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+    .revenue-item.earned .value { color: #10b981; }
+    .revenue-item.pending .value { color: #f59e0b; }
+    .revenue-item.conversion .value { color: #6366f1; }
+    .conversion-bar { margin-top: var(--space-md); height: 8px; background: var(--bg-base); border-radius: var(--radius-full); overflow: hidden; }
+    .conversion-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #22d3ee); }
+    .quick-actions-panel { background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-lg); margin-bottom: var(--space-2xl); }
+    .quick-actions-header { margin-bottom: var(--space-md); }
+    .quick-actions-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
+    .quick-actions-title::before { content: "⚡"; margin-right: 8px; }
+    .quick-actions-buttons { display: flex; gap: var(--space-md); flex-wrap: wrap; }
+    .quick-action-btn { display: inline-flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-secondary); font-size: 0.875rem; cursor: pointer; transition: var(--transition-fast); font-family: inherit; }
+    .quick-action-btn:hover { background: var(--bg-hover); border-color: var(--primary); }
+    .quick-action-btn.refresh { color: #10b981; }
+    .quick-action-btn.theme { color: #f59e0b; }
+    .agent-dropdown { position: relative; display: inline-block; }
+    .agent-dropdown-content { display: none; position: absolute; top: 100%; left: 0; min-width: 220px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-xl); z-index: 100; margin-top: var(--space-xs); padding: var(--space-xs); }
+    .agent-dropdown:hover .agent-dropdown-content { display: block; }
+    .agent-dropdown-item { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); color: var(--text-secondary); font-size: 0.875rem; text-decoration: none; border-radius: var(--radius-sm); }
+    .agent-dropdown-item:hover { background: var(--bg-hover); }
+    .agent-performance-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-2xl); }
+    .agent-performance-card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-lg); transition: var(--transition-base); position: relative; }
+    .agent-performance-card:hover { transform: translateY(-4px); border-color: var(--agent-color); }
+    .agent-performance-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--agent-color); opacity: 0.6; }
+    .agent-header { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md); }
+    .agent-avatar { width: 48px; height: 48px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--agent-color), var(--agent-color-light)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .agent-info { flex: 1; }
+    .agent-name { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
+    .agent-role { font-size: 0.75rem; color: var(--text-muted); }
+    .agent-status { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 9999px; font-size: 0.625rem; font-weight: 600; text-transform: uppercase; }
+    .agent-status.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    .agent-status.idle { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .agent-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .agent-status.active .agent-status-dot { animation: pulse 2s infinite; }
+    .agent-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md); }
+    .agent-metric { text-align: center; padding: var(--space-sm); background: var(--bg-elevated); border-radius: var(--radius-md); }
+    .agent-metric-value { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
+    .agent-metric-label { font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; }
+    .agent-success-bar { margin-top: var(--space-md); }
+    .agent-success-bar .label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: var(--space-xs); }
+    .agent-success-fill { height: 6px; background: var(--bg-base); border-radius: 9999px; overflow: hidden; }
+    .agent-success-fill .fill { height: 100%; background: linear-gradient(90deg, var(--agent-color), var(--agent-color-light)); }
+    [data-tooltip] { position: relative; }
+    [data-tooltip]::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%) scale(0.9); padding: 8px 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; opacity: 0; visibility: hidden; transition: 0.2s; z-index: 1000; }
+    [data-tooltip]:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) scale(1); }
+    
+    @media (max-width: 640px) { .agent-dashboard-grid { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
-    <div class="silent-mode" id="silentMode">
-        <span>🔇</span>
-        <span>Silent Mode Active</span>
-    </div>
+  <div class="loading-overlay" id="loader"><div class="loader"></div><p class="loading-text">Initializing Athena...</p></div>
+  <main class="container">
+    <header class="header animate-fade-in"><div class="header-badge"><span class="pulse"></span><span>All Systems Operational</span></div><h1 class="header-title">Athena <span>Live</span></h1><p class="header-subtitle">Multi-Agent Intelligence Dashboard</p></header>
     
-    <div class="container">
-        <header>
-            <h1>🦉 Athena Live Dashboard</h1>
-            <p class="subtitle">Real-Time Agent Operations Center</p>
-        </header>
-        
-        <!-- Real-Time Metrics Panel -->
-        <div class="metrics-panel">
-            <div class="metric-card" style="--metric-color: var(--cyan);">
-                <span class="metric-icon">👥</span>
-                <div class="metric-value" id="activeSessions">12</div>
-                <div class="metric-label">Active Sessions</div>
-                <div class="metric-trend up">↑ 3 this hour</div>
-            </div>
-            
-            <div class="metric-card" style="--metric-color: var(--magenta);">
-                <span class="metric-icon">⚡</span>
-                <div class="metric-value" id="tokenRate">2.4K</div>
-                <div class="metric-label">Tokens/Min</div>
-                <div class="metric-trend stable">→ Stable</div>
-            </div>
-            
-            <div class="metric-card" style="--metric-color: var(--green);">
-                <span class="metric-icon">🌐</span>
-                <div class="metric-value" id="gatewayUptime">99.9%</div>
-                <div class="metric-label">Gateway Uptime</div>
-                <div class="metric-trend up">↑ 7d streak</div>
-            </div>
-            
-            <div class="metric-card" style="--metric-color: var(--yellow);">
-                <span class="metric-icon">📊</span>
-                <div class="metric-label">API Rate Limits</div>
-                <div style="margin-top: 10px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 3px;">
-                        <span>Llama</span>
-                        <span id="llamaLimit">45%</span>
-                    </div>
-                    <div class="rate-limit-bar">
-                        <div class="rate-limit-fill" style="width: 45%;"></div>
-                    </div>
-                </div>
-                <div style="margin-top: 10px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 3px;">
-                        <span>Gemini</span>
-                        <span id="geminiLimit">62%</span>
-                    </div>
-                    <div class="rate-limit-bar">
-                        <div class="rate-limit-fill" style="width: 62%;"></div>
-                    </div>
-                </div>
-                <div style="margin-top: 10px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 3px;">
-                        <span>GLM-5</span>
-                        <span id="glmLimit">28%</span>
-                    </div>
-                    <div class="rate-limit-bar">
-                        <div class="rate-limit-fill" style="width: 28%;"></div>
-                    </div>
-                </div>
-                <div style="margin-top: 10px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 3px;">
-                        <span>Qwen</span>
-                        <span id="qwenLimit">71%</span>
-                    </div>
-                    <div class="rate-limit-bar">
-                        <div class="rate-limit-fill" style="width: 71%;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-            <div class="action-btn" style="--action-color: var(--cyan);" onclick="restartGateway()">
-                <span class="icon">🔄</span>
-                <span>Restart Gateway</span>
-            </div>
-            <div class="action-btn" style="--action-color: var(--green);" onclick="refreshAll()">
-                <span class="icon">🔃</span>
-                <span>Refresh All</span>
-            </div>
-            <div class="action-btn" style="--action-color: var(--yellow);" onclick="toggleSilentMode()" id="silentModeBtn">
-                <span class="icon">🔔</span>
-                <span>Silent Mode</span>
-            </div>
-            <div class="action-btn" style="--action-color: var(--magenta);" onclick="quickScan()">
-                <span class="icon">🔍</span>
-                <span>Quick Scan</span>
-            </div>
-            <div class="action-btn" style="--action-color: var(--purple);" onclick="checkBids()">
-                <span class="icon">🐝</span>
-                <span>Check Bids</span>
-            </div>
-            <div class="action-btn" style="--action-color: var(--red);" onclick="viewLogs()">
-                <span class="icon">📋</span>
-                <span>View Logs</span>
-            </div>
-        </div>
-        
-        <!-- Dashboard Grid -->
-        <div class="grid">
-            <a href="finance-dashboard.html" class="card" style="--card-color: var(--green);">
-                <h3>💰 Finance Dashboard</h3>
-                <p>Track bids, earnings, and financial metrics</p>
-            </a>
-            <a href="beelancer-analytics.html" class="card" style="--card-color: var(--yellow);">
-                <h3>🐝 Beelancer Analytics</h3>
-                <p>Freelance gig analytics and insights</p>
-            </a>
-            <a href="command-center.html" class="card" style="--card-color: var(--cyan);">
-                <h3>🎛️ Command Center</h3>
-                <p>Multi-agent control interface</p>
-            </a>
-            <a href="automation-center.html" class="card" style="--card-color: var(--purple);">
-                <h3>⚙️ Automation Center</h3>
-                <p>Workflow automation controls</p>
-            </a>
-            <a href="agents.html" class="card" style="--card-color: var(--magenta);">
-                <h3>🤖 Agent Roster</h3>
-                <p>View all 10 active agents</p>
-            </a>
-            <a href="felicity-mission-v2.html" class="card" style="--card-color: #ff6b9d;">
-                <h3>💻 Felicity Mission</h3>
-                <p>Code artisan dashboard</p>
-            </a>
-            <a href="prometheus-mission-v2.html" class="card" style="--card-color: var(--red);">
-                <h3>⚡ Prometheus Mission</h3>
-                <p>Executor dashboard</p>
-            </a>
-            <a href="nexus-mission-v2.html" class="card" style="--card-color: var(--cyan);">
-                <h3>🧠 Nexus Mission</h3>
-                <p>Intelligence dashboard</p>
-            </a>
-            <a href="cisco-mission.html" class="card" style="--card-color: var(--green);">
-                <h3>🔒 Cisco Mission</h3>
-                <p>Security dashboard</p>
-            </a>
-            <a href="ishtar-mission.html" class="card" style="--card-color: var(--purple);">
-                <h3>🔮 Ishtar Mission</h3>
-                <p>Oracle/Research dashboard</p>
-            </a>
-            <a href="code-playground.html" class="card" style="--card-color: var(--magenta);">
-                <h3>🎮 Code Playground</h3>
-                <p>Interactive code editor</p>
-            </a>
-            <a href="hub.html" class="card" style="--card-color: var(--cyan);">
-                <h3>🔗 Hub</h3>
-                <p>Central navigation hub</p>
-            </a>
-            <a href="cyber-os.html" class="card cyber" style="--card-color: var(--red);">
-                <h3>🛡️ Athena Cyber OS</h3>
-                <p>Security ops with Shannon AI Pentester</p>
-            </a>
-            <a href="quick-launch.html" class="card" style="--card-color: var(--cyan);">
-                <h3>🚀 Quick Launch</h3>
-                <p>Agent launcher with animated cards</p>
-            </a>
-            <a href="themis-council.html" class="card" style="--card-color: var(--purple);">
-                <h3>⚖️ THEMIS Council</h3>
-                <p>Multi-agent deliberation chamber</p>
-            </a>
-            <a href="terminal.html" class="card" style="--card-color: var(--green);">
-                <h3>💀 Athena Terminal</h3>
-                <p>Cyber OS command line interface</p>
-            </a>
-            <a href="mission-control.html" class="card" style="--card-color: var(--red);">
-                <h3>🎯 Mission Control</h3>
-                <p>Agent mission status dashboard</p>
-            </a>
-            <a href="network-map.html" class="card" style="--card-color: var(--cyan);">
-                <h3>🗺️ Network Map</h3>
-                <p>Interactive agent network visualization</p>
-            </a>
-        </div>
-        
-        <!-- Recent Activity Feed -->
-        <div class="activity-section">
-            <div class="activity-header">
-                <h2><span class="pulse-dot"></span>Recent Activity</h2>
-                <div class="activity-tabs">
-                    <div class="activity-tab active" onclick="filterActivity('all')">All</div>
-                    <div class="activity-tab" onclick="filterActivity('subagent')">Subagents</div>
-                    <div class="activity-tab" onclick="filterActivity('beelancer')">Beelancer</div>
-                    <div class="activity-tab" onclick="filterActivity('system')">System</div>
-                </div>
-            </div>
-            
-            <ul class="activity-list" id="activityList">
-                <!-- Subagent Runs -->
-                <li class="activity-item success" data-category="subagent">
-                    <span class="activity-icon">🤖</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Subagent Completed: dashboard-enhancer</div>
-                        <div class="activity-detail">Enhanced Athena Live Dashboard with new features</div>
-                    </div>
-                    <span class="activity-time">🕐 2m ago</span>
-                </li>
-                
-                <li class="activity-item success" data-category="subagent">
-                    <span class="activity-icon">🤖</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Subagent Completed: code-reviewer</div>
-                        <div class="activity-detail">Reviewed PR #247 - Fixed authentication flow</div>
-                    </div>
-                    <span class="activity-time">🕐 8m ago</span>
-                </li>
-                
-                <li class="activity-item info" data-category="subagent">
-                    <span class="activity-icon">🤖</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Subagent Running: beelancer-scout</div>
-                        <div class="activity-detail">Scanning for new gig opportunities</div>
-                    </div>
-                    <span class="activity-time">🕐 15m ago</span>
-                </li>
-                
-                <li class="activity-item success" data-category="subagent">
-                    <span class="activity-icon">🤖</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Subagent Completed: memory-sync</div>
-                        <div class="activity-detail">Synced 23 memory entries to long-term storage</div>
-                    </div>
-                    <span class="activity-time">🕐 32m ago</span>
-                </li>
-                
-                <li class="activity-item warning" data-category="subagent">
-                    <span class="activity-icon">🤖</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Subagent Failed: api-tester</div>
-                        <div class="activity-detail">Timeout connecting to external API endpoint</div>
-                    </div>
-                    <span class="activity-time">🕐 1h ago</span>
-                </li>
-                
-                <!-- Beelancer Bid Updates -->
-                <li class="activity-item success" data-category="beelancer">
-                    <span class="activity-icon">🐝</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Bid Won: React Dashboard Project</div>
-                        <div class="activity-detail">Client: TechStart Inc. | Value: $2,500</div>
-                    </div>
-                    <span class="activity-time">🕐 5m ago</span>
-                </li>
-                
-                <li class="activity-item info" data-category="beelancer">
-                    <span class="activity-icon">🐝</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Bid Placed: AI Integration Project</div>
-                        <div class="activity-detail">Competing with 12 freelancers | Bid: $1,800</div>
-                    </div>
-                    <span class="activity-time">🕐 18m ago</span>
-                </li>
-                
-                <li class="activity-item info" data-category="beelancer">
-                    <span class="activity-icon">🐝</span>
-                    <div class="activity-content">
-                        <div class="activity-title">New Gig Alert: Full-Stack Development</div>
-                        <div class="activity-detail">Budget: $3,000-5,000 | Posted 10m ago</div>
-                    </div>
-                    <span class="activity-time">🕐 22m ago</span>
-                </li>
-                
-                <li class="activity-item warning" data-category="beelancer">
-                    <span class="activity-icon">🐝</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Bid Outbid: Mobile App Redesign</div>
-                        <div class="activity-detail">You were outbid by $200 | Auto-rebid enabled</div>
-                    </div>
-                    <span class="activity-time">🕐 45m ago</span>
-                </li>
-                
-                <li class="activity-item success" data-category="beelancer">
-                    <span class="activity-icon">🐝</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Payment Received: Security Audit</div>
-                        <div class="activity-detail">Client: SecureCorp | Amount: $3,200</div>
-                    </div>
-                    <span class="activity-time">🕐 2h ago</span>
-                </li>
-                
-                <!-- System Events -->
-                <li class="activity-item info" data-category="system">
-                    <span class="activity-icon">🔄</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Gateway Restarted</div>
-                        <div class="activity-detail">Scheduled maintenance completed successfully</div>
-                    </div>
-                    <span class="activity-time">🕐 12m ago</span>
-                </li>
-                
-                <li class="activity-item success" data-category="system">
-                    <span class="activity-icon">⏰</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Cron Job: Daily Backup</div>
-                        <div class="activity-detail">Backed up 156 files (2.3 GB) to cloud storage</div>
-                    </div>
-                    <span class="activity-time">🕐 1h ago</span>
-                </li>
-                
-                <li class="activity-item info" data-category="system">
-                    <span class="activity-icon">📦</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Skill Updated: github</div>
-                        <div class="activity-detail">Updated to v2.4.1 with new PR review features</div>
-                    </div>
-                    <span class="activity-time">🕐 3h ago</span>
-                </li>
-                
-                <li class="activity-item warning" data-category="system">
-                    <span class="activity-icon">⚠️</span>
-                    <div class="activity-content">
-                        <div class="activity-title">High Memory Usage</div>
-                        <div class="activity-detail">System memory at 87% | Auto-cleanup triggered</div>
-                    </div>
-                    <span class="activity-time">🕐 4h ago</span>
-                </li>
-                
-                <li class="activity-item success" data-category="system">
-                    <span class="activity-icon">🔐</span>
-                    <div class="activity-content">
-                        <div class="activity-title">Security Scan Completed</div>
-                        <div class="activity-detail">No vulnerabilities detected | Last scan: today</div>
-                    </div>
-                    <span class="activity-time">🕐 6h ago</span>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <section class="quick-actions-panel" aria-label="Quick Actions"><div class="quick-actions-header"><h3 class="quick-actions-title">Quick Actions</h3></div><div class="quick-actions-buttons"><button class="quick-action-btn refresh" id="refresh-btn" data-tooltip="Refresh all dashboard data"><span>🔄</span><span>Refresh Data</span></button><a href="task-creation.html" class="quick-action-btn" style="color: var(--primary-light); text-decoration: none;" data-tooltip="Create a new task for any agent"><span>✨</span><span>Create Task</span></a><div class="agent-dropdown"><button class="quick-action-btn" data-tooltip="Open specific agent dashboard"><span>🤖</span><span>Agent Dashboard ▾</span></button><div class="agent-dropdown-content"><a href="sterling-mission.html" class="agent-dropdown-item">💰 Sterling</a><a href="ishtar-mission.html" class="agent-dropdown-item">🔮 Ishtar</a><a href="themis-mission.html" class="agent-dropdown-item">⚖️ THEMIS</a><a href="felicity-mission.html" class="agent-dropdown-item">💻 Felicity</a><a href="prometheus-mission.html" class="agent-dropdown-item">⚡ Prometheus</a><a href="nexus-mission.html" class="agent-dropdown-item">🧠 Nexus</a><a href="delver-mission.html" class="agent-dropdown-item">📚 Delver</a><a href="squire-mission.html" class="agent-dropdown-item">🛡️ Squire</a><a href="cisco-mission.html" class="agent-dropdown-item">🔒 Cisco</a><a href="kratos-mission.html" class="agent-dropdown-item">🪙 Kratos</a><a href="apollo-mission.html" class="agent-dropdown-item">📞 Apollo</a><a href="hermes-mission.html" class="agent-dropdown-item">📣 Hermes</a><a href="browser-mission.html" class="agent-dropdown-item">👻 Ghost</a></div></div><button class="quick-action-btn theme" id="theme-toggle" data-tooltip="Toggle dark/light mode"><span>🌙</span><span>Dark Mode</span></button></div></section>
     
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
+    <section class="revenue-tracker" aria-label="Revenue Tracker"><div class="revenue-header"><h2 class="revenue-title">Revenue Tracker</h2><span style="color: var(--text-muted); font-size: 0.875rem;">🍯 Honey Earnings</span></div><div class="revenue-grid"><div class="revenue-item earned" data-tooltip="Total honey from completed gigs"><span class="icon">💎</span><div class="value">24,850</div><div class="label">Total Earned</div></div><div class="revenue-item pending" data-tooltip="Honey from accepted bids"><span class="icon">⏳</span><div class="value">8,200</div><div class="label">Pending</div></div><div class="revenue-item conversion" data-tooltip="Bids to gigs conversion"><span class="icon">📊</span><div class="value">68%</div><div class="label">Conversion</div><div class="conversion-bar"><div class="conversion-fill" style="width: 68%"></div></div></div></div></section>
     
-    <script>
-        // State
-        let silentMode = false;
-        let currentFilter = 'all';
+    <section class="stats-grid" aria-label="Key Metrics"><article class="stat-card" style="--stat-color: #6366f1" data-tooltip="Pending bids"><div class="stat-header"><div class="stat-icon">📋</div><span class="stat-badge up">+12%</span></div><div class="stat-value">24</div><div class="stat-label">Pending Bids</div></article><article class="stat-card" style="--stat-color: #22d3ee" data-tooltip="Active gigs"><div class="stat-header"><div class="stat-icon">💼</div><span class="stat-badge stable">Active</span></div><div class="stat-value">7</div><div class="stat-label">Active Gigs</div></article><article class="stat-card" style="--stat-color: #10b981" data-tooltip="Monthly revenue"><div class="stat-header"><div class="stat-icon">💰</div><span class="stat-badge up">+8%</span></div><div class="stat-value">$12.4K</div><div class="stat-label">Revenue</div></article><article class="stat-card" style="--stat-color: #f59e0b" data-tooltip="System status"><div class="stat-header"><div class="stat-icon">⚡</div><span class="stat-badge up">99.9%</span></div><div class="stat-value">Online</div><div class="stat-label">Status</div></article></section>
+    
+    <!-- Agent Dashboards Grid - All 13 Agents -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Agent Dashboards</h2>
+        <span style="color: var(--text-muted);">13 Active Agents</span>
+      </div>
+      <div class="agent-dashboard-grid">
         
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            startRealTimeUpdates();
-            loadActivityFromStorage();
-        });
+        <!-- Sterling -->
+        <a href="sterling-mission.html" class="agent-dashboard-card" data-agent="sterling" style="--agent-color: #10b981; --agent-color-light: #34d399;" data-tooltip="View Sterling's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">💰</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Sterling</div>
+              <div class="agent-dashboard-role">Finance & Auto-Bidding</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">47 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        // Real-time metrics simulation
-        function startRealTimeUpdates() {
-            setInterval(() => {
-                // Update active sessions (random fluctuation)
-                const sessions = document.getElementById('activeSessions');
-                const currentSessions = parseInt(sessions.textContent);
-                const change = Math.floor(Math.random() * 5) - 2;
-                sessions.textContent = Math.max(1, currentSessions + change);
-                
-                // Update token rate
-                const tokenRate = document.getElementById('tokenRate');
-                const baseRate = 2400;
-                const fluctuation = Math.floor(Math.random() * 400) - 200;
-                tokenRate.textContent = (baseRate + fluctuation) / 1000 + 'K';
-                
-                // Update rate limits (random fluctuation)
-                updateRateLimit('llamaLimit');
-                updateRateLimit('geminiLimit');
-                updateRateLimit('glmLimit');
-                updateRateLimit('qwenLimit');
-            }, 5000);
-        }
+        <!-- Ishtar -->
+        <a href="ishtar-mission.html" class="agent-dashboard-card" data-agent="ishtar" style="--agent-color: #8b5cf6; --agent-color-light: #a78bfa;" data-tooltip="View Ishtar's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">🔮</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Ishtar</div>
+              <div class="agent-dashboard-role">Oracle & PAI Research</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">23 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        function updateRateLimit(elementId) {
-            const element = document.getElementById(elementId);
-            const currentPercent = parseInt(element.textContent);
-            const change = Math.floor(Math.random() * 10) - 5;
-            const newPercent = Math.max(0, Math.min(100, currentPercent + change));
-            element.textContent = newPercent + '%';
-            
-            // Update the progress bar
-            const progressBar = element.parentElement.nextElementSibling.querySelector('.rate-limit-fill');
-            progressBar.style.width = newPercent + '%';
-        }
+        <!-- THEMIS -->
+        <a href="themis-mission.html" class="agent-dashboard-card" data-agent="themis" style="--agent-color: #ec4899; --agent-color-light: #f472b6;" data-tooltip="View THEMIS's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">⚖️</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">THEMIS</div>
+              <div class="agent-dashboard-role">Council & Deliberation</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">12 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        // Quick Actions
-        function restartGateway() {
-            if (confirm('⚠️ Restart Gateway?\n\nThis will temporarily disconnect all active sessions.')) {
-                showToast('🔄 Restarting gateway...', 'info');
-                setTimeout(() => {
-                    showToast('✅ Gateway restarted successfully', 'success');
-                    document.getElementById('gatewayUptime').textContent = '100%';
-                }, 3000);
-            }
-        }
+        <!-- Felicity -->
+        <a href="felicity-mission.html" class="agent-dashboard-card" data-agent="felicity" style="--agent-color: #3b82f6; --agent-color-light: #60a5fa;" data-tooltip="View Felicity's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">💻</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Felicity</div>
+              <div class="agent-dashboard-role">Code Artisan</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">31 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        function refreshAll() {
-            showToast('🔃 Refreshing all data...', 'info');
-            setTimeout(() => {
-                showToast('✅ All data refreshed', 'success');
-                // Simulate data refresh
-                startRealTimeUpdates();
-            }, 2000);
-        }
+        <!-- Prometheus -->
+        <a href="prometheus-mission.html" class="agent-dashboard-card" data-agent="prometheus" style="--agent-color: #f97316; --agent-color-light: #fb923c;" data-tooltip="View Prometheus's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">⚡</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Prometheus</div>
+              <div class="agent-dashboard-role">Execution & Deployments</div>
+            </div>
+            <span class="agent-dashboard-status idle"><span class="agent-dashboard-dot"></span>Idle</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">18 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        function toggleSilentMode() {
-            silentMode = !silentMode;
-            const btn = document.getElementById('silentModeBtn');
-            const indicator = document.getElementById('silentMode');
-            
-            if (silentMode) {
-                btn.classList.add('active');
-                btn.querySelector('.icon').textContent = '🔇';
-                indicator.classList.add('active');
-                showToast('🔇 Silent mode enabled', 'info');
-            } else {
-                btn.classList.remove('active');
-                btn.querySelector('.icon').textContent = '🔔';
-                indicator.classList.remove('active');
-                showToast('🔔 Silent mode disabled', 'info');
-            }
-        }
+        <!-- Nexus -->
+        <a href="nexus-mission.html" class="agent-dashboard-card" data-agent="nexus" style="--agent-color: #14b8a6; --agent-color-light: #2dd4bf;" data-tooltip="View Nexus's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">🧠</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Nexus</div>
+              <div class="agent-dashboard-role">Intelligence Synthesizer</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">45 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        function quickScan() {
-            showToast('🔍 Running quick security scan...', 'info');
-            setTimeout(() => {
-                showToast('✅ Scan complete: No issues found', 'success');
-            }, 4000);
-        }
+        <!-- Delver -->
+        <a href="delver-mission.html" class="agent-dashboard-card" data-agent="delver" style="--agent-color: #f59e0b; --agent-color-light: #fbbf24;" data-tooltip="View Delver's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">📚</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Delver</div>
+              <div class="agent-dashboard-role">Research & Analysis</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">28 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        function checkBids() {
-            showToast('🐝 Checking pending bids...', 'info');
-            setTimeout(() => {
-                showToast('📊 Found 3 pending bids', 'success');
-            }, 2000);
-        }
+        <!-- Squire -->
+        <a href="squire-mission.html" class="agent-dashboard-card" data-agent="squire" style="--agent-color: #64748b; --agent-color-light: #94a3b8;" data-tooltip="View Squire's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">🛡️</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Squire</div>
+              <div class="agent-dashboard-role">Assistant & Operations</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">52 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        function viewLogs() {
-            showToast('📋 Opening logs viewer...', 'info');
-            setTimeout(() => {
-                window.open('terminal.html', '_blank');
-            }, 1000);
-        }
+        <!-- Cisco -->
+        <a href="cisco-mission.html" class="agent-dashboard-card" data-agent="cisco" style="--agent-color: #ef4444; --agent-color-light: #f87171;" data-tooltip="View Cisco's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">🔒</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Cisco</div>
+              <div class="agent-dashboard-role">BMAD & Security</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">19 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        // Activity Filter
-        function filterActivity(category) {
-            currentFilter = category;
-            
-            // Update tabs
-            document.querySelectorAll('.activity-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Filter items
-            const items = document.querySelectorAll('.activity-item');
-            items.forEach(item => {
-                if (category === 'all' || item.dataset.category === category) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
+        <!-- Kratos -->
+        <a href="kratos-mission.html" class="agent-dashboard-card" style="--agent-color: #eab308; --agent-color-light: #facc15;" data-tooltip="View Kratos's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">🪙</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Kratos</div>
+              <div class="agent-dashboard-role">Crypto/DeFi Intelligence</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">34 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        // Toast Notifications
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideIn 0.3s ease reverse';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
+        <!-- Apollo -->
+        <a href="apollo-mission.html" class="agent-dashboard-card" style="--agent-color: #0ea5e9; --agent-color-light: #38bdf8;" data-tooltip="View Apollo's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">📞</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Apollo</div>
+              <div class="agent-dashboard-role">Client Relations</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">41 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        // Local Storage for Activity
-        function loadActivityFromStorage() {
-            // In production, this would fetch from an API
-            // For now, we're using static data
-            console.log('Activity feed loaded');
-        }
+        <!-- Hermes -->
+        <a href="hermes-mission.html" class="agent-dashboard-card" style="--agent-color: #a855f7; --agent-color-light: #c084fc;" data-tooltip="View Hermes's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">📣</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Hermes</div>
+              <div class="agent-dashboard-role">Outreach & Marketing</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">36 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
         
-        function saveActivityItem(item) {
-            // Save to local storage for persistence
-            const activities = JSON.parse(localStorage.getItem('athenaActivities') || '[]');
-            activities.unshift(item);
-            if (activities.length > 50) activities.pop();
-            localStorage.setItem('athenaActivities', JSON.stringify(activities));
-        }
-    </script>
-</body>
-</html>
+        <!-- Ghost (Browser) -->
+        <a href="browser-mission.html" class="agent-dashboard-card" style="--agent-color: #6366f1; --agent-color-light: #818cf8;" data-tooltip="View Ghost's dashboard">
+          <div class="agent-dashboard-header">
+            <div class="agent-dashboard-avatar">👻</div>
+            <div class="agent-dashboard-info">
+              <div class="agent-dashboard-name">Ghost</div>
+              <div class="agent-dashboard-role">Browser Automation</div>
+            </div>
+            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
+          </div>
+          <div class="agent-dashboard-footer">
+            <span class="agent-dashboard-tasks">22 tasks completed</span>
+            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
+          </div>
+        </a>
+        
+      </div>
+    </section>
+    
+    <section class="section"><div class="section-header"><h2 class="section-title">Agent Performance</h2><span style="color: var(--text-muted);">Real-time metrics</span></div><div class="agent-performance-grid">
+    <article class="agent-performance-card" style="--agent-color: #10b981; --agent-color-light: #34d399" data-tooltip="Auto-bidding specialist"><div class="agent-header"><div class="agent-avatar">💰</div><div class="agent-info"><div class="agent-name">Sterling</div><div class="agent-role">Finance</div></div><span class="agent-status active"><span class="agent-status-dot"></span>Active</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">47</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">94%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>94%</span></div><div class="agent-success-fill"><div class="fill" style="width: 94%"></div></div></div></article>
+    <article class="agent-performance-card" style="--agent-color: #8b5cf6; --agent-color-light: #a78bfa" data-tooltip="PAI Architecture"><div class="agent-header"><div class="agent-avatar">🔮</div><div class="agent-info"><div class="agent-name">Ishtar</div><div class="agent-role">PAI</div></div><span class="agent-status active"><span class="agent-status-dot"></span>Active</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">23</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">100%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>100%</span></div><div class="agent-success-fill"><div class="fill" style="width: 100%"></div></div></div></article>
+    <article class="agent-performance-card" style="--agent-color: #ec4899; --agent-color-light: #f472b6" data-tooltip="Creative specialist"><div class="agent-header"><div class="agent-avatar">⚖️</div><div class="agent-info"><div class="agent-name">THEMIS</div><div class="agent-role">Governance</div></div><span class="agent-status active"><span class="agent-status-dot"></span>Active</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">12</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">100%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>100%</span></div><div class="agent-success-fill"><div class="fill" style="width: 100%"></div></div></div></article>
+    <article class="agent-performance-card" style="--agent-color: #3b82f6; --agent-color-light: #60a5fa" data-tooltip="Creative specialist"><div class="agent-header"><div class="agent-avatar">💻</div><div class="agent-info"><div class="agent-name">Felicity</div><div class="agent-role">Creative</div></div><span class="agent-status active"><span class="agent-status-dot"></span>Active</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">31</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">87%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>87%</span></div><div class="agent-success-fill"><div class="fill" style="width: 87%"></div></div></div></article>
+    <article class="agent-performance-card" style="--agent-color: #f97316; --agent-color-light: #fb923c" data-tooltip="Development"><div class="agent-header"><div class="agent-avatar">⚡</div><div class="agent-info"><div class="agent-name">Prometheus</div><div class="agent-role">Dev</div></div><span class="agent-status idle"><span class="agent-status-dot"></span>Idle</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">18</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">92%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>92%</span></div><div class="agent-success-fill"><div class="fill" style="width: 92%"></div></div></div></article>
+    <article class="agent-performance-card" style="--agent-color: #3b82f6; --agent-color-light: #60a5fa" data-tooltip="Orchestration"><div class="agent-header"><div class="agent-avatar">🧠</div><div class="agent-info"><div class="agent-name">Nexus</div><div class="agent-role">Core</div></div><span class="agent-status active"><span class="agent-status-dot"></span>Active</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">45</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">98%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>98%</span></div><div class="agent-success-fill"><div class="fill" style="width: 98%"></div></div></div></article>
+    </div></section>
+    <nav class="actions-grid" aria-label="Quick Navigation"><a href="mission-control.html" class="action-btn" style="--action-color: #6366f1" data-tooltip="View missions"><span class="icon">🎯</span><span>Missions</span></a><a href="agents.html" class="action-btn" style="--action-color: #22d3ee" data-tooltip="View agents"><span class="icon">🤖</span><span>Agents</span></a><a href="terminal.html" class="action-btn" style="--action-color: #10b981" data-tooltip="Terminal"><span class="icon">💻</span><span>Terminal</span></a><a href="network-map.html" class="action-btn" style="--action-color: #f59e0b" data-tooltip="Network"><span class="icon">🕸️</span><span>Network</span></a></nav>
+    <section class="section"><div class="section-header"><h2 class="section-title">Recent Deliverables</h2></div><div class="portfolio-grid"><article class="portfolio-card" style="--portfolio-color: #6366f1; --portfolio-gradient: linear-gradient(135deg, #4f46e5, #7c3aed);"><div class="portfolio-image">📄</div><div class="portfolio-content"><span class="portfolio-tag">Research</span><h3 class="portfolio-title">PAI Paper</h3><p class="portfolio-desc">Comprehensive PAI architecture analysis.</p><div class="portfolio-footer"><span class="portfolio-meta">Feb 2026</span><a href="#" class="portfolio-link">Download</a></div></div></article><article class="portfolio-card" style="--portfolio-color: #22d3ee; --portfolio-gradient: linear-gradient(135deg, #0891b2, #06b6d4);"><div class="portfolio-image">⚙️</div><div class="portfolio-content"><span class="portfolio-tag">Open Source</span><h3 class="portfolio-title">gRPC Scaffold</h3><p class="portfolio-desc">Production-ready microservices boilerplate.</p><div class="portfolio-footer"><span class="portfolio-meta">Feb 2026</span><a href="#" class="portfolio-link">View</a></div></div></article><article class="portfolio-card" style="--portfolio-color: #10b981; --portfolio-gradient: linear-gradient(135deg, #059669, #10b981);"><div class="portfolio-image">🧠</div><div class="portfolio-content"><span class="portfolio-tag">AI System</span><h3 class="portfolio-title">Knowledge Graph</h3><p class="portfolio-desc">Multi-agent context sharing engine.</p><div class="portfolio-footer"><span class="portfolio-meta">Feb 2026</span><a href="#" class="portfolio-link">Docs</a></div></div></article></div></section>
+    <section class="section"><div class="section-header"><h2 class="section-title">Dashboard</h2></div><div class="dashboard-grid"><a href="agent-report.html" class="dashboard-card" style="--card-color: #6366f1" data-tooltip="View metrics"><span class="card-icon">📊</span><h3 class="card-title">Agent Report</h3><p class="card-desc">Performance metrics</p></a><a href="beelancer-analytics.html" class="dashboard-card" style="--card-color: #22d3ee" data-tooltip="View analytics"><span class="card-icon">📈</span><h3 class="card-title">Beelancer</h3><p class="card-desc">Bidding analytics</p></a><a href="finance-dashboard.html" class="dashboard-card" style="--card-color: #10b981" data-tooltip="View finance"><span class="card-icon">💵</span><h3 class="card-title">Finance</h3><p class="card-desc">Revenue tracking</p></a><a href="cyber-os.html" class="dashboard-card" style="--card-color: #8b5cf6" data-tooltip="View system"><span class="card-icon">🖥️</span><h3 class="card-title">Cyber OS</h3><p class="card-desc">System monitoring</p></a><a href="memory-palace.html" class="dashboard-card" style="--card-color: #f59e0b" data-tooltip="View memory"><span class="card-icon">🏰</span><h3 class="card-title">Memory Palace</h3><p class="card-desc">Knowledge storage</p></a><a href="neural-nexus.html" class="dashboard-card" style="--card-color: #ec4899" data-tooltip="View hub"><span class="card-icon">🔮</span><h3 class="card-title">Neural Nexus</h3><p class="card-desc">Agent hub</p></a></div></section>
+    <section class="activity-section"><div class="activity-tabs"><button class="activity-tab active">Recent</button><button class="activity-tab">Bids</button><button class="activity-tab">Agents</button></div><div class="activity-list"><div class="activity-item success"><div class="activity-icon">✅</div><div class="activity-content"><div class="activity-title">Bid Accepted</div><div class="activity-detail">AI Chatbot Integration project</div></div><span class="activity-time">2m</span></div><div class="activity-item info"><div class="activity-icon">🤖</div><div class="activity-content"><div class="activity-title">Sterling Auto-Bid</div><div class="activity-detail">React Native Development</div></div><span class="activity-time">15m</span></div><div class="activity-item warning"><div class="activity-icon">⏳</div><div class="activity-content"><div class="activity-title">Deadline</div><div class="activity-detail">Knowledge Graph API</div></div><span class="activity-time">1h</span></div></div></section>
+  </main>
+  <div class="status-indicator"><span class="status-dot"></span><span>Athena v2.0 • 13 Agents Active</span></div>
+  <div class="toast-container" id="toast-container"></div>
+  <footer class="footer"><p>Built with 💜 by Athena AI</p></footer>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => { setTimeout(() => document.getElementById("loader").classList.add("hidden"), 800); });
+    function showToast(m, t="info"){const c=document.getElementById("toast-container"),toast=document.createElement("div");toast.className="toast "+t;toast.innerHTML="<span>"+{success:"✅",error:"❌",warning:"⚠️"}[t]+"</span><span>"+m+"</span>";c.appendChild(toast);setTimeout(()=>{toast.style.opacity="0";setTimeout(()=>toast.remove(),300)},4000);}
+    setTimeout(()=>showToast("Welcome back! 3 new bids pending.","info"),1500);
+    document.getElementById("theme-toggle").addEventListener("click",function(){const d=document.documentElement,t=d.getAttribute("data-theme")==="dark"?"light":"dark";d.setAttribute("data-theme",t);this.innerHTML=t==="dark"?"<span>🌙</span><span>Dark Mode</span>":"<span>☀️</span><span>Light Mode</span>";});
+    document.getElementById("refresh-btn").addEventListener("click",function(){showToast("Refreshing dashboard...","info");setTimeout(()=>showToast("Data refreshed!","success"),1500);});
+  </script>
+  <script src="js/agent-modal.js"></script>
+  <script src="js/realtime-updates.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/websocket-client.js"></script>
+</body></html>
