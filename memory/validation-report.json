@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-24T23:30:01.236705Z",
+  "timestamp": "2026-02-26T23:30:01.562201Z",
   "files": [
     {
       "path": "/root/.openclaw/workspace/memory/2026-02-20.md",
@@ -32,6 +32,36 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/2026-02-25.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/2026-02-26.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/action-items-tracker.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/agency-pricing-analysis.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/agent-optimization-log.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/agent-role-updates-2026-02-20.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -50,6 +80,12 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/autonomous-improvement-tracker.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/backup-log-2026-02.md",
       "issues": [
         "Missing header"
@@ -63,6 +99,18 @@
     },
     {
       "path": "/root/.openclaw/workspace/memory/bmad_repo.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/competitive-intel-2026-02.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/daily-build-2026-02-26.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
@@ -98,7 +146,53 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/kratos-mission-control-spec.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/mission-control-todo.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/mut-ac-ke-security-assessment.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/new-agents-final-report.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/new-agents-proposal.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/new-agents-report.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/orchestration-implementation-guide.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/pai-agent-coordination.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/pai-architecture-2026.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
@@ -116,6 +210,12 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/progress-report-17:00.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/quick-test.md",
       "issues": [
         "Missing header"
@@ -126,7 +226,43 @@
       "issues": []
     },
     {
+      "path": "/root/.openclaw/workspace/memory/session-topics-summary.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/sprint-2026-02-25.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/sprint-report-2026-02-25.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/subagent-architecture.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/system-optimization.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/telos-snapshot.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/workspace-cleanup-2026-02-26.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]

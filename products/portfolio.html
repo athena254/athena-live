@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Athena Portfolio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1f1f1f;
+      --text: #e5e5e5;
+      --text-muted: #737373;
+      --accent: #d4af37;
+      --accent-dim: #8a7518;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+    
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 60px 0 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+    
+    .hero .tagline {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+    
+    .hero .accent-line {
+      width: 60px;
+      height: 1px;
+      background: var(--accent);
+      margin: 30px auto;
+    }
+    
+    /* Section */
+    section {
+      padding: 60px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    section:last-of-type {
+      border-bottom: none;
+    }
+    
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 500;
+      margin-bottom: 32px;
+      color: var(--text);
+    }
+    
+    h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    
+    p {
+      color: var(--text-muted);
+      font-weight: 300;
+      font-size: 1rem;
+    }
+    
+    /* Executive Summary */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    
+    .agent-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px;
+      transition: border-color 0.3s ease;
+    }
+    
+    .agent-card:hover {
+      border-color: var(--accent-dim);
+    }
+    
+    .agent-card .name {
+      font-weight: 500;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    
+    .agent-card .role {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    
+    /* Case Study */
+    .case-study {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 40px;
+      margin-top: 24px;
+    }
+    
+    .case-study h3 {
+      margin-bottom: 16px;
+    }
+    
+    .case-study .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .metric {
+      text-align: center;
+    }
+    
+    .metric .value {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--accent);
+    }
+    
+    .metric .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    
+    /* Services */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 32px;
+    }
+    
+    .service-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .service-card.featured {
+      border-color: var(--accent-dim);
+    }
+    
+    .service-card .price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      margin: 16px 0 8px;
+    }
+    
+    .service-card .price span {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .service-card ul {
+      list-style: none;
+      margin-top: 20px;
+      flex-grow: 1;
+    }
+    
+    .service-card li {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .service-card li:last-child {
+      border-bottom: none;
+    }
+    
+    .service-card li::before {
+      content: "—";
+      color: var(--accent);
+      margin-right: 8px;
+    }
+    
+    /* Tech Stack */
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    
+    .tech-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 12px 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    .tech-item.primary {
+      border-color: var(--accent-dim);
+      color: var(--text);
+    }
+    
+    /* Contact */
+    .contact {
+      text-align: center;
+      padding: 80px 0;
+    }
+    
+    .contact-grid {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 40px;
+    }
+    
+    .contact-item a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+    }
+    
+    .contact-item a:hover {
+      color: var(--accent);
+    }
+    
+    .contact-item .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    
+    @media print {
+      body { background: #fff; color: #111; }
+      .agent-card, .service-card, .case-study, .tech-item { 
+        background: #f5f5f5; 
+        border-color: #ddd;
+      }
+      .hero .accent-line { background: #b8860b; }
+      h3, .metric .value, .contact-item a:hover { color: #b8860b; }
+      p, .agent-card .role, .service-card li, .tech-item, .metric .label { color: #555; }
+      .contact-item a { color: #111; }
+    }
+    
+    @media (max-width: 768px) {
+      .container { padding: 40px 20px; }
+      .hero h1 { font-size: 2.5rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .case-study .metrics { grid-template-columns: 1fr; gap: 20px; }
+      .contact-grid { flex-direction: column; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Hero -->
+    <header class="hero">
+      <h1>ATHENA</h1>
+      <p class="tagline">Autonomous Multi-Agent Systems for Enterprise</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <!-- Executive Summary -->
+    <section>
+      <h3>Executive Summary</h3>
+      <h2>13 Agents. One Mission.</h2>
+      <p>Athena is an orchestrated fleet of 13 specialized AI agents working in concert to execute complex workflows autonomously. From research to execution, bidding to analysis—Athena operates as your round-the-clock elite team.</p>
+      
+      <div class="agents-grid">
+        <div class="agent-card">
+          <div class="name">Sterling</div>
+          <div class="role">Finance & Auto-Bidding</div>
+        </div>
+        <div class="agent-card">
+          <div class="name">Ishtar</div>
+          <div class="role">PAI Architecture</div>
+        </div>
+        <div class="agent-card">
+          <div class="name">Delver</div>
+          <div class="role">Research & Discovery</div>
+        </div>
+        <div class="agent-card">
+          <div class="name">Squire</div>
+          <div class="role">Task Execution</div>
+        </div>
+        <div class="agent-card">
+          <div class="name">Felicity</div>
+          <div class="role">Communications</div>
+        </div>
+        <div class="agent-card">
+          <div class="name">Prometheus</div>
+          <div class="role">Monitoring & Alerts</div>
+        </div>
+        <div class="agent-card">
+          <div class="name">Cisco</div>
+          <div class="role">Infrastructure</div>
+        </div>
+        <div class="agent-card">
+          <div class="name">THEMIS</div>
+          <div class="role">Security & Governance</div>
+        </div>
+        <div class="agent-card">
+          <div class="name">+ 4 More</div>
+          <div class="role">Specialized Tasks</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Case Study -->
+    <section>
+      <h3>Case Study</h3>
+      <h2>The 24-Hour Build</h2>
+      <div class="case-study">
+        <p>In under 24 hours, Athena architected and deployed a complete PAI (Personal AI) Paper implementation featuring gRPC communication, a Knowledge Graph backend, and autonomous agent orchestration.</p>
+        
+        <div class="metrics">
+          <div class="metric">
+            <div class="value">24h</div>
+            <div class="label">Build Time</div>
+          </div>
+          <div class="metric">
+            <div class="value">gRPC</div>
+            <div class="label">Protocol</div>
+          </div>
+          <div class="metric">
+            <div class="value">KG</div>
+            <div class="label">Knowledge Graph</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section>
+      <h3>Services & Pricing</h3>
+      <h2>Choose Your Tier</h2>
+      
+      <div class="services-grid">
+        <div class="service-card">
+          <h3>Consulting</h3>
+          <div class="price">$500<span>/project</span></div>
+          <ul>
+            <li>Architecture review</li>
+            <li>System design</li>
+            <li>Technical roadmap</li>
+            <li>Best practices audit</li>
+          </ul>
+        </div>
+        
+        <div class="service-card featured">
+          <h3>Build</h3>
+          <div class="price">$2,500<span>/project</span></div>
+          <ul>
+            <li>Full agent system</li>
+            <li>Custom integrations</li>
+            <li>Knowledge graph setup</li>
+            <li>Deployment & training</li>
+            <li>30-day support</li>
+          </ul>
+        </div>
+        
+        <div class="service-card">
+          <h3>Retainer</h3>
+          <div class="price">$1,500<span>/month</span></div>
+          <ul>
+            <li>Ongoing optimization</li>
+            <li>New agent development</li>
+            <li>Priority support</li>
+            <li>Weekly reports</li>
+            <li>SLA guarantee</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section>
+      <h3>Tech Stack</h3>
+      <h2>Built With</h2>
+      
+      <div class="tech-stack">
+        <div class="tech-item primary">OpenClaw</div>
+        <div class="tech-item primary">React 19</div>
+        <div class="tech-item">Python</div>
+        <div class="tech-item">gRPC</div>
+        <div class="tech-item">Knowledge Graphs</div>
+        <div class="tech-item">Vector Databases</div>
+        <div class="tech-item">LLM Orchestration</div>
+        <div class="tech-item">AutoGen</div>
+        <div class="tech-item">Node.js</div>
+        <div class="tech-item">Docker</div>
+        <div class="tech-item">PostgreSQL</div>
+        <div class="tech-item">Graph Databases</div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact">
+      <h3>Contact</h3>
+      <h2>Let's Build Something Extraordinary</h2>
+      
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="label">Email</div>
+          <a href="mailto:muriukidismas9@gmail.com">muriukidismas9@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <div class="label">Telegram</div>
+          <a href="https://t.me/kallmedis">@kallmedis</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      © 2026 Athena — Autonomous Systems by Muriuki
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+{
+  "title": "Athena Team - 13-Agent Roster",
+  "lastUpdated": "2026-02-26",
+  "description": "The core team powering Athena OS - a multi-agent autonomous workforce",
+  "agents": [
+    {
+      "id": "athena",
+      "name": "Athena",
+      "role": "Primary Orchestrator",
+      "voice": "Sonia (British Female)",
+      "model": "GLM-5-FP8",
+      "superpower": "Task Routing & Coordination",
+      "status": "IDLE",
+      "lastMajorContribution": "Orchestrated daily build session - 7 dashboards created"
+    },
+    {
+      "id": "sterling",
+      "name": "Sterling",
+      "role": "Finance Agent (Auto-Bidder)",
+      "voice": "Thomas (British Male)",
+      "model": "GLM-5-FP8",
+      "superpower": "Autonomous Beelancer Bidding",
+      "status": "IDLE",
+      "lastMajorContribution": "Full auto-bidding authority, places bids every 30 minutes"
+    },
+    {
+      "id": "ishtar",
+      "name": "Ishtar",
+      "role": "PAI Architecture Research",
+      "voice": "Ezinne (Nigerian Female)",
+      "model": "qwen_nvidia",
+      "superpower": "Deep Technical Research",
+      "status": "BUSY",
+      "lastMajorContribution": "PAI Architecture research, orchestration implementation"
+    },
+    {
+      "id": "delver",
+      "name": "Delver",
+      "role": "Deep Research Agent",
+      "voice": "Default (edge-tts)",
+      "model": "llama (Groq)",
+      "superpower": "Knowledge Exploration",
+      "status": "BUSY",
+      "lastMajorContribution": "Active research task in progress"
+    },
+    {
+      "id": "squire",
+      "name": "Squire",
+      "role": "Task Management",
+      "voice": "Default (edge-tts)",
+      "model": "llama (Groq)",
+      "superpower": "Reminders & Follow-ups",
+      "status": "IDLE",
+      "lastMajorContribution": "Task tracking and scheduling coordination"
+    },
+    {
+      "id": "felicity",
+      "name": "Felicity",
+      "role": "Code Artisan",
+      "voice": "Default (edge-tts)",
+      "model": "qwen_nvidia",
+      "superpower": "Dashboard Building",
+      "status": "IDLE",
+      "lastMajorContribution": "Built Quantum Flux Visualizer, Neural Nexus, Mission Control, Cyber OS"
+    },
+    {
+      "id": "prometheus",
+      "name": "Prometheus",
+      "role": "Executor & Project Planning",
+      "voice": "Default (edge-tts)",
+      "model": "GLM-5-FP8",
+      "superpower": "Script Execution & Deployment",
+      "status": "IDLE",
+      "lastMajorContribution": "System operations and deployment automation"
+    },
+    {
+      "id": "cisco",
+      "name": "Cisco",
+      "role": "Communication & Notifications",
+      "voice": "Default (edge-tts)",
+      "model": "GLM-5-FP8",
+      "superpower": "Alert Broadcasting",
+      "status": "IDLE",
+      "lastMajorContribution": "Unified notification system, alert routing"
+    },
+    {
+      "id": "themis",
+      "name": "THEMIS",
+      "role": "Oversight & Compliance",
+      "voice": "Maisie (British Female)",
+      "model": "OpenRouter free",
+      "superpower": "Multi-Perspective Deliberation",
+      "status": "IDLE",
+      "lastMajorContribution": "Complex decision making, policy enforcement"
+    },
+    {
+      "id": "apollo",
+      "name": "Apollo",
+      "role": "Prospecting Agent",
+      "voice": "Default (edge-tts)",
+      "model": "GLM-5-FP8",
+      "superpower": "Lead Generation",
+      "status": "IDLE",
+      "lastMajorContribution": "Prospect search, lead scoring, pipeline management"
+    },
+    {
+      "id": "hermes",
+      "name": "Hermes",
+      "role": "Client Relations",
+      "voice": "Default (edge-tts)",
+      "model": "GLM-5-FP8",
+      "superpower": "Client Communication",
+      "status": "IDLE",
+      "lastMajorContribution": "Client onboarding, relationship management templates"
+    },
+    {
+      "id": "kratos",
+      "name": "Kratos",
+      "role": "Crypto/DeFi Trading",
+      "voice": "Default (edge-tts)",
+      "model": "GLM-5-FP8",
+      "superpower": "DeFi Portfolio Management",
+      "status": "IDLE",
+      "lastMajorContribution": "Trading, risk assessment, portfolio tracking"
+    },
+    {
+      "id": "chiron",
+      "name": "Chiron",
+      "role": "QA Testing",
+      "voice": "Default (edge-tts)",
+      "model": "GLM-5-FP8",
+      "superpower": "Bug Detection",
+      "status": "IDLE",
+      "lastMajorContribution": "Testing, validation, QA checklist templates"
+    }
+  ],
+  "summary": {
+    "totalAgents": 13,
+    "active": 2,
+    "idle": 11,
+    "busy": 2,
+    "uniqueRoles": 13
+  }
+}
