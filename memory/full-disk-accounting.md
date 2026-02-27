@@ -1,8 +1,8 @@
 # FULL DISK ACCOUNTING REPORT
-**Date:** 2026-02-27 23:45 UTC  
+**Date:** 2026-02-27 23:52 UTC  
 **Total Disk:** 79GB  
-**Used:** 71GB (95%)  
-**Free:** 3.8GB
+**Used:** 63GB (85%)  
+**Free:** 12GB
 
 ---
 
@@ -10,26 +10,26 @@
 
 | Path | Size | % of Used |
 |------|------|-----------|
-| /root | 16GB | 22.5% |
-| /usr | ~40GB | 56.3% |
-| /var | ~8GB | 11.3% |
-| /opt | ~3GB | 4.2% |
-| /lib | ~2GB | 2.8% |
-| /etc | ~100MB | 0.1% |
-| /boot | ~100MB | 0.1% |
-| Other | ~1.8GB | 2.5% |
+| /root | ~8GB | 12.7% |
+| /usr | ~40GB | 63.5% |
+| /var | ~8GB | 12.7% |
+| /opt | ~3GB | 4.8% |
+| /lib | ~2GB | 3.2% |
+| /etc | ~100MB | 0.2% |
+| /boot | ~100MB | 0.2% |
+| Other | ~1.8GB | 2.9% |
 
 ---
 
-## 📂 /root DIRECTORY (16GB)
+## 📂 /root DIRECTORY (8GB)
 
-### Major Consumers
+### Major Consumers (Post-Cleanup)
 | Path | Size | Notes |
 |------|------|-------|
-| .cache | 7.6GB | **CLEANUP CANDIDATE** |
+| .cache | 924MB | Remaining (playwright, chroma, hf) |
 | .ollama | 4.2GB | AI models |
 | go | 2.4GB | Go installation |
-| .npm | 1.3GB | **CLEANUP CANDIDATE** |
+| .npm | 1.1MB | Minimal |
 | .openclaw | 472MB | Main system |
 | .claude | 25MB | Claude data |
 | .config | 236KB | Config files |
@@ -37,7 +37,7 @@
 
 ---
 
-## 🚨 /root/.cache BREAKDOWN (7.6GB)
+## 🚨 /root/.cache BREAKDOWN (924MB) - CLEANED
 
 | Path | Size | Assessment |
 |------|------|------------|
