@@ -1,11 +1,11 @@
 {
   "version": "1.1",
-  "updated": "2026-02-26T19:25:23.939683Z",
+  "updated": "2026-02-27T04:16:07.473604Z",
   "tasks": [
     {
       "id": "task_20260226_192523_23b21961",
       "type": "RESEARCH",
-      "status": "ASSIGNED",
+      "status": "PENDING",
       "priority": "MEDIUM",
       "created": "2026-02-26T19:25:23.938943Z",
       "deadline": null,
@@ -42,12 +42,13 @@
           "at": "2026-02-26T19:25:23.939675Z",
           "event": "ASSIGNED",
           "by": "delver"
+        },
+        {
+          "at": "2026-02-27T04:16:07.473604Z",
+          "event": "LEASE_EXPIRED"
         }
       ],
-      "lease": {
-        "owner": "delver",
-        "expiresAt": "2026-02-26T19:35:23.939666Z"
-      }
+      "lease": null
     }
   ],
   "stats": {

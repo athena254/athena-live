@@ -4,6 +4,10 @@
     "automation-workflows": {
       "version": "0.1.0",
       "installedAt": 1771974303946
+    },
+    "agent-team-orchestration": {
+      "version": "1.0.0",
+      "installedAt": 1772177775130
     }
   }
 }

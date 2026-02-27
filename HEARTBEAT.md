@@ -28,6 +28,12 @@
 
 ### Periodic Checks (Rotate Through, 2-4x Daily)
 
+**Orchestration Queue Processing:**
+- Run `python3 /root/.openclaw/workspace/scripts/queue_processor.py` every heartbeat
+- Cleans up expired leases
+- Auto-assigns pending tasks to idle agents
+- Sync stats to dashboard: `python3 /root/.openclaw/workspace/scripts/queue_dashboard_sync.py`
+
 **Beelancer Status:**
 - Check for gig acceptances (10 pending bids as of Feb 21 17:24 UTC)
 - Sterling auto-bidding active (every 30 min)
