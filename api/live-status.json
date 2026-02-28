@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-02-28T01:00:00.000Z",
+  "source": "openclaw gateway (static snapshot)",
+  "status": "operational",
+  "health": "Gateway OK",
+  "channels": ["Telegram: configured", "WhatsApp: linked"],
+  "heartbeat": {
+    "agents": [
+      {"agentId": "main", "enabled": true},
+      {"agentId": "ishtar", "enabled": true},
+      {"agentId": "themis", "enabled": true}
+    ]
+  },
+  "sessions": {
+    "total": 543,
+    "activeAgents": 6,
+    "totalTokens": 2291139,
+    "byAgent": [
+      {"agentId": "main", "sessions": 480, "latestAge": 20, "isActive": true, "inputTokens": 1034307, "model": "GLM-5-FP8"},
+      {"agentId": "coder", "sessions": 7, "latestAge": 89, "isActive": true, "inputTokens": 416039, "model": "coder-model"},
+      {"agentId": "prometheus", "sessions": 8, "latestAge": 166, "isActive": true, "inputTokens": 154910, "model": "llama-3.3"},
+      {"agentId": "themis", "sessions": 3, "latestAge": 167, "isActive": true, "inputTokens": 26149, "model": "GLM-5-FP8"},
+      {"agentId": "finance", "sessions": 17, "latestAge": 168, "isActive": true, "inputTokens": 13021, "model": "GLM-5-FP8"},
+      {"agentId": "researcher", "sessions": 7, "latestAge": 170, "isActive": true, "inputTokens": 26203, "model": "GLM-5-FP8"},
+      {"agentId": "ishtar", "sessions": 10, "latestAge": 1318, "isActive": false, "inputTokens": 497605, "model": "GLM-5-FP8"},
+      {"agentId": "butler", "sessions": 4, "latestAge": 2341, "isActive": false, "inputTokens": 21341, "model": "GLM-5-FP8"},
+      {"agentId": "cisco", "sessions": 5, "latestAge": 2379, "isActive": false, "inputTokens": 22354, "model": "GLM-5-FP8"}
+    ]
+  },
+  "note": "This is a static snapshot. For live data, run 'node api/live-status.js' locally."
+}
