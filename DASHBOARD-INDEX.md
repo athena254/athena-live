@@ -1,6 +1,6 @@
 # Athena Dashboard Index
 
-**Last Updated:** 2026-02-28 01:08 UTC
+**Last Updated:** 2026-02-28 01:12 UTC
 
 ## Quick Access
 
@@ -17,6 +17,7 @@
 | **Quick Capture** | quick-capture.html | 📝 Quick note capture |
 | **Alert Center** | alert-center.html | ⚠️ System alerts & warnings |
 | **Cost Tracker** | cost-tracker.html | 💰 Token usage & cost analytics |
+| **Live Gateway Monitor** | live-monitor.html | 📡 Real-time gateway status (NEW!) |
 
 ## Master Dashboards
 
@@ -100,6 +101,7 @@ index.html (Master)
 | Endpoint | File | Description |
 |----------|------|-------------|
 | **Status** | api/status.php | System metrics & agent status |
+| **Live Gateway** | api/live-status.js | Real gateway data (Node.js) |
 | **Data** | api/data.json | Full agent data snapshot |
 | **Git** | api/git.js | Git operations API |
 | **Commands** | api/command.js | Command execution API |
