@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-27T22:43:25.280578Z",
+  "timestamp": "2026-02-27T23:30:01.866700Z",
   "files": [
     {
       "path": "/root/.openclaw/workspace/memory/2026-02-20.md",
@@ -98,6 +98,12 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/autonomous-builds.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/autonomous-improvement-tracker.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -146,6 +152,12 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/core-operating-directive.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/daily-build-2026-02-26.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -153,12 +165,6 @@
     },
     {
       "path": "/root/.openclaw/workspace/memory/daily-build-backlog.md",
-      "issues": [
-        "Second line lacks timezone indicator"
-      ]
-    },
-    {
-      "path": "/root/.openclaw/workspace/memory/daily-build-today.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
@@ -183,6 +189,12 @@
     },
     {
       "path": "/root/.openclaw/workspace/memory/dashboard-v3-changes.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/intellectual-works.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
@@ -249,6 +261,12 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/mem0-integration.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/mission-control-todo.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -256,6 +274,12 @@
     },
     {
       "path": "/root/.openclaw/workspace/memory/morning-report-2026-02-28.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/morning-report-system.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
@@ -365,7 +389,19 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/system-broadcasting-directive.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/system-decisions.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/system-fixes.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
