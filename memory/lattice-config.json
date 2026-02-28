@@ -1,0 +1,75 @@
+{
+  "lattice": {
+    "enabled": true,
+    "created": "2026-02-28T02:25:00Z",
+    "version": "1.0"
+  },
+  "connections": [
+    {
+      "id": "sterling-kratos",
+      "agents": ["sterling", "kratos"],
+      "type": "BIDIRECTIONAL",
+      "trigger": "FINANCIAL_PATTERN",
+      "description": "Finance and crypto intelligence intersection"
+    },
+    {
+      "id": "shannon-cisco",
+      "agents": ["shannon", "cisco"],
+      "type": "UNIDIRECTIONAL",
+      "trigger": "SECURITY_FINDING",
+      "description": "Security vulnerabilities to assessment"
+    },
+    {
+      "id": "cisco-felicity",
+      "agents": ["cisco", "felicity"],
+      "type": "UNIDIRECTIONAL",
+      "trigger": "SECURITY_APPROVED",
+      "description": "Approved fixes to implementation"
+    },
+    {
+      "id": "shannon-felicity",
+      "agents": ["shannon", "felicity"],
+      "type": "UNIDIRECTIONAL",
+      "trigger": "SECURITY_CODE",
+      "description": "Code review from security perspective"
+    },
+    {
+      "id": "delver-sterling",
+      "agents": ["delver", "sterling"],
+      "type": "BIDIRECTIONAL",
+      "trigger": "CAREER_FINANCE",
+      "description": "Research meets financial opportunity"
+    },
+    {
+      "id": "delver-kratos",
+      "agents": ["delver", "kratos"],
+      "type": "UNIDIRECTIONAL",
+      "trigger": "MARKET_INTELLIGENCE",
+      "description": "Research to crypto analysis"
+    },
+    {
+      "id": "ishtar-athena",
+      "agents": ["ishtar", "athena"],
+      "type": "SYNTHESIS",
+      "trigger": "ORACLE_INSIGHT",
+      "description": "Oracle perspective synthesis"
+    },
+    {
+      "id": "themis-all",
+      "agents": ["themis"],
+      "type": "BROADCAST",
+      "trigger": "DELIBERATION",
+      "description": "THEMIS can deliberate on any agent's work"
+    }
+  ],
+  "monitoring": {
+    "connectionFreshnessThreshold": 24,
+    "synthesisRateTarget": 0.5,
+    "crossAgentInsightTarget": 10,
+    "alertThresholds": {
+      "criticalResponseMs": 300000,
+      "highResponseMs": 1800000
+    }
+  },
+  "activeConnection": "sterling-kratos"
+}
