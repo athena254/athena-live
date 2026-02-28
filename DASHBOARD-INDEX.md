@@ -6,6 +6,7 @@
 
 | Tool | File | Shortcut |
 |------|------|----------|
+| **Command Widget** | command-widget.html | ⚡ |
 | **Command Palette** | command-palette.html | ⌘K |
 | **Quick Status** | quick-status.html | - |
 
@@ -84,3 +85,12 @@ index.html (Master)
 | onboard-micro-agent | /skills/onboard-micro-agent/ |
 | felicity-handoff | /skills/felicity-handoff/ |
 | system-sync | /skills/system-sync/ |
+
+## API Endpoints
+
+| Endpoint | File | Description |
+|----------|------|-------------|
+| **Status** | api/status.php | System metrics & agent status |
+| **Data** | api/data.json | Full agent data snapshot |
+| **Git** | api/git.js | Git operations API |
+| **Commands** | api/command.js | Command execution API |
