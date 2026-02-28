@@ -19,6 +19,7 @@
     .agent-dashboard-avatar { width: 52px; height: 52px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--agent-color), var(--agent-color-light)); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; flex-shrink: 0; }
     .agent-dashboard-info { flex: 1; min-width: 0; }
     .agent-dashboard-name { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+    .boot-badge { font-size: 0.75rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-left: 4px; animation: pulse 2s infinite; }
     .agent-dashboard-role { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .agent-dashboard-status { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; font-size: 0.625rem; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
     .agent-dashboard-status.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
@@ -115,13 +116,13 @@
           <div class="agent-dashboard-header">
             <div class="agent-dashboard-avatar">💰</div>
             <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Sterling</div>
+              <div class="agent-dashboard-name">Sterling <span class="boot-badge" title="Boot personality pending">🆕</span></div>
               <div class="agent-dashboard-role">Finance & Auto-Bidding</div>
             </div>
             <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
           </div>
           <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">47 tasks completed</span>
+            <span class="agent-dashboard-tasks">47 tasks | mem0: sterling_finance</span>
             <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
           </div>
         </a>
@@ -259,13 +260,13 @@
           <div class="agent-dashboard-header">
             <div class="agent-dashboard-avatar">🪙</div>
             <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Kratos</div>
+              <div class="agent-dashboard-name">Kratos <span class="boot-badge" title="Boot personality pending">🆕</span></div>
               <div class="agent-dashboard-role">Crypto/DeFi Intelligence</div>
             </div>
             <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
           </div>
           <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">34 tasks completed</span>
+            <span class="agent-dashboard-tasks">34 tasks | mem0: kratos_crypto</span>
             <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
           </div>
         </a>
