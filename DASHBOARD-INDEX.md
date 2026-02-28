@@ -1,6 +1,13 @@
 # Athena Dashboard Index
 
-**Last Updated:** 2026-02-27 18:30 UTC
+**Last Updated:** 2026-02-28 00:48 UTC
+
+## Quick Access
+
+| Tool | File | Shortcut |
+|------|------|----------|
+| **Command Palette** | command-palette.html | ⌘K |
+| **Quick Status** | quick-status.html | - |
 
 ## Master Dashboards
 
