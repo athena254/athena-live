@@ -1,14 +1,22 @@
 # Athena Dashboard Index
 
-**Last Updated:** 2026-02-28 00:48 UTC
+**Last Updated:** 2026-02-28 01:08 UTC
 
 ## Quick Access
 
 | Tool | File | Shortcut |
 |------|------|----------|
+| **Terminal** | terminal.html | ⌨️ |
 | **Command Widget** | command-widget.html | ⚡ |
 | **Command Palette** | command-palette.html | ⌘K |
+| **Agent Command Center** | agent-command-palette.html | Full agent control center |
 | **Quick Status** | quick-status.html | - |
+| **Agent Pulse** | agent-pulse.html | Real-time agent status widget |
+| **Git Control** | git-control.html | 📁 Repo status & quick actions |
+| **Skill Runner** | skill-runner.html | 🚀 Run automation skills |
+| **Quick Capture** | quick-capture.html | 📝 Quick note capture |
+| **Alert Center** | alert-center.html | ⚠️ System alerts & warnings |
+| **Cost Tracker** | cost-tracker.html | 💰 Token usage & cost analytics |
 
 ## Master Dashboards
 
@@ -17,6 +25,7 @@
 | **Master Dashboard** | index.html | Main hub with 13 agent cards + navigation |
 | **Micro-Agents Hub** | micro-agents.html | Hub for Shannon & Katie |
 | **Task Queue Monitor** | task-queue-monitor.html | Live task queue visualization |
+| **API Health Monitor** | api-health-monitor.html | Real-time API status dashboard |
 | **Quick Status** | quick-status.html | Compact status widget |
 | **Activity Feed** | activity-feed.html | Live agent activity stream |
 
