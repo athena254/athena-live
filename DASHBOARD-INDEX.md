@@ -17,7 +17,8 @@
 | **Quick Capture** | quick-capture.html | 📝 Quick note capture |
 | **Alert Center** | alert-center.html | ⚠️ System alerts & warnings |
 | **Cost Tracker** | cost-tracker.html | 💰 Token usage & cost analytics |
-| **Live Gateway Monitor** | live-monitor.html | 📡 Real-time gateway status (NEW!) |
+| **Live Gateway Monitor** | live-monitor.html | 📡 Real-time gateway status |
+| **Model Playground** | model-playground.html | 🧪 Test & compare AI models |
 
 ## Master Dashboards
 
