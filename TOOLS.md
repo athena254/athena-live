@@ -38,3 +38,35 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 ---
 
 Add whatever helps you do your job. This is your cheat sheet.
+
+## Athena CLI Tools
+
+### Quick Agent Commands
+
+```bash
+# Quick status check
+node scripts/athena-qc.js status
+
+# Check specific agent session
+node scripts/athena-qc.js session main
+
+# List all sessions
+node scripts/athena-qc.js sessions
+
+# Gateway health
+node scripts/athena-qc.js health
+
+# System metrics
+node scripts/athena-qc.js metrics
+
+# Send message to agent
+node scripts/athena-qc.js send sterling "Hello!"
+
+# Or use shell wrapper
+./scripts/athena-qc.sh status
+```
+
+Add alias to ~/.bashrc:
+```bash
+alias athena='node /root/.openclaw/workspace/scripts/athena-qc.js'
+```

@@ -46,7 +46,7 @@ for path in [WORKSPACE / 'MEMORY.md'] + sorted(MEMORY_DIR.glob('*.md')):
     chunk_size = 8000
     parts = [new_text[i:i+chunk_size] for i in range(0, len(new_text), chunk_size)]
     for idx, part in enumerate(parts, 1):
-        header = f"=== {base_title} (chunk {idx}/{len(parts)}) ({datetime.datetime.utcnow().isoformat()} UTC) ==="
+        header = f"=== {base_title} (chunk {idx}/{len(parts)}) ({datetime.datetime.now(datetime.timezone.utc).isoformat()} UTC) ==="
         chunks.append((base_title, idx, len(parts), header, part.strip()))
     state[path_str] = {'lines': len(lines)}
 
@@ -55,9 +55,9 @@ for base_title, idx, total, header, content in chunks:
     body = f"{header}\n\n{content}"
     safe_tag = re.sub(r'[^A-Za-z0-9_-]+', '-', base_title).strip('-').lower() or 'document'
     payload = json.dumps({
-        'content': f"[Athena Backup {datetime.datetime.utcnow().isoformat()} UTC]\n\n{body}",
+        'content': f"[Athena Backup {datetime.datetime.now(datetime.timezone.utc).isoformat()} UTC]\n\n{body}",
         'containerTags': ['athena-memory', safe_tag],
-        'title': f'Athena backup {base_title} chunk {idx} - {datetime.datetime.utcnow().date()}'
+        'title': f'Athena backup {base_title} chunk {idx} - {datetime.datetime.now(datetime.timezone.utc).date()}'
     }).encode('utf-8')
     requests.append(payload)
 

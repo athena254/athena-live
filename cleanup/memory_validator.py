@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 import pathlib
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 MEMORY_DIR = pathlib.Path(__file__).resolve().parent.parent / 'memory'
 REPORT = MEMORY_DIR / 'validation-report.json'
 
 results = {
-    'timestamp': datetime.utcnow().isoformat() + 'Z',
+    'timestamp': datetime.now(timezone.utc).isoformat() + 'Z',
     'files': []
 }
 
