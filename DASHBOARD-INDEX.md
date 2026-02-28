@@ -8,6 +8,9 @@
 |-----------|------|-------------|
 | **Master Dashboard** | index.html | Main hub with 13 agent cards + navigation |
 | **Micro-Agents Hub** | micro-agents.html | Hub for Shannon & Katie |
+| **Task Queue Monitor** | task-queue-monitor.html | Live task queue visualization |
+| **Quick Status** | quick-status.html | Compact status widget |
+| **Activity Feed** | activity-feed.html | Live agent activity stream |
 
 ## Agent Mission Dashboards
 
@@ -58,6 +61,8 @@ index.html (Master)
 ├── apollo-mission.html
 ├── hermes-mission.html
 ├── browser-mission.html
+├── task-queue-monitor.html
+├── quick-status.html
 └── micro-agents.html
     ├── shannon-mission.html
     └── katie-mission.html
