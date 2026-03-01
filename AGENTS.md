@@ -266,3 +266,9 @@ For idle-time behavior, see  — it's injected at every session start and contai
 
 For subagent role isolation and enforcement, see  — temporary spawn rules, need-to-know principle, and lifecycle management.
 
+
+
+## Persistence Mode
+
+For autonomous and idle mode persistence rules, see  — wall protocol, fleet utilization, continuous operation, and return briefing format.
+

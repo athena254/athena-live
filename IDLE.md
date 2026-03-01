@@ -238,3 +238,9 @@ Add this to your openclaw config to trigger Athena's idle loop automatically:
 
 For subagent role isolation rules, see .
 
+
+
+## Persistence
+
+For persistence rules during autonomous/idle modes, see .
+
