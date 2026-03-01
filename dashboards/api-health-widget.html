@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena API Health Monitor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00d9ff, #00ff88, #00d9ff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+            margin-bottom: 10px;
+        }
+        @keyframes shimmer { to { background-position: 200% center; } }
+        .timestamp {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .api-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .api-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,217,255,0.2);
+            border-color: rgba(0,217,255,0.3);
+        }
+        .api-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+        .api-card.healthy::before { background: linear-gradient(90deg, #00ff88, #00d9ff); }
+        .api-card.warning::before { background: linear-gradient(90deg, #ffaa00, #ff6600); }
+        .api-card.critical::before { background: linear-gradient(90deg, #ff4444, #ff0000); }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .provider-name { font-size: 1.2rem; font-weight: 600; }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-badge.healthy { background: rgba(0,255,136,0.2); color: #00ff88; }
+        .status-badge.warning { background: rgba(255,170,0,0.2); color: #ffaa00; }
+        .status-badge.critical { background: rgba(255,68,68,0.2); color: #ff4444; }
+        
+        .model-name { color: #888; font-size: 0.85rem; margin-bottom: 15px; }
+        
+        .metrics { display: flex; flex-direction: column; gap: 10px; }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .metric-label { color: #aaa; font-size: 0.85rem; }
+        .metric-value { font-weight: 500; }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        .progress-fill.high { background: linear-gradient(90deg, #00ff88, #00d9ff); }
+        .progress-fill.medium { background: linear-gradient(90deg, #ffaa00, #ff6600); }
+        .progress-fill.low { background: linear-gradient(90deg, #ff4444, #ff0000); }
+        
+        .refresh-btn {
+            display: block;
+            margin: 30px auto;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .refresh-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,217,255,0.4);
+        }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .summary-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+        .summary-value { font-size: 2rem; font-weight: 700; }
+        .summary-value.green { color: #00ff88; }
+        .summary-value.yellow { color: #ffaa00; }
+        .summary-value.red { color: #ff4444; }
+        .summary-label { color: #888; font-size: 0.85rem; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Athena API Health Monitor</h1>
+        <div class="timestamp">Last Updated: <span id="timestamp">2026-03-01 05:18 UTC</span></div>
+        
+        <div class="summary">
+            <div class="summary-card">
+                <div class="summary-value green">5</div>
+                <div class="summary-label">Healthy APIs</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value yellow">2</div>
+                <div class="summary-label">Need OAuth</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value red">1</div>
+                <div class="summary-label">Critical</div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <!-- GLM-5 -->
+            <div class="api-card healthy">
+                <div class="card-header">
+                    <span class="provider-name">Modal Direct</span>
+                    <span class="status-badge healthy">ACTIVE</span>
+                </div>
+                <div class="model-name">GLM-5-FP8</div>
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-label">Limit</span>
+                        <span class="metric-value">UNLIMITED</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Cost</span>
+                        <span class="metric-value">$0.00</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill high" style="width:100%"></div></div>
+                </div>
+            </div>
+            
+            <!-- NVIDIA Qwen -->
+            <div class="api-card healthy">
+                <div class="card-header">
+                    <span class="provider-name">NVIDIA NIM</span>
+                    <span class="status-badge healthy">ACTIVE</span>
+                </div>
+                <div class="model-name">Qwen 3.5 397B</div>
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-label">Tier</span>
+                        <span class="metric-value">Enterprise</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Headroom</span>
+                        <span class="metric-value">HIGH</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill high" style="width:95%"></div></div>
+                </div>
+            </div>
+            
+            <!-- Gemini -->
+            <div class="api-card healthy">
+                <div class="card-header">
+                    <span class="provider-name">Google</span>
+                    <span class="status-badge healthy">ACTIVE</span>
+                </div>
+                <div class="model-name">Gemini 2.5 Flash/Pro</div>
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-label">Context</span>
+                        <span class="metric-value">1M tokens</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Headroom</span>
+                        <span class="metric-value">HIGH</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill high" style="width:90%"></div></div>
+                </div>
+            </div>
+            
+            <!-- Groq -->
+            <div class="api-card healthy">
+                <div class="card-header">
+                    <span class="provider-name">Groq</span>
+                    <span class="status-badge healthy">ACTIVE</span>
+                </div>
+                <div class="model-name">Llama 3.3 70B</div>
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-label">Tier</span>
+                        <span class="metric-value">On-Demand</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Rate Limit</span>
+                        <span class="metric-value">30/min</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill high" style="width:85%"></div></div>
+                </div>
+            </div>
+            
+            <!-- OpenRouter -->
+            <div class="api-card critical">
+                <div class="card-header">
+                    <span class="provider-name">OpenRouter</span>
+                    <span class="status-badge critical">EXHAUSTED</span>
+                </div>
+                <div class="model-name">Free Models</div>
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-label">Credits</span>
+                        <span class="metric-value" style="color:#ff4444">5.22/5 USED</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Status</span>
+                        <span class="metric-value">OVER LIMIT</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill low" style="width:104%"></div></div>
+                </div>
+            </div>
+            
+            <!-- MiniMax -->
+            <div class="api-card warning">
+                <div class="card-header">
+                    <span class="provider-name">MiniMax</span>
+                    <span class="status-badge warning">OAUTH</span>
+                </div>
+                <div class="model-name">M2.1 / M2.5</div>
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-label">Limit</span>
+                        <span class="metric-value">UNLIMITED</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Action</span>
+                        <span class="metric-value">Login Required</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill medium" style="width:50%"></div></div>
+                </div>
+            </div>
+            
+            <!-- Qwen Portal -->
+            <div class="api-card warning">
+                <div class="card-header">
+                    <span class="provider-name">Qwen Portal</span>
+                    <span class="status-badge warning">OAUTH</span>
+                </div>
+                <div class="model-name">Multiple Models</div>
+                <div class="metrics">
+                    <div class="metric">
+                        <span class="metric-label">Limit</span>
+                        <span class="metric-value">UNLIMITED</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Action</span>
+                        <span class="metric-value">Login Required</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill medium" style="width:50%"></div></div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="refresh-btn" onclick="location.reload()">🔄 Refresh Status</button>
+    </div>
+    
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toISOString().slice(0,16).replace('T',' ') + ' UTC';
+    </script>
+</body>
+</html>

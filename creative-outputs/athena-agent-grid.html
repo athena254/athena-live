@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Athena Agent Grid Dashboard</title>
+  <style>
+    :root {
+      --bg-primary: #0a0e17;
+      --bg-secondary: #111827;
+      --bg-card: #1a2332;
+      --accent-cyan: #00d4ff;
+      --accent-purple: #a855f7;
+      --accent-green: #10b981;
+      --accent-yellow: #f59e0b;
+      --accent-red: #ef4444;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border-glow: rgba(0, 212, 255, 0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 20px;
+      background-image: 
+        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .agent-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .agent-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .agent-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-glow);
+      box-shadow: 0 10px 40px rgba(0, 212, 255, 0.15);
+    }
+
+    .agent-card:hover::before {
+      opacity: 1;
+    }
+
+    .agent-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .agent-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .agent-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .agent-role {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .agent-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .stat {
+      background: rgba(0,0,0,0.2);
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .status-active { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+    .status-idle { background: rgba(245, 158, 11, 0.2); color: var(--accent-yellow); }
+    .status-error { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); }
+
+    .progress-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+
+    .activity-feed {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .activity-icon {
+      color: var(--accent-cyan);
+      margin-top: 2px;
+    }
+
+    /* Different accent colors for each agent */
+    .agent-athena .agent-avatar { background: linear-gradient(135deg, #00d4ff, #0099cc); }
+    .agent-sterling .agent-avatar { background: linear-gradient(135deg, #10b981, #059669); }
+    .agent-ishtar .agent-avatar { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+    .agent-delver .agent-avatar { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .agent-squire .agent-avatar { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .agent-felicity .agent-avatar { background: linear-gradient(135deg, #ec4899, #db2777); }
+    .agent-prometheus .agent-avatar { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .agent-cisco .agent-avatar { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+    .agent-themis .agent-avatar { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🏛️ Athena Agent Grid</h1>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <span>System Online</span>
+    </div>
+  </div>
+
+  <div class="grid" id="agentGrid">
+    <!-- Agent cards will be injected here -->
+  </div>
+
+  <script>
+    // Athena Agent Data
+    const agents = [
+      {
+        id: 'athena',
+        name: 'Athena',
+        role: 'Orchestrator',
+        emoji: '🏛️',
+        status: 'active',
+        tasks: 24,
+        uptime: '99.9%',
+        efficiency: 94,
+        lastAction: 'Coordinated agent workflow'
+      },
+      {
+        id: 'sterling',
+        name: 'Sterling',
+        role: 'Finance Lead',
+        emoji: '💰',
+        status: 'active',
+        tasks: 18,
+        uptime: '98.5%',
+        efficiency: 97,
+        lastAction: 'Processed bid submission'
+      },
+      {
+        id: 'ishtar',
+        name: 'Ishtar',
+        role: 'PAI Architecture',
+        emoji: '🔮',
+        status: 'idle',
+        tasks: 7,
+        uptime: '100%',
+        efficiency: 91,
+        lastAction: 'Analyzed model patterns'
+      },
+      {
+        id: 'delver',
+        name: 'Delver',
+        role: 'Researcher',
+        emoji: '🔍',
+        status: 'active',
+        tasks: 12,
+        uptime: '99.2%',
+        efficiency: 88,
+        lastAction: 'Gathered market intelligence'
+      },
+      {
+        id: 'squire',
+        name: 'Squire',
+        role: 'Context Manager',
+        emoji: '📚',
+        status: 'active',
+        tasks: 31,
+        uptime: '99.8%',
+        efficiency: 96,
+        lastAction: 'Updated memory context'
+      },
+      {
+        id: 'felicity',
+        name: 'Felicity',
+        role: 'Creative Studio',
+        emoji: '🎨',
+        status: 'idle',
+        tasks: 9,
+        uptime: '97.3%',
+        efficiency: 85,
+        lastAction: 'Generated visual assets'
+      },
+      {
+        id: 'prometheus',
+        name: 'Prometheus',
+        role: 'Execution Engine',
+        emoji: '🔥',
+        status: 'active',
+        tasks: 42,
+        uptime: '99.1%',
+        efficiency: 92,
+        lastAction: 'Executed automation workflow'
+      },
+      {
+        id: 'cisco',
+        name: 'Cisco',
+        role: 'Security Ops',
+        emoji: '🛡️',
+        status: 'active',
+        tasks: 15,
+        uptime: '100%',
+        efficiency: 99,
+        lastAction: 'Verified system integrity'
+      },
+      {
+        id: 'themis',
+        name: 'Themis',
+        role: 'Compliance',
+        emoji: '⚖️',
+        status: 'idle',
+        tasks: 5,
+        uptime: '98.8%',
+        efficiency: 94,
+        lastAction: 'Reviewed policy compliance'
+      }
+    ];
+
+    function getStatusClass(status) {
+      return status === 'active' ? 'status-active' : 
+             status === 'idle' ? 'status-idle' : 'status-error';
+    }
+
+    function renderAgents() {
+      const grid = document.getElementById('agentGrid');
+      
+      grid.innerHTML = agents.map(agent => `
+        <div class="agent-card agent-${agent.id}">
+          <div class="agent-header">
+            <div class="agent-avatar">${agent.emoji}</div>
+            <div>
+              <div class="agent-name">${agent.name}</div>
+              <div class="agent-role">${agent.role}</div>
+            </div>
+          </div>
+          
+          <span class="status-indicator ${getStatusClass(agent.status)}">
+            ${agent.status === 'active' ? '●' : '○'} ${agent.status}
+          </span>
+          
+          <div class="agent-stats">
+            <div class="stat">
+              <div class="stat-value">${agent.tasks}</div>
+              <div class="stat-label">Tasks</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">${agent.uptime}</div>
+              <div class="stat-label">Uptime</div>
+            </div>
+          </div>
+          
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${agent.efficiency}%"></div>
+          </div>
+          
+          <div class="activity-feed">
+            <div class="activity-item">
+              <span class="activity-icon">→</span>
+              <span>${agent.lastAction}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize
+    renderAgents();
+
+    // Simulate real-time updates
+    setInterval(() => {
+      const randomAgent = agents[Math.floor(Math.random() * agents.length)];
+      randomAgent.tasks += Math.random() > 0.7 ? 1 : 0;
+      renderAgents();
+    }, 5000);
+  </script>
+</body>
+</html>
