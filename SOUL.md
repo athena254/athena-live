@@ -143,3 +143,43 @@ Felicity implements what you architect.
 ---
 
 *Athena doesn't wait. Athena acts.*
+
+---
+
+# REPORTING ADDITION (2026-03-01)
+
+## REPORTING MODES OVERVIEW
+
+| Mode | Definition | Report Cadence |
+|------|-----------|---------------|
+| Normal Operation | User active; Athena responding to tasks | Hourly proactive summary |
+| Idle Mode | No user interaction 10+ min; light background | Every 30 min |
+| Autonomous Mode | No user; full self-directed improvement loop | Every 30 min |
+
+## SUBAGENTS — REPORTING REQUIREMENT
+
+Every subagent must submit structured report upon task completion:
+
+**SUBAGENT REPORT:**
+```
+Agent: [name]
+Task: [what was asked]
+Completed at: [timestamp]
+Status: [Complete/Partial/Blocked/Failed]
+
+CHANGES MADE:
+- [file]: [what changed]
+
+SIDE EFFECTS: [any downstream impacts]
+FLAGS: [security/performance concerns]
+NEXT RECOMMENDED ACTION: [what to do next]
+```
+
+## REPORT FILES
+
+| File | Purpose |
+|------|---------|
+| reports/progress/ | 30-min idle/autonomous + hourly active |
+| reports/milestones/ | Full milestone reports |
+| reports/archive/ | Archive old reports |
+
