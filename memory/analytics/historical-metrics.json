@@ -1,0 +1,229 @@
+{
+  "metadata": {
+    "created": "2026-02-28T19:17:00.000Z",
+    "lastUpdated": "2026-02-28T19:33:42.518Z",
+    "dataPoints": 0,
+    "retentionDays": 30
+  },
+  "metrics": {
+    "daily": [],
+    "hourly": [
+      {
+        "timestamp": "2026-02-28T19:33:42.517Z",
+        "tasks": 649,
+        "success": 98.57777777777777,
+        "activeAgents": 6,
+        "pendingBids": 10,
+        "queueDepth": 0,
+        "tokenRate": "2.4K",
+        "errors": 0,
+        "latency": 0.5
+      }
+    ]
+  },
+  "agents": {
+    "athena": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 47,
+          "success": 99.9,
+          "status": "active"
+        }
+      ]
+    },
+    "sterling": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 23,
+          "success": 100,
+          "status": "active"
+        }
+      ]
+    },
+    "ishtar": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 15,
+          "success": 98.5,
+          "status": "idle"
+        }
+      ]
+    },
+    "themis": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 12,
+          "success": 99.2,
+          "status": "idle"
+        }
+      ]
+    },
+    "felicity": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 34,
+          "success": 99.7,
+          "status": "active"
+        }
+      ]
+    },
+    "prometheus": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 28,
+          "success": 98.9,
+          "status": "idle"
+        }
+      ]
+    },
+    "delver": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 11,
+          "success": 96.5,
+          "status": "idle"
+        }
+      ]
+    },
+    "squire": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 22,
+          "success": 99.1,
+          "status": "idle"
+        }
+      ]
+    },
+    "cisco": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 8,
+          "success": 100,
+          "status": "idle"
+        }
+      ]
+    },
+    "nexus": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 19,
+          "success": 97.8,
+          "status": "idle"
+        }
+      ]
+    },
+    "beelancer": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 56,
+          "success": 94.2,
+          "status": "active"
+        }
+      ]
+    },
+    "scribe": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 31,
+          "success": 99.5,
+          "status": "idle"
+        }
+      ]
+    },
+    "voyager": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 14,
+          "success": 97.1,
+          "status": "idle"
+        }
+      ]
+    },
+    "chronos": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 89,
+          "success": 99.8,
+          "status": "active"
+        }
+      ]
+    },
+    "hermes": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 42,
+          "success": 98.3,
+          "status": "idle"
+        }
+      ]
+    },
+    "argo": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 17,
+          "success": 96.9,
+          "status": "idle"
+        }
+      ]
+    },
+    "vesta": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 25,
+          "success": 99.4,
+          "status": "idle"
+        }
+      ]
+    },
+    "janus": {
+      "history": [
+        {
+          "date": "2026-02-28",
+          "tasks": 156,
+          "success": 99.6,
+          "status": "active"
+        }
+      ]
+    }
+  },
+  "bidding": {
+    "dailyStats": [
+      {
+        "date": "2026-02-28",
+        "bids": 10,
+        "wins": 3,
+        "revenue": 450,
+        "winRate": "30.0"
+      }
+    ],
+    "winRateHistory": [
+      {
+        "date": "2026-02-28",
+        "rate": 30
+      }
+    ],
+    "revenueHistory": []
+  },
+  "system": {
+    "queueHistory": [],
+    "errorRateHistory": [],
+    "latencyHistory": []
+  }
+}

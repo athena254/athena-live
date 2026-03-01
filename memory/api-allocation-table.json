@@ -1,0 +1,134 @@
+{
+  "lastUpdated": "2026-02-28T03:06:00Z",
+  "auditPhase": "complete",
+  "apis": {
+    "openrouter": {
+      "source": "OpenRouter",
+      "apiKey": "sk-or-v1-...(truncated)",
+      "status": "active",
+      "limits": {
+        "free_tier": "varies by model",
+        "rateLimit": "model-dependent"
+      },
+      "usage": "low",
+      "headroom": "high",
+      "assignedAgents": ["THEMIS"],
+      "notes": "Free tier key for THEMIS council deliberations"
+    },
+    "beelancer": {
+      "source": "Beelancer.ai",
+      "apiKey": "bee_d3c2...(truncated)",
+      "status": "degraded",
+      "limits": {
+        "api": "HTTP 405 error currently"
+      },
+      "usage": "blocked",
+      "headroom": "none (blocked)",
+      "assignedAgents": ["Sterling"],
+      "notes": "Auto-bidding API blocked - HTTP 405 error. 2 pending bids."
+    },
+    "groq": {
+      "source": "Groq",
+      "apiKey": "gsk_30Mu...(truncated)",
+      "status": "rate_limited",
+      "limits": {
+        "whisper": "unlimited",
+        "llama-3.3-70b": "30/min",
+        "llama-3.1-8b": "30/min"
+      },
+      "usage": "rate_limited",
+      "headroom": "exhausted (429 errors)",
+      "assignedAgents": ["all"],
+      "notes": "Primary fallback model (llama) - RATE LIMITED 2026-02-28 04:34 UTC"
+    },
+    "supermemory": {
+      "source": "Supermemory AI",
+      "apiKey": "sm_tj6x...(truncated)",
+      "status": "active",
+      "limits": {
+        "free_tier": "varies"
+      },
+      "usage": "active",
+      "headroom": "medium",
+      "assignedAgents": ["memory system"],
+      "notes": "Persistent memory storage - 68 markdown files indexed"
+    },
+    "qwen-portal": {
+      "source": "Qwen Portal",
+      "apiKey": "OAuth",
+      "status": "rate_limited",
+      "limits": {
+        "coder-model": "OAuth-based"
+      },
+      "usage": "rate_limited",
+      "headroom": "exhausted (429 errors)",
+      "assignedAgents": ["coding agents"],
+      "notes": "OAuth authentication - RATE LIMITED 2026-02-28 04:34 UTC"
+    },
+    "modal-glm5": {
+      "source": "Modal (zai-org/GLM-5-FP8)",
+      "apiKey": "configured",
+      "status": "active",
+      "limits": {
+        "rate": "unlimited"
+      },
+      "usage": "primary",
+      "headroom": "unlimited",
+      "assignedAgents": ["all"],
+      "notes": "Primary model - currently in use"
+    },
+    "nvidia-qwen": {
+      "source": "NVIDIA API",
+      "apiKey": "configured",
+      "status": "active",
+      "limits": {
+        "qwen3.5-397b": "unlimited"
+      },
+      "usage": "secondary",
+      "headroom": "unlimited",
+      "assignedAgents": ["all"],
+      "notes": "Secondary primary model"
+    },
+    "minimax": {
+      "source": "MiniMax",
+      "apiKey": "configured",
+      "status": "rate_limited",
+      "limits": {
+        "m2.1": "varies",
+        "m2.5": "200k context"
+      },
+      "usage": "rate_limited",
+      "headroom": "exhausted (429 errors)",
+      "assignedAgents": ["coding sessions"],
+      "notes": "Default model for coding sessions - RATE LIMITED 2026-02-28 04:34 UTC"
+    },
+    "gemini": {
+      "source": "Google Gemini",
+      "apiKey": "configured",
+      "status": "active",
+      "limits": {
+        "free_tier": "20/day"
+      },
+      "usage": "low",
+      "headroom": "resets at 00:00 UTC",
+      "assignedAgents": ["all"],
+      "notes": "Gemini 2.5 Flash Lite available"
+    }
+  },
+  "fallbackChain": ["glm-5-fp8", "qwen_nvidia", "llama", "qwen", "openrouter-free"],
+  "currentPrimaryModel": "glm-5-fp8",
+  "issues": [
+    {
+      "api": "beelancer",
+      "issue": "HTTP 405 error blocking auto-bidding",
+      "impact": "high",
+      "status": "needs investigation"
+    }
+  ],
+  "recommendations": [
+    "Fix Beelancer API blockage - Sterling's bidding is stalled",
+    "Consider Mem0 integration for enhanced memory (research completed)",
+    "Firecrawl could enhance Delver's research capabilities",
+    "ntfy for push notifications beyond Telegram"
+  ]
+}

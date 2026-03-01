@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Usage Dashboard | Athena</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a2234;
+            --bg-card-hover: #232d42;
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.15);
+            --warning: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --border: #374151;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+            background-image: 
+                radial-gradient(ellipse at top, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #818cf8);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+        
+        .timestamp {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .timestamp::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-value.success { color: var(--success); }
+        .stat-value.warning { color: var(--warning); }
+        .stat-value.danger { color: var(--danger); }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .api-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .api-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--status-color);
+        }
+        
+        .api-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .api-card.status-active { --status-color: var(--success); }
+        .api-card.status-rate_limited { --status-color: var(--warning); }
+        .api-card.status-degraded { --status-color: var(--danger); }
+        
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .api-name {
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-badge {
+            font-size: 0.625rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+        
+        .status-badge.active {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+        
+        .status-badge.rate_limited {
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+        
+        .status-badge.degraded {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+        
+        .api-details {
+            display: grid;
+            gap: 0.75rem;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8125rem;
+        }
+        
+        .detail-label {
+            color: var(--text-muted);
+        }
+        
+        .detail-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .usage-bar {
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .usage-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        .usage-fill.high { background: var(--success); width: 100%; }
+        .usage-fill.medium { background: var(--warning); width: 60%; }
+        .usage-fill.low { background: var(--text-muted); width: 25%; }
+        
+        .agents-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+            margin-top: 0.75rem;
+        }
+        
+        .agent-tag {
+            font-size: 0.6875rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            color: var(--text-secondary);
+        }
+        
+        .issues-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .issue-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--danger-bg);
+            border-radius: 8px;
+            margin-top: 0.75rem;
+        }
+        
+        .issue-icon {
+            color: var(--danger);
+            font-size: 1.25rem;
+        }
+        
+        .issue-content {
+            flex: 1;
+        }
+        
+        .issue-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .issue-desc {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+        
+        .fallback-chain {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .fallback-item {
+            font-size: 0.75rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        
+        .fallback-item:first-child {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        .fallback-arrow {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .primary-badge {
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            background: var(--success-bg);
+            color: var(--success);
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">⚡</div>
+                <h1>API Usage Dashboard</h1>
+            </div>
+            <div class="timestamp">
+                Last updated: <span id="lastUpdated"></span>
+            </div>
+        </header>
+        
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value success" id="activeCount">0</div>
+                <div class="stat-label">Active</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value warning" id="limitedCount">0</div>
+                <div class="stat-label">Rate Limited</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value danger" id="degradedCount">0</div>
+                <div class="stat-label">Degraded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalCount">0</div>
+                <div class="stat-label">Total APIs</div>
+            </div>
+        </div>
+        
+        <div class="api-grid" id="apiGrid"></div>
+        
+        <div class="issues-section">
+            <div class="section-title">⚠️ Active Issues</div>
+            <div id="issuesList"></div>
+        </div>
+        
+        <div class="issues-section">
+            <div class="section-title">🔄 Fallback Chain</div>
+            <div class="fallback-chain" id="fallbackChain"></div>
+        </div>
+    </div>
+    
+    <script>
+        const apiData = {
+  "lastUpdated": "2026-02-28T03:06:00Z",
+  "auditPhase": "complete",
+  "apis": {
+    "openrouter": {
+      "source": "OpenRouter",
+      "status": "active",
+      "usage": "low",
+      "headroom": "high",
+      "assignedAgents": ["THEMIS"],
+      "notes": "Free tier key for THEMIS council deliberations",
+      "limits": { "free_tier": "varies by model" }
+    },
+    "beelancer": {
+      "source": "Beelancer.ai",
+      "status": "degraded",
+      "usage": "blocked",
+      "headroom": "none (blocked)",
+      "assignedAgents": ["Sterling"],
+      "notes": "Auto-bidding API blocked - HTTP 405 error. 2 pending bids.",
+      "limits": { "api": "HTTP 405 error" }
+    },
+    "groq": {
+      "source": "Groq",
+      "status": "rate_limited",
+      "usage": "rate_limited",
+      "headroom": "exhausted (429 errors)",
+      "assignedAgents": ["all"],
+      "notes": "Primary fallback model (llama) - RATE LIMITED",
+      "limits": { "llama-3.3-70b": "30/min", "llama-3.1-8b": "30/min" }
+    },
+    "supermemory": {
+      "source": "Supermemory AI",
+      "status": "active",
+      "usage": "active",
+      "headroom": "medium",
+      "assignedAgents": ["memory system"],
+      "notes": "Persistent memory storage - 68 markdown files indexed",
+      "limits": { "free_tier": "varies" }
+    },
+    "qwen-portal": {
+      "source": "Qwen Portal",
+      "status": "rate_limited",
+      "usage": "rate_limited",
+      "headroom": "exhausted (429 errors)",
+      "assignedAgents": ["coding agents"],
+      "notes": "OAuth authentication - RATE LIMITED",
+      "limits": { "coder-model": "OAuth-based" }
+    },
+    "modal-glm5": {
+      "source": "Modal (GLM-5-FP8)",
+      "status": "active",
+      "usage": "primary",
+      "headroom": "unlimited",
+      "assignedAgents": ["all"],
+      "notes": "Primary model - currently in use",
+      "limits": { "rate": "unlimited" },
+      "isPrimary": true
+    },
+    "nvidia-qwen": {
+      "source": "NVIDIA Qwen",
+      "status": "active",
+      "usage": "secondary",
+      "headroom": "unlimited",
+      "assignedAgents": ["all"],
+      "notes": "Secondary primary model",
+      "limits": { "qwen3.5-397b": "unlimited" },
+      "isSecondary": true
+    },
+    "minimax": {
+      "source": "MiniMax",
+      "status": "rate_limited",
+      "usage": "rate_limited",
+      "headroom": "exhausted (429 errors)",
+      "assignedAgents": ["coding sessions"],
+      "notes": "Default model for coding sessions - RATE LIMITED",
+      "limits": { "m2.1": "varies", "m2.5": "200k context" }
+    },
+    "gemini": {
+      "source": "Google Gemini",
+      "status": "active",
+      "usage": "low",
+      "headroom": "resets at 00:00 UTC",
+      "assignedAgents": ["all"],
+      "notes": "Gemini 2.5 Flash Lite available",
+      "limits": { "free_tier": "20/day" }
+    }
+  },
+  "fallbackChain": ["glm-5-fp8", "qwen_nvidia", "llama", "qwen", "openrouter-free"],
+  "currentPrimaryModel": "glm-5-fp8",
+  "issues": [
+    {
+      "api": "beelancer",
+      "issue": "HTTP 405 error blocking auto-bidding",
+      "impact": "high",
+      "status": "needs investigation"
+    }
+  ]
+};
+        
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit',
+                timeZone: 'UTC'
+            }) + ' UTC';
+        }
+        
+        function getUsageClass(usage) {
+            if (usage === 'primary' || usage === 'secondary' || usage === 'active') return 'high';
+            if (usage === 'rate_limited') return 'medium';
+            return 'low';
+        }
+        
+        function renderAPI(apiKey, api) {
+            const statusClass = `status-${api.status}`;
+            const usageClass = getUsageClass(api.usage);
+            const displayName = apiKey === 'modal-glm5' ? 'Modal GLM-5' : 
+                              apiKey === 'qwen-portal' ? 'Qwen Portal' : api.source;
+            const primaryBadge = api.isPrimary ? '<span class="primary-badge">PRIMARY</span>' : 
+                               api.isSecondary ? '<span class="primary-badge" style="background:rgba(99,102,241,0.15);color:#6366f1;">SECONDARY</span>' : '';
+            
+            let limitsText = '';
+            if (api.limits) {
+                const limits = Object.entries(api.limits)
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join(', ');
+                limitsText = limits;
+            }
+            
+            return `
+                <div class="api-card ${statusClass}">
+                    <div class="api-header">
+                        <div class="api-name">
+                            ${displayName} ${primaryBadge}
+                        </div>
+                        <span class="status-badge ${api.status}">${api.status.replace('_', ' ')}</span>
+                    </div>
+                    <div class="api-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Usage</span>
+                            <span class="detail-value">${api.usage}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Headroom</span>
+                            <span class="detail-value">${api.headroom}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Limits</span>
+                            <span class="detail-value">${limitsText || 'N/A'}</span>
+                        </div>
+                        <div class="usage-bar">
+                            <div class="usage-fill ${usageClass}"></div>
+                        </div>
+                    </div>
+                    <div class="agents-list">
+                        ${api.assignedAgents.map(a => `<span class="agent-tag">${a}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function render() {
+            document.getElementById('lastUpdated').textContent = formatDate(apiData.lastUpdated);
+            
+            const apis = Object.values(apiData.apis);
+            const active = apis.filter(a => a.status === 'active').length;
+            const limited = apis.filter(a => a.status === 'rate_limited').length;
+            const degraded = apis.filter(a => a.status === 'degraded').length;
+            
+            document.getElementById('activeCount').textContent = active;
+            document.getElementById('limitedCount').textContent = limited;
+            document.getElementById('degradedCount').textContent = degraded;
+            document.getElementById('totalCount').textContent = apis.length;
+            
+            const sortedApis = Object.entries(apiData.apis).sort(([,a], [,b]) => {
+                const order = { active: 0, rate_limited: 1, degraded: 2 };
+                return order[a.status] - order[b.status];
+            });
+            
+            document.getElementById('apiGrid').innerHTML = sortedApis
+                .map(([key, api]) => renderAPI(key, api))
+                .join('');
+            
+            if (apiData.issues && apiData.issues.length > 0) {
+                document.getElementById('issuesList').innerHTML = apiData.issues.map(issue => `
+                    <div class="issue-item">
+                        <div class="issue-icon">⚠️</div>
+                        <div class="issue-content">
+                            <div class="issue-title">${issue.api}: ${issue.issue}</div>
+                            <div class="issue-desc">Impact: ${issue.impact} • Status: ${issue.status}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                document.getElementById('issuesList').innerHTML = '<p style="color:var(--text-muted);font-size:0.875rem;">No active issues</p>';
+            }
+            
+            const chain = apiData.fallbackChain;
+            document.getElementById('fallbackChain').innerHTML = chain.map((model, i) => 
+                `<span class="fallback-item">${model}</span>${i < chain.length - 1 ? '<span class="fallback-arrow">→</span>' : ''}`
+            ).join('');
+        }
+        
+        render();
+    </script>
+</body>
+</html>

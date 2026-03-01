@@ -1,0 +1,153 @@
+# Dashboard Problem Findings Report
+**Date:** 2026-02-28  
+**Domain:** Athena Dashboard Ecosystem  
+**Location:** `/root/.openclaw/workspace/athena-live/`
+
+---
+
+## Dashboard Health Score
+
+**Overall Score: 7.5/10 (Good - Minor Issues)**
+
+| Metric | Score | Notes |
+|--------|-------|-------|
+| File Count | 112 HTML files | Large ecosystem, well-organized |
+| Broken Links | 4 found | Refer to missing pages |
+| Stale Files | 0 critical | Recent updates present |
+| Documentation | Excellent | DASHBOARD-INDEX.md and README.md current |
+| Architecture | Solid | Clear separation of concerns |
+
+---
+
+## Issues Found
+
+### 🔴 Critical Issues
+
+#### 1. Broken Internal Links (4 instances)
+| File | Missing Target |
+|------|-----------------|
+| `felicity-mission-v2.html` | `color-theory.html` |
+| `nexus-mission-v2.html` | `knowledge-graph.html` |
+| `prometheus-mission-v2.html` | `daily-quest.html` |
+| `queue.html` | `bids.html` |
+
+**Impact:** Users clicking these links get 404 errors. These appear to be legacy references to pages that were removed or renamed.
+
+---
+
+### 🟡 Medium Priority Issues
+
+#### 2. Redundant v2 Mission Files
+Three agent dashboards have v2 versions that may be redundant:
+- `felicity-mission-v2.html` (15,888 bytes)
+- `nexus-mission-v2.html` (22,612 bytes)  
+- `prometheus-mission-v2.html` (21,701 bytes)
+
+**Analysis:** The DASHBOARD-INDEX.md only lists the v1 versions as active. These v2 files may be legacy experiments that should be:
+- Either restored to active use (if v2 is the preferred version)
+- Or consolidated/removed to avoid confusion
+
+#### 3. Unused UI Component Files
+The following files appear to be component demos not integrated into main dashboards:
+- `widget2.html`, `widget6.html`
+- `chip.html`, `toggle.html`, `stepper.html`
+- `spinner.html`, `skeleton.html`
+- `card2.html`, `modal2.html`, `dropdown.html`
+- `easter-egg.html`, `blogcard.html`, `gallery2.html`, `carousel.html`, `grid.html`
+
+**Impact:** 15 files serving no active purpose. May be leftover from UI development.
+
+#### 4. Report/Monitor File Duplication
+Multiple files with overlapping functionality:
+- `morning-report.html` & `evening-report.html`
+- `pulse-monitor.html` & `pulse-report.html`
+- `live-monitor.html` & `gateway-monitor.html`
+- `api-health-monitor.html` & `lattice-monitor.html`
+
+**Recommendation:** Consider consolidating these into unified reports with time-range filters.
+
+---
+
+### 🟢 Low Priority Issues
+
+#### 5. Scripts Location Inconsistency
+- Dashboard references: `scripts/dashboard_websocket.py`
+- Actual location: `/root/.openclaw/workspace/scripts/`
+- **Noted:** Works fine but could cause confusion during deployment
+
+#### 6. API File Mix (.js and .php)
+Both `create-task.js` and `create-task.php` exist as API fallbacks. This is good for resilience but should be documented which is primary.
+
+---
+
+## Recommended Improvements
+
+### Immediate Actions (High Impact)
+
+1. **Fix 4 Broken Links**
+   - Either create the missing target files
+   - Or update links to point to correct destinations
+   - Priority: `queue.html -> bids.html` is likely most used
+
+2. **Consolidate v2 Mission Files**
+   - If v2 is preferred: Update DASHBOARD-INDEX.md to reference v2
+   - If v1 is preferred: Remove v2 files or clearly mark as legacy
+
+3. **Clean Up Unused UI Components**
+   - Move to `/archive/` or `/components/` folder
+   - Or delete if truly unused (15 files)
+
+### Medium-Term Improvements
+
+4. **Consolidate Report Dashboards**
+   - Merge morning/evening reports into single `daily-report.html` with time filter
+   - Merge pulse monitors into unified `system-pulse.html`
+
+5. **Create Unified Monitoring Hub**
+   - Current: 4+ separate monitor files
+   - Proposed: Single `monitoring-hub.html` with tabbed interface
+
+6. **Add Link Validation to CI/CD**
+   - Create simple script to validate all internal links on build
+
+### Long-Term Enhancements
+
+7. **Modular Component System**
+   - Extract common UI patterns into shared components
+   - Reduce duplication across 112 HTML files
+
+8. **Documentation Auto-Generation**
+   - DASHBOARD-INDEX.md could be generated from file scan
+   - Ensure it stays in sync automatically
+
+---
+
+## Summary Statistics
+
+| Category | Count |
+|----------|-------|
+| Total HTML files | 112 |
+| JavaScript modules | 5 |
+| CSS files | 2 |
+| API endpoints | 16 |
+| Agent mission dashboards | 19 |
+| Monitor/dashboard files | 12 |
+| Component demo files | 15 |
+
+---
+
+## Files Requiring Attention
+
+| File | Issue | Priority |
+|------|-------|----------|
+| `queue.html` | Missing `bids.html` link | High |
+| `felicity-mission-v2.html` | Missing `color-theory.html` | High |
+| `nexus-mission-v2.html` | Missing `knowledge-graph.html` | High |
+| `prometheus-mission-v2.html` | Missing `daily-quest.html` | High |
+| `*v2.html` files (3) | Redundancy unclear | Medium |
+| UI component files (15) | Not integrated | Medium |
+| Report files (4 pairs) | Overlapping function | Low |
+
+---
+
+*Report generated by Dashboard Audit Sub-Agent - 2026-02-28*

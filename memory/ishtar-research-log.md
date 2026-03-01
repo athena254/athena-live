@@ -1395,3 +1395,407 @@ scripts/
 
 *Ishtar Night Cycle Research Complete - 2026-02-27*
 *Ready for next research cycle or user interaction*
+
+---
+
+## 2026-02-28 — Analytics Dashboard (Night Cycle)
+
+### Topic: Analytics Dashboard - Historical Data Visualization with Charts and Trends
+
+**Research Duration:** ~1 hour
+
+#### Problem Statement
+The existing Athena Live dashboard showed only snapshot data without historical context. Needed to implement comprehensive analytics with trend visualization for:
+- Task completion trends over time
+- Agent performance comparison
+- Revenue and bidding analytics
+- Error rate tracking
+
+#### Key Findings
+
+1. **Existing Analytics Infrastructure**
+   - `api-analytics.html` - Token usage tracking with Chart.js
+   - `beelancer-analytics.html` - Bid tracking and earnings
+   - Both lacked historical trend visualization
+   - No data archival system for historical metrics
+
+2. **Chart.js Integration**
+   - Already available via CDN
+   - Supports time series with `chartjs-adapter-date-fns`
+   - Good for line, bar, and area charts
+   - Can handle multiple datasets for comparison
+
+3. **Data Storage Requirements**
+   - Need hourly metrics for fine-grained analysis (keep 7 days)
+   - Need daily metrics for trend analysis (keep 90 days)
+   - Agent-specific history for performance comparison
+   - Bidding stats for Sterling's win rate tracking
+
+#### Implementation Delivered
+
+1. **Created `/athena-live/analytics-dashboard.html`**
+   - Full analytics dashboard with 5 chart types
+   - Task completion trend (line chart)
+   - Revenue trend (line chart)
+   - Agent performance comparison (bar chart)
+   - Error rate tracking (line chart)
+   - Bidding history (multi-line chart)
+   - Time range selector (7D, 30D, 90D)
+   - Auto-refresh every 5 minutes
+   - Sample data generation for immediate visualization
+
+2. **Created `/scripts/collect-metrics.js`**
+   - Metrics collector for periodic data archival
+   - Collects hourly and daily metrics
+   - Tracks per-agent performance
+   - Archives bidding statistics
+   - Retention policy enforcement
+
+3. **Created `/scripts/generate-sample-analytics.js`**
+   - Generates 30 days of sample historical data
+   - Realistic patterns (weekend vs weekday)
+   - Hourly patterns (business hours vs night)
+   - Agent-specific task distributions
+
+4. **Created `/memory/analytics/historical-metrics.json`**
+   - Persistent storage for historical metrics
+   - Structured for efficient querying
+
+5. **Created `/athena-live/api/analytics/historical.json`**
+   - API endpoint for dashboard to fetch data
+   - CORS-friendly static JSON file
+
+6. **Updated main dashboard** (`index.html`)
+   - Added link to Analytics Dashboard in quick actions
+
+#### Technical Decisions
+
+1. **Static JSON vs Database**
+   - Chose static JSON files for simplicity
+   - No additional infrastructure required
+   - Fast reads, easy backup
+   - Suitable for 30-90 day retention
+
+2. **Sample Data Generation**
+   - Created generator script to populate historical data
+   - Realistic patterns based on expected usage
+   - Immediate visualization value
+
+3. **Time Range Selector**
+   - 7D, 30D, 90D options
+   - Updates all charts simultaneously
+   - Reduces data points for performance
+
+#### Architecture Notes
+
+```
+/memory/analytics/historical-metrics.json   # Source of truth
+        ↓ (copy/symlink)
+/athena-live/api/analytics/historical.json  # API endpoint
+        ↓ (fetch)
+/athena-live/analytics-dashboard.html       # Visualization
+```
+
+#### Metrics Collection Schedule (Recommended)
+
+```bash
+# Hourly collection
+0 * * * * cd /root/.openclaw/workspace && node scripts/collect-metrics.js
+
+# Or via Athena heartbeat (check every 30 min)
+# Add to HEARTBEAT.md: "Run collect-metrics.js on the hour"
+```
+
+#### Future Enhancements
+
+1. **Real-time updates** - WebSocket for live chart updates
+2. **Export functionality** - CSV/JSON export of metrics
+3. **Alerting** - Thresholds for error rates, queue depth
+4. **Comparative analysis** - Week-over-week, month-over-month comparisons
+5. **Predictive analytics** - Forecast trends using simple regression
+
+#### Files Created/Modified
+
+- `athena-live/analytics-dashboard.html` (NEW - 600+ lines)
+- `scripts/collect-metrics.js` (NEW - 200+ lines)
+- `scripts/generate-sample-analytics.js` (NEW - 180+ lines)
+- `memory/analytics/historical-metrics.json` (NEW)
+- `athena-live/api/analytics/historical.json` (NEW)
+- `athena-live/index.html` (MODIFIED - added analytics link)
+
+#### Status: ✅ COMPLETE
+
+---
+
+## 2026-02-28 — Task Scheduling System (Night Cycle)
+
+### Topic: Task Scheduling System - Cron-like Scheduling for Automated Task Execution
+
+**Research Duration:** ~45 minutes
+
+#### Problem Statement
+Athena needed a robust task scheduling system for automating recurring operations like:
+- Hourly metrics collection
+- Daily backups
+- Periodic bidding cycles
+- Health checks and maintenance tasks
+
+#### Key Findings
+
+1. **Cron Expression Parsing**
+   - Python can parse standard 5-field cron expressions
+   - Support for: `*`, ranges (`1-5`), steps (`*/15`), lists (`1,3,5`)
+   - Need to handle timezone considerations (UTC vs local)
+
+2. **Schedule Types Required**
+   - **Cron**: Traditional cron expressions for complex schedules
+   - **Interval**: Simple recurring intervals (every N seconds)
+   - **Once**: One-time scheduled tasks
+
+3. **Task Templates**
+   - Predefined task configurations for common operations
+   - Reduces configuration errors
+   - Ensures consistency in task parameters
+
+#### Implementation Delivered
+
+1. **Created `/scripts/task_scheduler.py`** (450+ lines)
+   - Full cron expression parser
+   - Three schedule types (cron, interval, once)
+   - Task templates for common operations
+   - Daemon mode for continuous operation
+   - CLI interface for management
+
+2. **Created `/athena-live/scheduler.html`** (500+ lines)
+   - Web UI for schedule management
+   - Template selection with quick presets
+   - Cron expression helper with presets
+   - Task status management (enable/pause/disable)
+   - Run history view
+
+3. **Created `/memory/scheduled-tasks.json`**
+   - Persistent storage for scheduled tasks
+   - Run history tracking
+   - Metadata for audit trail
+
+4. **Default Schedules Created**
+   - `hourly_metrics` - Every hour on the hour
+   - `daily_backup` - Daily at midnight UTC
+   - `bidding_cycle` - Every 30 minutes
+   - `weekly_health_check` - Mondays at 9am
+
+5. **Updated main dashboard** with Scheduler link
+
+#### Technical Architecture
+
+```
+Task Scheduler Flow:
+┌─────────────────────┐
+│ scheduled-tasks.json│ (Storage)
+└──────────┬──────────┘
+           │
+    ┌──────▼──────┐
+    │task_scheduler│ (Daemon)
+    │   .py        │
+    └──────┬──────┘
+           │ (when due)
+    ┌──────▼──────┐
+    │ agent-queue │ (Execution)
+    │   .json     │
+    └─────────────┘
+```
+
+#### CLI Commands
+
+```bash
+# Set up default schedules
+python scripts/task_scheduler.py --setup-defaults
+
+# List all scheduled tasks
+python scripts/task_scheduler.py --list
+
+# Show scheduler status
+python scripts/task_scheduler.py --status
+
+# Run daemon (continuous)
+python scripts/task_scheduler.py --daemon --interval 60
+
+# Check once
+python scripts/task_scheduler.py --check
+```
+
+#### Cron Expression Reference
+
+| Expression | Meaning |
+|------------|---------|
+| `0 * * * *` | Every hour on the hour |
+| `0 0 * * *` | Daily at midnight |
+| `0 9 * * *` | Daily at 9am |
+| `0 9 * * 1` | Every Monday at 9am |
+| `*/15 * * * *` | Every 15 minutes |
+| `0 */6 * * *` | Every 6 hours |
+| `0 0 1 * *` | First day of month |
+
+#### Integration Points
+
+1. **Metrics Collection** → `scripts/collect-metrics.js`
+2. **Beelancer Bidding** → Sterling agent
+3. **System Backup** → Squire agent
+4. **Health Checks** → Athena agent
+
+#### Future Enhancements
+
+1. **Webhook triggers** - External systems can trigger tasks
+2. **Task dependencies** - Wait for other tasks to complete
+3. **Retry policies** - Configure retry behavior per task
+4. **Timezone support** - Schedule in local time zones
+5. **Calendar view** - Visual calendar of scheduled tasks
+
+#### Files Created/Modified
+
+- `scripts/task_scheduler.py` (NEW - 450+ lines)
+- `athena-live/scheduler.html` (NEW - 500+ lines)
+- `memory/scheduled-tasks.json` (NEW)
+- `athena-live/api/scheduled-tasks.json` (NEW)
+- `athena-live/index.html` (MODIFIED - added scheduler link)
+
+#### Status: ✅ COMPLETE
+
+---
+
+## 2026-02-28 — Cross-Agent Learning (Night Cycle)
+
+### Topic: Cross-Agent Learning - Knowledge Sharing and ML Between Agents
+
+**Research Duration:** ~30 minutes
+
+#### Problem Statement
+Agents operate independently without sharing knowledge. When Sterling learns a bidding pattern, Ishtar doesn't benefit. When Felicity discovers a communication best practice, it's not available to others.
+
+Needed a system for:
+- Shared knowledge base across all agents
+- Experience logging and pattern extraction
+- Learning transfer between agents
+- Insight aggregation
+
+#### Key Findings
+
+1. **Knowledge Types to Share**
+   - **Patterns**: Recurring observations from tasks
+   - **Best Practices**: Proven approaches
+   - **Failure Modes**: Things that didn't work
+   - **Templates**: Reusable configurations
+
+2. **Domain Mapping**
+   - Each agent has primary domains
+   - Sterling: bidding, finance
+   - Ishtar: research, development
+   - Felicity: communication
+   - Cross-domain learning when domains overlap
+
+3. **Confidence Scoring**
+   - Patterns gain confidence with repeated observations
+   - Confidence decays without reinforcement
+   - Threshold for sharing to other agents
+
+#### Implementation Delivered
+
+1. **Created `/scripts/cross_agent_learning.py`** (450+ lines)
+   - Experience logging system
+   - Pattern extraction from experiences
+   - Knowledge retrieval for agents
+   - Learning transfer between agents
+   - Performance analysis
+
+2. **Created `/memory/knowledge-base.json`**
+   - Persistent knowledge storage
+   - Domain-organized patterns
+   - Experience history
+   - Agent-specific statistics
+
+3. **Created `/athena-live/knowledge.html`** (400+ lines)
+   - Knowledge base visualization
+   - Agent performance cards
+   - Domain knowledge display
+   - Shared insights view
+   - Recent experience feed
+
+4. **Sample Experiences Created**
+   - Sterling: bidding patterns
+   - Ishtar: research methodologies
+   - Felicity: communication best practices
+
+#### Architecture
+
+```
+Agent completes task
+        │
+        ▼
+┌──────────────────┐
+│ Experience Logger│
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐    ┌──────────────────┐
+│ Pattern Extractor│───▶│ Knowledge Base   │
+└──────────────────┘    │  (JSON)          │
+                        └────────┬─────────┘
+                                 │
+         ┌───────────────────────┼───────────────────────┐
+         │                       │                       │
+         ▼                       ▼                       ▼
+    ┌─────────┐            ┌─────────┐            ┌─────────┐
+    │Sterling │            │ Ishtar  │            │Felicity │
+    │ Learns  │            │ Learns  │            │ Learns  │
+    └─────────┘            └─────────┘            └─────────┘
+```
+
+#### CLI Commands
+
+```bash
+# Create sample experiences
+python scripts/cross_agent_learning.py --sample
+
+# Analyze agent performance
+python scripts/cross_agent_learning.py --analyze
+
+# Get knowledge for specific agent
+python scripts/cross_agent_learning.py --knowledge-for sterling
+
+# Transfer learning between agents
+python scripts/cross_agent_learning.py --transfer sterling ishtar bidding
+
+# View shared insights
+python scripts/cross_agent_learning.py --insights
+```
+
+#### Integration Points
+
+1. **Task Completion** → Log experience automatically
+2. **Agent Decision Making** → Query relevant patterns
+3. **New Agent Training** → Transfer learning from experienced agents
+4. **Performance Reviews** → Analyze cross-agent statistics
+
+#### Future Enhancements
+
+1. **ML Models** - Train predictive models on experiences
+2. **Knowledge Graph** - Visualize knowledge relationships
+3. **Automatic Transfer** - Detect when transfer is beneficial
+4. **Confidence Decay** - Time-based confidence reduction
+5. **Conflict Resolution** - Handle contradictory learnings
+
+#### Files Created/Modified
+
+- `scripts/cross_agent_learning.py` (NEW - 450+ lines)
+- `memory/knowledge-base.json` (NEW)
+- `athena-live/knowledge.html` (NEW - 400+ lines)
+- `athena-live/api/knowledge-base.json` (NEW)
+- `athena-live/index.html` (MODIFIED - added knowledge link)
+
+#### Status: ✅ COMPLETE
+
+---
+
+*Ishtar Night Cycle Research - 2026-02-28*
+*Cross-Agent Learning system implementation complete*
+*Session total: 3 topics completed, ~2500 lines of code*

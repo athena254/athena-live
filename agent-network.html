@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Athena Agent Network</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Space+Mono:wght@400;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --bg-dark: #0a0e17;
+      --bg-card: #111827;
+      --accent-cyan: #22d3ee;
+      --accent-purple: #a78bfa;
+      --accent-orange: #fb923c;
+      --accent-green: #4ade80;
+      --accent-pink: #f472b6;
+      --accent-yellow: #facc15;
+      --accent-red: #f87171;
+      --accent-blue: #60a5fa;
+      --text-primary: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+    
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(167, 139, 250, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(251, 146, 60, 0.03) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+    
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      font-family: 'Space Mono', monospace;
+    }
+    
+    /* Network visualization */
+    .network-container {
+      position: relative;
+      width: 100%;
+      height: 600px;
+      background: var(--bg-card);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.05);
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+    
+    .network-svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Agent nodes */
+    .agent-node {
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    
+    .agent-node:hover {
+      transform: scale(1.1);
+    }
+    
+    .agent-circle {
+      stroke-width: 3;
+      transition: all 0.3s ease;
+    }
+    
+    .agent-node:hover .agent-circle {
+      filter: drop-shadow(0 0 20px currentColor);
+    }
+    
+    .agent-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-anchor: middle;
+      fill: white;
+      pointer-events: none;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+    
+    .agent-role {
+      font-family: 'Outfit', sans-serif;
+      font-size: 9px;
+      text-anchor: middle;
+      fill: var(--text-muted);
+      pointer-events: none;
+    }
+    
+    /* Connection lines */
+    .connection-line {
+      stroke: rgba(255,255,255,0.1);
+      stroke-width: 1;
+      fill: none;
+      stroke-dasharray: 5, 5;
+      animation: dash 20s linear infinite;
+    }
+    
+    @keyframes dash {
+      to { stroke-dashoffset: -100; }
+    }
+    
+    .connection-line.strong {
+      stroke: rgba(255,255,255,0.2);
+      stroke-dasharray: none;
+    }
+    
+    /* Agent cards grid */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    
+    .agent-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .agent-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+    
+    .agent-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.1);
+    }
+    
+    .agent-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .agent-card .icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    
+    .agent-card .role {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      font-family: 'Space Mono', monospace;
+    }
+    
+    .agent-card .description {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    
+    .agent-card .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-family: 'Space Mono', monospace;
+    }
+    
+    .status.active {
+      background: rgba(74, 222, 128, 0.1);
+      color: var(--accent-green);
+    }
+    
+    .status.special {
+      background: rgba(251, 191, 36, 0.1);
+      color: var(--accent-yellow);
+    }
+    
+    .status.auxiliary {
+      background: rgba(96, 165, 250, 0.1);
+      color: var(--accent-blue);
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    /* Legend */
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-family: 'Space Mono', monospace;
+    }
+    
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Athena Agent Network</h1>
+      <p class="subtitle">// 9 agents · 1 system · infinite possibilities</p>
+    </header>
+    
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--accent-cyan)"></div>
+        <span>Core Hub</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--accent-green)"></div>
+        <span>Finance</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--accent-purple)"></div>
+        <span>Architecture</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--accent-orange)"></div>
+        <span>Research</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--accent-pink)"></div>
+        <span>Support</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--accent-yellow)"></div>
+        <span>Automation</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--accent-red)"></div>
+        <span>Security</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--accent-blue)"></div>
+        <span>Infrastructure</span>
+      </div>
+    </div>
+    
+    <div class="network-container">
+      <svg class="network-svg" viewBox="0 0 1200 600">
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        
+        <!-- Connection lines -->
+        <g class="connections">
+          <!-- Athena center connections -->
+          <line x1="600" y1="300" x2="200" y2="150" class="connection-line strong"/>
+          <line x1="600" y1="300" x2="1000" y2="150" class="connection-line strong"/>
+          <line x1="600" y1="300" x2="150" y2="450" class="connection-line"/>
+          <line x1="600" y1="300" x2="1050" y2="450" class="connection-line"/>
+          <line x1="600" y1="300" x2="300" y2="300" class="connection-line strong"/>
+          <line x1="600" y1="300" x2="900" y2="300" class="connection-line strong"/>
+          <line x1="600" y1="300" x2="450" y2="500" class="connection-line"/>
+          <line x1="600" y1="300" x2="750" y2="500" class="connection-line"/>
+          
+          <!-- Inter-agent connections -->
+          <line x1="200" y1="150" x2="300" y2="300" class="connection-line"/>
+          <line x1="1000" y1="150" x2="900" y2="300" class="connection-line"/>
+          <line x1="300" y1="300" x2="450" y2="500" class="connection-line"/>
+          <line x1="900" y1="300" x2="750" y2="500" class="connection-line"/>
+        </g>
+        
+        <!-- Agent Nodes -->
+        <!-- ATHENA - Central Hub -->
+        <g class="agent-node floating" transform="translate(600, 300)">
+          <circle r="50" fill="#111827" stroke="#22d3ee" class="agent-circle"/>
+          <text y="-5" class="agent-label">ATHENA</text>
+          <text y="12" class="agent-role">Central Hub</text>
+        </g>
+        
+        <!-- STERLING - Finance -->
+        <g class="agent-node" transform="translate(200, 150)">
+          <circle r="40" fill="#111827" stroke="#4ade80" class="agent-circle"/>
+          <text y="-3" class="agent-label">STERLING</text>
+          <text y="14" class="agent-role">Finance</text>
+        </g>
+        
+        <!-- ISTHAR - Architecture -->
+        <g class="agent-node" transform="translate(1000, 150)">
+          <circle r="40" fill="#111827" stroke="#a78bfa" class="agent-circle"/>
+          <text y="-3" class="agent-label">ISTHAR</text>
+          <text y="14" class="agent-role">PAI Arch</text>
+        </g>
+        
+        <!-- DELVER - Research -->
+        <g class="agent-node" transform="translate(150, 450)">
+          <circle r="35" fill="#111827" stroke="#fb923c" class="agent-circle"/>
+          <text y="-2" class="agent-label">DELVER</text>
+          <text y="12" class="agent-role">Research</text>
+        </g>
+        
+        <!-- SQUIRE - Support -->
+        <g class="agent-node" transform="translate(1050, 450)">
+          <circle r="35" fill="#111827" stroke="#f472b6" class="agent-circle"/>
+          <text y="-2" class="agent-label">SQUIRE</text>
+          <text y="12" class="agent-role">Support</text>
+        </g>
+        
+        <!-- FELICITY - Automation -->
+        <g class="agent-node" transform="translate(300, 300)">
+          <circle r="38" fill="#111827" stroke="#facc15" class="agent-circle"/>
+          <text y="-3" class="agent-label">FELICITY</text>
+          <text y="14" class="agent-role">Automation</text>
+        </g>
+        
+        <!-- PROMETHEUS - Intelligence -->
+        <g class="agent-node" transform="translate(900, 300)">
+          <circle r="38" fill="#111827" stroke="#60a5fa" class="agent-circle"/>
+          <text y="-3" class="agent-label">PROMETHEUS</text>
+          <text y="14" class="agent-role">Intelligence</text>
+        </g>
+        
+        <!-- CISCO - Infrastructure -->
+        <g class="agent-node" transform="translate(450, 500)">
+          <circle r="32" fill="#111827" stroke="#f87171" class="agent-circle"/>
+          <text y="-1" class="agent-label">CISCO</text>
+          <text y="11" class="agent-role">Security</text>
+        </g>
+        
+        <!-- THEMIS - Governance -->
+        <g class="agent-node" transform="translate(750, 500)">
+          <circle r="32" fill="#111827" stroke="#c084fc" class="agent-circle"/>
+          <text y="-1" class="agent-label">THEMIS</text>
+          <text y="11" class="agent-role">Governance</text>
+        </g>
+      </svg>
+    </div>
+    
+    <!-- Agent Cards -->
+    <div class="agents-grid">
+      <div class="agent-card" style="--accent: #22d3ee">
+        <h3><span class="icon" style="background: rgba(34, 211, 238, 0.2)">⚡</span>Athena</h3>
+        <p class="role">// CENTRAL HUB</p>
+        <p class="description">The orchestrator. Coordinates all agents, manages communication, and maintains system coherence. The face of the system to users.</p>
+        <span class="status active"><span class="status-dot"></span>Active</span>
+      </div>
+      
+      <div class="agent-card" style="--accent: #4ade80">
+        <h3><span class="icon" style="background: rgba(74, 222, 128, 0.2)">💰</span>Sterling</h3>
+        <p class="role">// FINANCE</p>
+        <p class="description">Full auto-bidding authority on Beelancer. Monitors freelance budgets, optimizes bid strategies, and maximizes ROI on platform work.</p>
+        <span class="status active"><span class="status-dot"></span>Auto-bidding</span>
+      </div>
+      
+      <div class="agent-card" style="--accent: #a78bfa">
+        <h3><span class="icon" style="background: rgba(167, 139, 250, 0.2)">🏛️</span>Ishtar</h3>
+        <p class="role">// PAI ARCHITECTURE</p>
+        <p class="description">PAI Architecture specialist. Focuses on building Personal AI infrastructure. Does not participate in bidding.</p>
+        <span class="status special"><span class="status-dot"></span>Architecture</span>
+      </div>
+      
+      <div class="agent-card" style="--accent: #fb923c">
+        <h3><span class="icon" style="background: rgba(251, 146, 60, 0.2)">🔍</span>Delver</h3>
+        <p class="role">// RESEARCH</p>
+        <p class="description">Deep research agent. Explores topics, gathers intelligence, and provides comprehensive analysis for decision-making.</p>
+        <span class="status active"><span class="status-dot"></span>Researching</span>
+      </div>
+      
+      <div class="agent-card" style="--accent: #f472b6">
+        <h3><span class="icon" style="background: rgba(244, 114, 182, 0.2)">🛡️</span>Squire</h3>
+        <p class="role">// SUPPORT</p>
+        <p class="description">User support specialist. Handles queries, troubleshoots issues, and provides helpful assistance across platforms.</p>
+        <span class="status active"><span class="status-dot"></span>On duty</span>
+      </div>
+      
+      <div class="agent-card" style="--accent: #facc15">
+        <h3><span class="icon" style="background: rgba(250, 204, 21, 0.2)">⚙️</span>Felicity</h3>
+        <p class="role">// AUTOMATION</p>
+        <p class="description">Workflow automation expert. Creates and maintains automated processes, integrations, and efficiency improvements.</p>
+        <span class="status active"><span class="status-dot"></span>Automating</span>
+      </div>
+      
+      <div class="agent-card" style="--accent: #60a5fa">
+        <h3><span class="icon" style="background: rgba(96, 165, 250, 0.2)">🧠</span>Prometheus</h3>
+        <p class="role">// INTELLIGENCE</p>
+        <p class="description">Learning and optimization agent. Analyzes patterns, improves strategies, and brings intelligence to system decisions.</p>
+        <span class="status active"><span class="status-dot"></span>Learning</span>
+      </div>
+      
+      <div class="agent-card" style="--accent: #f87171">
+        <h3><span class="icon" style="background: rgba(248, 113, 113, 0.2)">🔐</span>Cisco</h3>
+        <p class="role">// SECURITY</p>
+        <p class="description">Security and infrastructure guardian. Monitors systems, enforces policies, and protects against threats.</p>
+        <span class="status auxiliary"><span class="status-dot"></span>Guarding</span>
+      </div>
+      
+      <div class="agent-card" style="--accent: #c084fc">
+        <h3><span class="icon" style="background: rgba(192, 132, 252, 0.2)">⚖️</span>THEMIS</h3>
+        <p class="role">// GOVERNANCE</p>
+        <p class="description">System governance and compliance. Ensures ethical operations, maintains policies, and balances agent activities.</p>
+        <span class="status auxiliary"><span class="status-dot"></span>Overseeing</span>
+      </div>
+    </div>
+    
+    <footer>
+      <p>Athena OS · Agent Network Visualization · Generated 2026</p>
+    </footer>
+  </div>
+  
+  <script>
+    // Add hover effects to cards
+    document.querySelectorAll('.agent-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.borderColor = card.style.getPropertyValue('--accent');
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.borderColor = 'rgba(255,255,255,0.05)';
+      });
+    });
+    
+    // Intersection Observer for fade-in animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.agent-card').forEach((card, i) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = `all 0.5s ease ${i * 0.1}s`;
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>

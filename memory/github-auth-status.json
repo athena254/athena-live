@@ -1,0 +1,12 @@
+{
+  "status": "failed",
+  "account": "DisMuriuki",
+  "github_host": "github.com",
+  "token_prefix": "ghp_w4o***",
+  "error": "The token in /root/.config/gh/hosts.yml is invalid",
+  "http_status": 401,
+  "last_check": "2026-02-28T11:25:00Z",
+  "requires_user_action": true,
+  "reauth_command": "gh auth login -h github.com",
+  "notes": "Token appears to be expired or revoked. Manual re-authentication required."
+}
