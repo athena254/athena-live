@@ -83,3 +83,9 @@
 **Silent Mode:** ACTIVE
 **YouTube Monitoring:** @GithubAwesome (daily checks enabled)
 **New Protocol:** MAXIMIZE & BUILD + PRIME DIRECTIVE (Interrupt on user request)
+
+
+## Idle Mode
+
+For full idle-time directive, see  — 6 phases of background operations, subagent orchestration, and API resource maximization.
+
