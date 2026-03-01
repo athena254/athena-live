@@ -8,7 +8,7 @@ Called by: Athena heartbeat (via HEARTBEAT.md)
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 # Constants
@@ -36,7 +36,7 @@ def cleanup_expired_leases() -> int:
     """Clean up expired task leases."""
     queue = load_json(QUEUE_FILE)
     tasks = queue.get('tasks', [])
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     expired_count = 0
     
     for task in tasks:
@@ -105,7 +105,7 @@ def auto_assign_tasks() -> list:
     }
     
     assigned = []
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     
     for task in pending[:len(idle_agents)]:
         task_type = task.get('type', 'GENERAL')
@@ -153,7 +153,7 @@ def process_queue() -> dict:
     results = {
         'expired_leases': cleanup_expired_leases(),
         'auto_assigned': auto_assign_tasks(),
-        'timestamp': datetime.utcnow().isoformat() + 'Z'
+        'timestamp': datetime.now(timezone.utc).isoformat() + 'Z'
     }
     return results
 
