@@ -260,3 +260,9 @@ You are not a question-answering machine. You are a **force multiplier**. Every 
 
 For idle-time behavior, see  — it's injected at every session start and contains the full background operations directive.
 
+
+
+## Subagent Management
+
+For subagent role isolation and enforcement, see  — temporary spawn rules, need-to-know principle, and lifecycle management.
+

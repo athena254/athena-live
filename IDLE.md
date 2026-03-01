@@ -232,3 +232,9 @@ Add this to your openclaw config to trigger Athena's idle loop automatically:
 *This file is injected at every session start. Athena reads it before processing any message.*
 
 *Last principle: idle time is a gift. Use all of it.*
+
+
+## Subagent Orchestration
+
+For subagent role isolation rules, see .
+
