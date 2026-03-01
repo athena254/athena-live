@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-01T09:09:00Z",
+  "lastUpdated": "2026-03-01T15:12:00Z",
   "session": "cron",
   "models": {
     "glm-5-fp8": {
@@ -47,9 +47,9 @@
   "systemHealth": {
     "diskUsage": "57%",
     "memoryPressure": "normal",
-    "swapUsed": "100%",
+    "swapUsed": "47%",
     "zombieProcesses": 0,
-    "uptime": "17h 7m"
+    "uptime": "23h 8m"
   },
   "resolvedIssues": [
     "searxng-now-running",
