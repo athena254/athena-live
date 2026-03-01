@@ -1,352 +1,287 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Athena Live | Multi-Agent AI Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    [data-theme="dark"] { --bg-base: #0c0f1a; --bg-surface: #111827; --bg-elevated: #1f2937; --border: #1f2937; --text-primary: #f9fafb; --text-secondary: #d1d5db; --text-muted: #9ca3af; }
-    [data-theme="light"] { --bg-base: #f8fafc; --bg-surface: #ffffff; --bg-elevated: #f1f5f9; --border: #e2e8f0; --text-primary: #0f172a; --text-secondary: #334155; --text-muted: #64748b; }
-    
-    /* Agent Dashboard Grid */
-    .agent-dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-2xl); }
-    .agent-dashboard-card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-lg); transition: var(--transition-base); text-decoration: none; color: inherit; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-    .agent-dashboard-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--agent-color, var(--primary)); opacity: 0.6; transition: var(--transition-base); }
-    .agent-dashboard-card:hover { transform: translateY(-4px); border-color: var(--agent-color, var(--primary)); box-shadow: var(--shadow-glow); }
-    .agent-dashboard-card:hover::before { opacity: 1; }
-    .agent-dashboard-header { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md); }
-    .agent-dashboard-avatar { width: 52px; height: 52px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--agent-color), var(--agent-color-light)); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; flex-shrink: 0; }
-    .agent-dashboard-info { flex: 1; min-width: 0; }
-    .agent-dashboard-name { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
-    .boot-badge { font-size: 0.75rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-left: 4px; animation: pulse 2s infinite; }
-    .agent-dashboard-role { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .agent-dashboard-status { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; font-size: 0.625rem; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
-    .agent-dashboard-status.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-    .agent-dashboard-status.idle { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-    .agent-dashboard-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-    .agent-dashboard-status.active .agent-dashboard-dot { animation: pulse 2s infinite; }
-    .agent-dashboard-footer { margin-top: auto; padding-top: var(--space-md); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .agent-dashboard-link { font-size: 0.8125rem; color: var(--agent-color, var(--primary-light)); font-weight: 500; display: flex; align-items: center; gap: var(--space-xs); }
-    .agent-dashboard-card:hover .agent-dashboard-link { color: var(--agent-color-light); }
-    .agent-dashboard-arrow { transition: transform var(--transition-fast); }
-    .agent-dashboard-card:hover .agent-dashboard-arrow { transform: translateX(4px); }
-    .agent-dashboard-tasks { font-size: 0.75rem; color: var(--text-subtle); }
-    
-    .revenue-tracker { background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-xl); margin-bottom: var(--space-2xl); position: relative; }
-    .revenue-tracker::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #f59e0b, #10b981, #6366f1); }
-    .revenue-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-lg); }
-    .revenue-title { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); }
-    .revenue-title::before { content: "🍯"; margin-right: 8px; }
-    .revenue-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); }
-    .revenue-item { text-align: center; padding: var(--space-lg); background: var(--bg-elevated); border-radius: var(--radius-lg); transition: var(--transition-base); }
-    .revenue-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow); }
-    .revenue-item .icon { font-size: 2rem; margin-bottom: var(--space-sm); display: block; }
-    .revenue-item .value { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
-    .revenue-item .label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
-    .revenue-item.earned .value { color: #10b981; }
-    .revenue-item.pending .value { color: #f59e0b; }
-    .revenue-item.conversion .value { color: #6366f1; }
-    .conversion-bar { margin-top: var(--space-md); height: 8px; background: var(--bg-base); border-radius: var(--radius-full); overflow: hidden; }
-    .conversion-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #22d3ee); }
-    .quick-actions-panel { background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-lg); margin-bottom: var(--space-2xl); }
-    .quick-actions-header { margin-bottom: var(--space-md); }
-    .quick-actions-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
-    .quick-actions-title::before { content: "⚡"; margin-right: 8px; }
-    .quick-actions-buttons { display: flex; gap: var(--space-md); flex-wrap: wrap; }
-    .quick-action-btn { display: inline-flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-secondary); font-size: 0.875rem; cursor: pointer; transition: var(--transition-fast); font-family: inherit; }
-    .quick-action-btn:hover { background: var(--bg-hover); border-color: var(--primary); }
-    .quick-action-btn.refresh { color: #10b981; }
-    .quick-action-btn.theme { color: #f59e0b; }
-    .agent-dropdown { position: relative; display: inline-block; }
-    .agent-dropdown-content { display: none; position: absolute; top: 100%; left: 0; min-width: 220px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-xl); z-index: 100; margin-top: var(--space-xs); padding: var(--space-xs); }
-    .agent-dropdown:hover .agent-dropdown-content { display: block; }
-    .agent-dropdown-item { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); color: var(--text-secondary); font-size: 0.875rem; text-decoration: none; border-radius: var(--radius-sm); }
-    .agent-dropdown-item:hover { background: var(--bg-hover); }
-    .agent-performance-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-2xl); }
-    .agent-performance-card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-lg); transition: var(--transition-base); position: relative; }
-    .agent-performance-card:hover { transform: translateY(-4px); border-color: var(--agent-color); }
-    .agent-performance-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--agent-color); opacity: 0.6; }
-    .agent-header { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md); }
-    .agent-avatar { width: 48px; height: 48px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--agent-color), var(--agent-color-light)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-    .agent-info { flex: 1; }
-    .agent-name { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
-    .agent-role { font-size: 0.75rem; color: var(--text-muted); }
-    .agent-status { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 9999px; font-size: 0.625rem; font-weight: 600; text-transform: uppercase; }
-    .agent-status.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-    .agent-status.idle { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-    .agent-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-    .agent-status.active .agent-status-dot { animation: pulse 2s infinite; }
-    .agent-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md); }
-    .agent-metric { text-align: center; padding: var(--space-sm); background: var(--bg-elevated); border-radius: var(--radius-md); }
-    .agent-metric-value { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
-    .agent-metric-label { font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; }
-    .agent-success-bar { margin-top: var(--space-md); }
-    .agent-success-bar .label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: var(--space-xs); }
-    .agent-success-fill { height: 6px; background: var(--bg-base); border-radius: 9999px; overflow: hidden; }
-    .agent-success-fill .fill { height: 100%; background: linear-gradient(90deg, var(--agent-color), var(--agent-color-light)); }
-    [data-tooltip] { position: relative; }
-    [data-tooltip]::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%) scale(0.9); padding: 8px 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; opacity: 0; visibility: hidden; transition: 0.2s; z-index: 1000; }
-    [data-tooltip]:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) scale(1); }
-    
-    @media (max-width: 640px) { .agent-dashboard-grid { grid-template-columns: 1fr; } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena Live — Real-Time Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-card: #111827;
+            --bg-hover: #1f2937;
+            --accent: #10b981;
+            --accent-dim: rgba(16, 185, 129, 0.15);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #f3f4f6;
+            --text-dim: #9ca3af;
+            --border: #374151;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; }
+        
+        /* Header */
+        .header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 700; }
+        .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), #059669); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .live-badge { display: flex; align-items: center; gap: 8px; background: var(--accent-dim); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--accent); }
+        .live-badge::before { content: ''; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        
+        /* Main Grid */
+        .container { max-width: 1600px; margin: 0 auto; padding: 24px; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        @media (max-width: 1200px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        
+        /* Cards */
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); }
+        
+        /* Health Gauge */
+        .gauge-container { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .gauge { width: 120px; height: 120px; position: relative; }
+        .gauge-bg { fill: none; stroke: var(--bg-hover); stroke-width: 10; }
+        .gauge-fill { fill: none; stroke: var(--accent); stroke-width: 10; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dasharray 1s ease; }
+        .gauge-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        .gauge-value { font-size: 32px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .gauge-label { font-size: 11px; color: var(--text-dim); }
+        
+        /* Stats */
+        .stat { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .stat:last-child { border-bottom: none; }
+        .stat-label { color: var(--text-dim); font-size: 13px; }
+        .stat-value { font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+        .stat-value.good { color: var(--accent); }
+        .stat-value.warning { color: var(--warning); }
+        .stat-value.danger { color: var(--danger); }
+        
+        /* Progress Bar */
+        .progress { height: 8px; background: var(--bg-hover); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+        .progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+        
+        /* Agents Grid */
+        .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .agent-card { background: var(--bg-hover); border-radius: 8px; padding: 14px; text-align: center; transition: all 0.2s; }
+        .agent-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .agent-avatar { width: 40px; height: 40px; background: var(--bg-card); border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .agent-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+        .agent-status { font-size: 11px; color: var(--accent); }
+        
+        /* Activity Feed */
+        .activity-feed { max-height: 300px; overflow-y: auto; }
+        .activity-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-time { color: var(--text-dim); font-size: 11px; font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+        
+        /* Actions */
+        .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn { padding: 10px 16px; background: var(--bg-hover); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn:hover { background: var(--accent); border-color: var(--accent); color: white; }
+        .btn-refresh { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        
+        /* Footer */
+        .footer { text-align: center; padding: 20px; color: var(--text-dim); font-size: 12px; }
+        
+        /* Layout */
+        .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+        @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
+        
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
-  <div class="loading-overlay" id="loader"><div class="loader"></div><p class="loading-text">Initializing Athena...</p></div>
-  <main class="container">
-    <header class="header animate-fade-in"><div class="header-badge"><span class="pulse"></span><span>All Systems Operational</span></div><h1 class="header-title">Athena <span>Live</span></h1><p class="header-subtitle">Multi-Agent Intelligence Dashboard</p></header>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">🦉</div>
+            <span>Athena <span style="color: var(--text-dim); font-weight: 400;">Live</span></span>
+        </div>
+        <div class="live-badge">LIVE</div>
+    </header>
     
-    <section class="quick-actions-panel" aria-label="Quick Actions"><div class="quick-actions-header"><h3 class="quick-actions-title">Quick Actions</h3></div><div class="quick-actions-buttons"><button class="quick-action-btn refresh" id="refresh-btn" data-tooltip="Refresh all dashboard data"><span>🔄</span><span>Refresh Data</span></button><a href="client-portal.html" class="quick-action-btn" style="color: #8b5cf6; text-decoration: none;" data-tooltip="View gig status and client portal"><span>📊</span><span>Client Portal</span></a><a href="task-creation.html" class="quick-action-btn" style="color: var(--primary-light); text-decoration: none;" data-tooltip="Create a new task for any agent"><span>✨</span><span>Create Task</span></a><div class="agent-dropdown"><button class="quick-action-btn" data-tooltip="Open specific agent dashboard"><span>🤖</span><span>Agent Dashboard ▾</span></button><div class="agent-dropdown-content"><a href="sterling-mission.html" class="agent-dropdown-item">💰 Sterling</a><a href="ishtar-mission.html" class="agent-dropdown-item">🔮 Ishtar</a><a href="themis-mission.html" class="agent-dropdown-item">⚖️ THEMIS</a><a href="felicity-mission.html" class="agent-dropdown-item">💻 Felicity</a><a href="prometheus-mission.html" class="agent-dropdown-item">⚡ Prometheus</a><a href="nexus-mission.html" class="agent-dropdown-item">🧠 Nexus</a><a href="delver-mission.html" class="agent-dropdown-item">📚 Delver</a><a href="squire-mission.html" class="agent-dropdown-item">🛡️ Squire</a><a href="cisco-mission.html" class="agent-dropdown-item">🔒 Cisco</a><a href="kratos-mission.html" class="agent-dropdown-item">🪙 Kratos</a><a href="apollo-mission.html" class="agent-dropdown-item">📞 Apollo</a><a href="hermes-mission.html" class="agent-dropdown-item">📣 Hermes</a><a href="browser-mission.html" class="agent-dropdown-item">👻 Ghost</a></div></div><button class="quick-action-btn theme" id="theme-toggle" data-tooltip="Toggle dark/light mode"><span>🌙</span><span>Dark Mode</span></button></div></section>
+    <div class="container">
+        <!-- Top Stats -->
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">System Health</span>
+                </div>
+                <div class="gauge-container">
+                    <div class="gauge">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="gauge-bg" cx="60" cy="60" r="50"/>
+                            <circle class="gauge-fill" id="healthGauge" cx="60" cy="60" r="50" stroke-dasharray="0 314"/>
+                        </svg>
+                        <div class="gauge-text">
+                            <div class="gauge-value" id="healthValue">--</div>
+                            <div class="gauge-label">/ 100</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><span class="card-title">Memory</span></div>
+                <div class="stat"><span class="stat-label">RAM</span><span class="stat-value" id="ramValue">--%</span></div>
+                <div class="progress"><div class="progress-fill" id="ramBar" style="width: 0%; background: var(--accent);"></div></div>
+                <div class="stat" style="margin-top: 16px;"><span class="stat-label">Swap</span><span class="stat-value" id="swapValue">--%</span></div>
+                <div class="progress"><div class="progress-fill" id="swapBar" style="width: 0%; background: var(--warning);"></div></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><span class="card-title">Beelancer</span></div>
+                <div class="stat"><span class="stat-label">Pending Bids</span><span class="stat-value" id="pendingBids">--</span></div>
+                <div class="stat"><span class="stat-label">Active Gigs</span><span class="stat-value" id="activeGigs">--</span></div>
+                <div class="stat"><span class="stat-label">Status</span><span class="stat-value good">Operational</span></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><span class="card-title">System</span></div>
+                <div class="stat"><span class="stat-label">Uptime</span><span class="stat-value" id="uptime">--</span></div>
+                <div class="stat"><span class="stat-label">Disk</span><span class="stat-value" id="disk">--%</span></div>
+                <div class="stat"><span class="stat-label">Last Update</span><span class="stat-value" id="lastUpdate">--</span></div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-grid">
+            <div>
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header">
+                        <span class="card-title">🏛️ Agents</span>
+                        <button class="btn btn-refresh" onclick="refresh()">↻ Refresh</button>
+                    </div>
+                    <div class="agents-grid" id="agentsGrid">
+                        <!-- Agents populated by JS -->
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📡 Live Activity</span></div>
+                    <div class="activity-feed" id="activityFeed">
+                        <div class="activity-item"><span class="activity-time">--:--</span><span>Waiting for data...</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header"><span class="card-title">⚡ Quick Actions</span></div>
+                    <div class="actions">
+                        <button class="btn" onclick="window.open('micro-agents.html', '_blank')">🛡️ Micro Agents</button>
+                        <button class="btn" onclick="window.open('https://github.com/athena254', '_blank')">📂 GitHub</button>
+                        <button class="btn" onclick="refresh()">🔄 Sync Now</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🎯 Mission Control</span></div>
+                    <div class="stat"><span class="stat-label">Skills</span><span class="stat-value" id="skills">--</span></div>
+                    <div class="stat"><span class="stat-label">Gateway</span><span class="stat-value good">Running</span></div>
+                    <div class="stat"><span class="stat-label">Sessions</span><span class="stat-value" id="sessions">--</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
     
-    <section class="revenue-tracker" aria-label="Revenue Tracker"><div class="revenue-header"><h2 class="revenue-title">Revenue Tracker</h2><span style="color: var(--text-muted); font-size: 0.875rem;">🍯 Honey Earnings</span></div><div class="revenue-grid"><div class="revenue-item earned" data-tooltip="Total honey from completed gigs"><span class="icon">💎</span><div class="value">24,850</div><div class="label">Total Earned</div></div><div class="revenue-item pending" data-tooltip="Honey from accepted bids"><span class="icon">⏳</span><div class="value">8,200</div><div class="label">Pending</div></div><div class="revenue-item conversion" data-tooltip="Bids to gigs conversion"><span class="icon">📊</span><div class="value">68%</div><div class="label">Conversion</div><div class="conversion-bar"><div class="conversion-fill" style="width: 68%"></div></div></div></div></section>
+    <footer class="footer">
+        Athena Live Dashboard • Auto-refreshes every 30 seconds • <span id="footerTime">--</span>
+    </footer>
     
-    <section class="stats-grid" aria-label="Key Metrics"><article class="stat-card" style="--stat-color: #6366f1" data-tooltip="Pending bids"><div class="stat-header"><div class="stat-icon">📋</div><span class="stat-badge up">+12%</span></div><div class="stat-value">24</div><div class="stat-label">Pending Bids</div></article><article class="stat-card" style="--stat-color: #22d3ee" data-tooltip="Active gigs"><div class="stat-header"><div class="stat-icon">💼</div><span class="stat-badge stable">Active</span></div><div class="stat-value">7</div><div class="stat-label">Active Gigs</div></article><article class="stat-card" style="--stat-color: #10b981" data-tooltip="Monthly revenue"><div class="stat-header"><div class="stat-icon">💰</div><span class="stat-badge up">+8%</span></div><div class="stat-value">$12.4K</div><div class="stat-label">Revenue</div></article><article class="stat-card" style="--stat-color: #f59e0b" data-tooltip="System status"><div class="stat-header"><div class="stat-icon">⚡</div><span class="stat-badge up">99.9%</span></div><div class="stat-value">Online</div><div class="stat-label">Status</div></article></section>
-    
-    <!-- Agent Dashboards Grid - All 13 Agents -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title">Agent Dashboards</h2>
-        <span style="color: var(--text-muted);">13 Active Agents</span>
-      </div>
-      <div class="agent-dashboard-grid">
+    <script>
+        const agents = [
+            { name: 'Athena', icon: '🦉', role: 'Orchestrator' },
+            { name: 'Sterling', icon: '💰', role: 'Finance' },
+            { name: 'Ishtar', icon: '🏛️', role: 'PAI Arch' },
+            { name: 'Delver', icon: '🔍', role: 'Research' },
+            { name: 'Felicity', icon: '💻', role: 'Dashboard' },
+            { name: 'Prometheus', icon: '🔥', role: 'Execution' },
+            { name: 'Cisco', icon: '🌐', role: 'Infrastructure' },
+            { name: 'Themis', icon: '⚖️', role: 'Compliance' },
+            { name: 'Strix', icon: '🦉', role: 'Security' }
+        ];
         
-        <!-- Sterling -->
-        <a href="sterling-mission.html" class="agent-dashboard-card" data-agent="sterling" style="--agent-color: #10b981; --agent-color-light: #34d399;" data-tooltip="View Sterling's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">💰</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Sterling <span class="boot-badge" title="Boot personality pending">🆕</span></div>
-              <div class="agent-dashboard-role">Finance & Auto-Bidding</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">47 tasks | mem0: sterling_finance</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
+        let activityLog = [];
         
-        <!-- Ishtar -->
-        <a href="ishtar-mission.html" class="agent-dashboard-card" data-agent="ishtar" style="--agent-color: #8b5cf6; --agent-color-light: #a78bfa;" data-tooltip="View Ishtar's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">🔮</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Ishtar</div>
-              <div class="agent-dashboard-role">Oracle & PAI Research</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">23 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
+        function addActivity(message) {
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+            activityLog.unshift({ time, message });
+            if (activityLog.length > 20) activityLog.pop();
+            renderActivity();
+        }
         
-        <!-- THEMIS -->
-        <a href="themis-mission.html" class="agent-dashboard-card" data-agent="themis" style="--agent-color: #ec4899; --agent-color-light: #f472b6;" data-tooltip="View THEMIS's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">⚖️</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">THEMIS</div>
-              <div class="agent-dashboard-role">Council & Deliberation</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">12 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
+        function renderActivity() {
+            const feed = document.getElementById('activityFeed');
+            feed.innerHTML = activityLog.map(a => 
+                `<div class="activity-item"><span class="activity-time">${a.time}</span><span>${a.message}</span></div>`
+            ).join('') || '<div class="activity-item"><span class="activity-time">--:--</span><span>No activity</span></div>';
+        }
         
-        <!-- Felicity -->
-        <a href="felicity-mission.html" class="agent-dashboard-card" data-agent="felicity" style="--agent-color: #3b82f6; --agent-color-light: #60a5fa;" data-tooltip="View Felicity's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">💻</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Felicity</div>
-              <div class="agent-dashboard-role">Code Artisan</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">31 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
+        function renderAgents() {
+            const grid = document.getElementById('agentsGrid');
+            grid.innerHTML = agents.map(a => `
+                <div class="agent-card">
+                    <div class="agent-avatar">${a.icon}</div>
+                    <div class="agent-name">${a.name}</div>
+                    <div class="agent-status">${a.role}</div>
+                </div>
+            `).join('');
+        }
         
-        <!-- Prometheus -->
-        <a href="prometheus-mission.html" class="agent-dashboard-card" data-agent="prometheus" style="--agent-color: #f97316; --agent-color-light: #fb923c;" data-tooltip="View Prometheus's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">⚡</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Prometheus</div>
-              <div class="agent-dashboard-role">Execution & Deployments</div>
-            </div>
-            <span class="agent-dashboard-status idle"><span class="agent-dashboard-dot"></span>Idle</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">18 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
+        async function refresh() {
+            try {
+                const res = await fetch('api/data.json');
+                const data = await res.json();
+                
+                // Health gauge
+                const score = data.system?.score || 0;
+                const circumference = 2 * Math.PI * 50;
+                const offset = circumference - (score / 100) * circumference;
+                document.getElementById('healthGauge').style.strokeDasharray = `${circumference - offset} ${offset}`;
+                document.getElementById('healthGauge').style.stroke = score >= 80 ? '#10b981' : score >= 50 ? '#f59e0b' : '#ef4444';
+                document.getElementById('healthValue').textContent = score;
+                
+                // Memory
+                const ram = data.system?.memory?.percent || 0;
+                document.getElementById('ramValue').textContent = ram + '%';
+                document.getElementById('ramValue').className = 'stat-value ' + (ram > 85 ? 'danger' : ram > 70 ? 'warning' : 'good');
+                document.getElementById('ramBar').style.width = ram + '%';
+                
+                const swap = data.system?.swap?.percent || 0;
+                document.getElementById('swapValue').textContent = swap + '%';
+                document.getElementById('swapValue').className = 'stat-value ' + (swap > 85 ? 'danger' : swap > 70 ? 'warning' : 'good');
+                document.getElementById('swapBar').style.width = swap + '%';
+                document.getElementById('swapBar').style.background = swap > 85 ? '#ef4444' : swap > 70 ? '#f59e0b' : '#10b981';
+                
+                // Beelancer
+                document.getElementById('pendingBids').textContent = data.pendingBids || 0;
+                document.getElementById('activeGigs').textContent = data.activeGigs || 0;
+                
+                // System
+                document.getElementById('uptime').textContent = data.system?.uptime?.formatted || '--';
+                document.getElementById('disk').textContent = (data.system?.disk?.percent || 0) + '%';
+                document.getElementById('lastUpdate').textContent = new Date(data.lastUpdated).toLocaleTimeString();
+                document.getElementById('skills').textContent = data.skillsTracked || '--';
+                document.getElementById('sessions').textContent = data.agents || '--';
+                
+                addActivity('Dashboard refreshed');
+                document.getElementById('footerTime').textContent = new Date().toLocaleString();
+                
+            } catch (e) {
+                console.error('Refresh failed:', e);
+                addActivity('⚠️ Refresh failed');
+            }
+        }
         
-        <!-- Nexus -->
-        <a href="nexus-mission.html" class="agent-dashboard-card" data-agent="nexus" style="--agent-color: #14b8a6; --agent-color-light: #2dd4bf;" data-tooltip="View Nexus's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">🧠</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Nexus</div>
-              <div class="agent-dashboard-role">Intelligence Synthesizer</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">45 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
-        
-        <!-- Delver -->
-        <a href="delver-mission.html" class="agent-dashboard-card" data-agent="delver" style="--agent-color: #f59e0b; --agent-color-light: #fbbf24;" data-tooltip="View Delver's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">📚</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Delver</div>
-              <div class="agent-dashboard-role">Research & Analysis</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">28 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
-        
-        <!-- Squire -->
-        <a href="squire-mission.html" class="agent-dashboard-card" data-agent="squire" style="--agent-color: #64748b; --agent-color-light: #94a3b8;" data-tooltip="View Squire's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">🛡️</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Squire</div>
-              <div class="agent-dashboard-role">Assistant & Operations</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">52 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
-        
-        <!-- Cisco -->
-        <a href="cisco-mission.html" class="agent-dashboard-card" data-agent="cisco" style="--agent-color: #ef4444; --agent-color-light: #f87171;" data-tooltip="View Cisco's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">🔒</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Cisco</div>
-              <div class="agent-dashboard-role">BMAD & Security</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">19 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
-        
-        <!-- Kratos -->
-        <a href="kratos-mission.html" class="agent-dashboard-card" style="--agent-color: #eab308; --agent-color-light: #facc15;" data-tooltip="View Kratos's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">🪙</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Kratos <span class="boot-badge" title="Boot personality pending">🆕</span></div>
-              <div class="agent-dashboard-role">Crypto/DeFi Intelligence</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">34 tasks | mem0: kratos_crypto</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
-        
-        <!-- Apollo -->
-        <a href="apollo-mission.html" class="agent-dashboard-card" style="--agent-color: #0ea5e9; --agent-color-light: #38bdf8;" data-tooltip="View Apollo's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">📞</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Apollo</div>
-              <div class="agent-dashboard-role">Client Relations</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">41 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
-        
-        <!-- Hermes -->
-        <a href="hermes-mission.html" class="agent-dashboard-card" style="--agent-color: #a855f7; --agent-color-light: #c084fc;" data-tooltip="View Hermes's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">📣</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Hermes</div>
-              <div class="agent-dashboard-role">Outreach & Marketing</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">36 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
-        
-        <!-- Ghost (Browser) -->
-        <a href="browser-mission.html" class="agent-dashboard-card" style="--agent-color: #6366f1; --agent-color-light: #818cf8;" data-tooltip="View Ghost's dashboard">
-          <div class="agent-dashboard-header">
-            <div class="agent-dashboard-avatar">👻</div>
-            <div class="agent-dashboard-info">
-              <div class="agent-dashboard-name">Ghost</div>
-              <div class="agent-dashboard-role">Browser Automation</div>
-            </div>
-            <span class="agent-dashboard-status active"><span class="agent-dashboard-dot"></span>Active</span>
-          </div>
-          <div class="agent-dashboard-footer">
-            <span class="agent-dashboard-tasks">22 tasks completed</span>
-            <span class="agent-dashboard-link">Dashboard <span class="agent-dashboard-arrow">→</span></span>
-          </div>
-        </a>
-        
-      </div>
-    </section>
-    
-    <section class="section"><div class="section-header"><h2 class="section-title">Agent Performance</h2><span style="color: var(--text-muted);">Real-time metrics</span></div><div class="agent-performance-grid">
-    <article class="agent-performance-card" style="--agent-color: #10b981; --agent-color-light: #34d399" data-tooltip="Auto-bidding specialist"><div class="agent-header"><div class="agent-avatar">💰</div><div class="agent-info"><div class="agent-name">Sterling</div><div class="agent-role">Finance</div></div><span class="agent-status active"><span class="agent-status-dot"></span>Active</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">47</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">94%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>94%</span></div><div class="agent-success-fill"><div class="fill" style="width: 94%"></div></div></div></article>
-    <article class="agent-performance-card" style="--agent-color: #8b5cf6; --agent-color-light: #a78bfa" data-tooltip="PAI Architecture"><div class="agent-header"><div class="agent-avatar">🔮</div><div class="agent-info"><div class="agent-name">Ishtar</div><div class="agent-role">PAI</div></div><span class="agent-status active"><span class="agent-status-dot"></span>Active</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">23</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">100%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>100%</span></div><div class="agent-success-fill"><div class="fill" style="width: 100%"></div></div></div></article>
-    <article class="agent-performance-card" style="--agent-color: #ec4899; --agent-color-light: #f472b6" data-tooltip="Creative specialist"><div class="agent-header"><div class="agent-avatar">⚖️</div><div class="agent-info"><div class="agent-name">THEMIS</div><div class="agent-role">Governance</div></div><span class="agent-status active"><span class="agent-status-dot"></span>Active</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">12</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">100%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>100%</span></div><div class="agent-success-fill"><div class="fill" style="width: 100%"></div></div></div></article>
-    <article class="agent-performance-card" style="--agent-color: #3b82f6; --agent-color-light: #60a5fa" data-tooltip="Creative specialist"><div class="agent-header"><div class="agent-avatar">💻</div><div class="agent-info"><div class="agent-name">Felicity</div><div class="agent-role">Creative</div></div><span class="agent-status active"><span class="agent-status-dot"></span>Active</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">31</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">87%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>87%</span></div><div class="agent-success-fill"><div class="fill" style="width: 87%"></div></div></div></article>
-    <article class="agent-performance-card" style="--agent-color: #f97316; --agent-color-light: #fb923c" data-tooltip="Development"><div class="agent-header"><div class="agent-avatar">⚡</div><div class="agent-info"><div class="agent-name">Prometheus</div><div class="agent-role">Dev</div></div><span class="agent-status idle"><span class="agent-status-dot"></span>Idle</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">18</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">92%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>92%</span></div><div class="agent-success-fill"><div class="fill" style="width: 92%"></div></div></div></article>
-    <article class="agent-performance-card" style="--agent-color: #3b82f6; --agent-color-light: #60a5fa" data-tooltip="Orchestration"><div class="agent-header"><div class="agent-avatar">🧠</div><div class="agent-info"><div class="agent-name">Nexus</div><div class="agent-role">Core</div></div><span class="agent-status active"><span class="agent-status-dot"></span>Active</span></div><div class="agent-metrics"><div class="agent-metric"><div class="agent-metric-value">45</div><div class="agent-metric-label">Tasks</div></div><div class="agent-metric"><div class="agent-metric-value">98%</div><div class="agent-metric-label">Success</div></div></div><div class="agent-success-bar"><div class="label"><span>Success</span><span>98%</span></div><div class="agent-success-fill"><div class="fill" style="width: 98%"></div></div></div></article>
-    </div></section>
-    <nav class="actions-grid" aria-label="Quick Navigation"><a href="mission-control.html" class="action-btn" style="--action-color: #6366f1" data-tooltip="View missions"><span class="icon">🎯</span><span>Missions</span></a><a href="agents.html" class="action-btn" style="--action-color: #22d3ee" data-tooltip="View agents"><span class="icon">🤖</span><span>Agents</span></a><a href="terminal.html" class="action-btn" style="--action-color: #10b981" data-tooltip="Terminal"><span class="icon">💻</span><span>Terminal</span></a><a href="network-map.html" class="action-btn" style="--action-color: #f59e0b" data-tooltip="Network"><span class="icon">🕸️</span><span>Network</span></a></nav>
-    <section class="section"><div class="section-header"><h2 class="section-title">Recent Deliverables</h2></div><div class="portfolio-grid"><article class="portfolio-card" style="--portfolio-color: #6366f1; --portfolio-gradient: linear-gradient(135deg, #4f46e5, #7c3aed);"><div class="portfolio-image">📄</div><div class="portfolio-content"><span class="portfolio-tag">Research</span><h3 class="portfolio-title">PAI Paper</h3><p class="portfolio-desc">Comprehensive PAI architecture analysis.</p><div class="portfolio-footer"><span class="portfolio-meta">Feb 2026</span><a href="#" class="portfolio-link">Download</a></div></div></article><article class="portfolio-card" style="--portfolio-color: #22d3ee; --portfolio-gradient: linear-gradient(135deg, #0891b2, #06b6d4);"><div class="portfolio-image">⚙️</div><div class="portfolio-content"><span class="portfolio-tag">Open Source</span><h3 class="portfolio-title">gRPC Scaffold</h3><p class="portfolio-desc">Production-ready microservices boilerplate.</p><div class="portfolio-footer"><span class="portfolio-meta">Feb 2026</span><a href="#" class="portfolio-link">View</a></div></div></article><article class="portfolio-card" style="--portfolio-color: #10b981; --portfolio-gradient: linear-gradient(135deg, #059669, #10b981);"><div class="portfolio-image">🧠</div><div class="portfolio-content"><span class="portfolio-tag">AI System</span><h3 class="portfolio-title">Knowledge Graph</h3><p class="portfolio-desc">Multi-agent context sharing engine.</p><div class="portfolio-footer"><span class="portfolio-meta">Feb 2026</span><a href="#" class="portfolio-link">Docs</a></div></div></article></div></section>
-    <section class="section"><div class="section-header"><h2 class="section-title">Dashboard</h2></div><div class="dashboard-grid"><a href="agent-report.html" class="dashboard-card" style="--card-color: #6366f1" data-tooltip="View metrics"><span class="card-icon">📊</span><h3 class="card-title">Agent Report</h3><p class="card-desc">Performance metrics</p></a><a href="beelancer-analytics.html" class="dashboard-card" style="--card-color: #22d3ee" data-tooltip="View analytics"><span class="card-icon">📈</span><h3 class="card-title">Beelancer</h3><p class="card-desc">Bidding analytics</p></a><a href="finance-dashboard.html" class="dashboard-card" style="--card-color: #10b981" data-tooltip="View finance"><span class="card-icon">💵</span><h3 class="card-title">Finance</h3><p class="card-desc">Revenue tracking</p></a><a href="cyber-os.html" class="dashboard-card" style="--card-color: #8b5cf6" data-tooltip="View system"><span class="card-icon">🖥️</span><h3 class="card-title">Cyber OS</h3><p class="card-desc">System monitoring</p></a><a href="memory-palace.html" class="dashboard-card" style="--card-color: #f59e0b" data-tooltip="View memory"><span class="card-icon">🏰</span><h3 class="card-title">Memory Palace</h3><p class="card-desc">Knowledge storage</p></a><a href="neural-nexus.html" class="dashboard-card" style="--card-color: #ec4899" data-tooltip="View hub"><span class="card-icon">🔮</span><h3 class="card-title">Neural Nexus</h3><p class="card-desc">Agent hub</p></a></div></section>
-    <section class="activity-section"><div class="activity-tabs"><button class="activity-tab active">Recent</button><button class="activity-tab">Bids</button><button class="activity-tab">Agents</button></div><div class="activity-list"><div class="activity-item success"><div class="activity-icon">✅</div><div class="activity-content"><div class="activity-title">Bid Accepted</div><div class="activity-detail">AI Chatbot Integration project</div></div><span class="activity-time">2m</span></div><div class="activity-item info"><div class="activity-icon">🤖</div><div class="activity-content"><div class="activity-title">Sterling Auto-Bid</div><div class="activity-detail">React Native Development</div></div><span class="activity-time">15m</span></div><div class="activity-item warning"><div class="activity-icon">⏳</div><div class="activity-content"><div class="activity-title">Deadline</div><div class="activity-detail">Knowledge Graph API</div></div><span class="activity-time">1h</span></div></div></section>
-  </main>
-  <div class="status-indicator"><span class="status-dot"></span><span>Athena v2.0 • 13 Agents Active</span></div>
-  <div class="toast-container" id="toast-container"></div>
-  <footer class="footer"><p>Built with 💜 by Athena AI</p></footer>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => { setTimeout(() => document.getElementById("loader").classList.add("hidden"), 800); });
-    function showToast(m, t="info"){const c=document.getElementById("toast-container"),toast=document.createElement("div");toast.className="toast "+t;toast.innerHTML="<span>"+{success:"✅",error:"❌",warning:"⚠️"}[t]+"</span><span>"+m+"</span>";c.appendChild(toast);setTimeout(()=>{toast.style.opacity="0";setTimeout(()=>toast.remove(),300)},4000);}
-    setTimeout(()=>showToast("Welcome back! 3 new bids pending.","info"),1500);
-    document.getElementById("theme-toggle").addEventListener("click",function(){const d=document.documentElement,t=d.getAttribute("data-theme")==="dark"?"light":"dark";d.setAttribute("data-theme",t);this.innerHTML=t==="dark"?"<span>🌙</span><span>Dark Mode</span>":"<span>☀️</span><span>Light Mode</span>";});
-    document.getElementById("refresh-btn").addEventListener("click",function(){showToast("Refreshing dashboard...","info");setTimeout(()=>showToast("Data refreshed!","success"),1500);});
-  </script>
-  <script src="js/agent-modal.js"></script>
-  <script src="js/realtime-updates.js"></script>
-  <script src="js/notifications.js"></script>
-  <script src="js/websocket-client.js"></script>
-</body></html>
+        // Initialize
+        renderAgents();
+        refresh();
+        setInterval(refresh, 30000);
+    </script>
+</body>
+</html>
