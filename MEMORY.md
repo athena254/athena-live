@@ -552,3 +552,15 @@ Researched emerging tools for Athena enhancement:
 - Committed to: backup/fresh-start
 - 25 files changed, 3060 insertions
 
+
+---
+## 2026-03-01: Proactive Directive
+
+Added proactive mode to core docs:
+- AGENTS.md: Added Proactive Mode section with 6 rules
+- SOUL.md: Incorporated act-first principle
+- Dashboard: Enhanced with system health metrics, swap cleared
+
+**Key principle:** Act first, report after. Use full toolkit, delegate to subagents, automate recurrences, complete the intent, close the loop.
+
+**Session highlight:** Enhanced dashboard refresh → cleared swap 100% → 40%
