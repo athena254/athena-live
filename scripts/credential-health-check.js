@@ -118,7 +118,7 @@ function getEnvCredentials(config) {
 function getModelCredentials(config) {
   const creds = {};
   if (config.models?.providers) {
-    for (const [provider, details(config.models.providers] of Object.entries)) {
+    for (const [provider, details] of Object.entries(config.models.providers)) {
       if (details.apiKey && details.apiKey !== 'REPLACE_ME') {
         creds[provider] = details.apiKey;
       }

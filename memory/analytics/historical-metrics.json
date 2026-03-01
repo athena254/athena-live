@@ -1,7 +1,7 @@
 {
   "metadata": {
     "created": "2026-02-28T19:17:00.000Z",
-    "lastUpdated": "2026-02-28T19:33:42.518Z",
+    "lastUpdated": "2026-03-01T06:52:06.297Z",
     "dataPoints": 0,
     "retentionDays": 30
   },
@@ -10,6 +10,17 @@
     "hourly": [
       {
         "timestamp": "2026-02-28T19:33:42.517Z",
+        "tasks": 649,
+        "success": 98.57777777777777,
+        "activeAgents": 6,
+        "pendingBids": 10,
+        "queueDepth": 0,
+        "tokenRate": "2.4K",
+        "errors": 0,
+        "latency": 0.5
+      },
+      {
+        "timestamp": "2026-03-01T06:52:06.296Z",
         "tasks": 649,
         "success": 98.57777777777777,
         "activeAgents": 6,
@@ -29,6 +40,12 @@
           "tasks": 47,
           "success": 99.9,
           "status": "active"
+        },
+        {
+          "date": "2026-03-01",
+          "tasks": 47,
+          "success": 99.9,
+          "status": "active"
         }
       ]
     },
@@ -36,6 +53,12 @@
       "history": [
         {
           "date": "2026-02-28",
+          "tasks": 23,
+          "success": 100,
+          "status": "active"
+        },
+        {
+          "date": "2026-03-01",
           "tasks": 23,
           "success": 100,
           "status": "active"
@@ -49,6 +72,12 @@
           "tasks": 15,
           "success": 98.5,
           "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
+          "tasks": 15,
+          "success": 98.5,
+          "status": "idle"
         }
       ]
     },
@@ -56,6 +85,12 @@
       "history": [
         {
           "date": "2026-02-28",
+          "tasks": 12,
+          "success": 99.2,
+          "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
           "tasks": 12,
           "success": 99.2,
           "status": "idle"
@@ -69,6 +104,12 @@
           "tasks": 34,
           "success": 99.7,
           "status": "active"
+        },
+        {
+          "date": "2026-03-01",
+          "tasks": 34,
+          "success": 99.7,
+          "status": "active"
         }
       ]
     },
@@ -76,6 +117,12 @@
       "history": [
         {
           "date": "2026-02-28",
+          "tasks": 28,
+          "success": 98.9,
+          "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
           "tasks": 28,
           "success": 98.9,
           "status": "idle"
@@ -89,6 +136,12 @@
           "tasks": 11,
           "success": 96.5,
           "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
+          "tasks": 11,
+          "success": 96.5,
+          "status": "idle"
         }
       ]
     },
@@ -96,6 +149,12 @@
       "history": [
         {
           "date": "2026-02-28",
+          "tasks": 22,
+          "success": 99.1,
+          "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
           "tasks": 22,
           "success": 99.1,
           "status": "idle"
@@ -109,6 +168,12 @@
           "tasks": 8,
           "success": 100,
           "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
+          "tasks": 8,
+          "success": 100,
+          "status": "idle"
         }
       ]
     },
@@ -116,6 +181,12 @@
       "history": [
         {
           "date": "2026-02-28",
+          "tasks": 19,
+          "success": 97.8,
+          "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
           "tasks": 19,
           "success": 97.8,
           "status": "idle"
@@ -129,6 +200,12 @@
           "tasks": 56,
           "success": 94.2,
           "status": "active"
+        },
+        {
+          "date": "2026-03-01",
+          "tasks": 56,
+          "success": 94.2,
+          "status": "active"
         }
       ]
     },
@@ -136,6 +213,12 @@
       "history": [
         {
           "date": "2026-02-28",
+          "tasks": 31,
+          "success": 99.5,
+          "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
           "tasks": 31,
           "success": 99.5,
           "status": "idle"
@@ -149,6 +232,12 @@
           "tasks": 14,
           "success": 97.1,
           "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
+          "tasks": 14,
+          "success": 97.1,
+          "status": "idle"
         }
       ]
     },
@@ -156,6 +245,12 @@
       "history": [
         {
           "date": "2026-02-28",
+          "tasks": 89,
+          "success": 99.8,
+          "status": "active"
+        },
+        {
+          "date": "2026-03-01",
           "tasks": 89,
           "success": 99.8,
           "status": "active"
@@ -169,6 +264,12 @@
           "tasks": 42,
           "success": 98.3,
           "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
+          "tasks": 42,
+          "success": 98.3,
+          "status": "idle"
         }
       ]
     },
@@ -176,6 +277,12 @@
       "history": [
         {
           "date": "2026-02-28",
+          "tasks": 17,
+          "success": 96.9,
+          "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
           "tasks": 17,
           "success": 96.9,
           "status": "idle"
@@ -189,6 +296,12 @@
           "tasks": 25,
           "success": 99.4,
           "status": "idle"
+        },
+        {
+          "date": "2026-03-01",
+          "tasks": 25,
+          "success": 99.4,
+          "status": "idle"
         }
       ]
     },
@@ -196,6 +309,12 @@
       "history": [
         {
           "date": "2026-02-28",
+          "tasks": 156,
+          "success": 99.6,
+          "status": "active"
+        },
+        {
+          "date": "2026-03-01",
           "tasks": 156,
           "success": 99.6,
           "status": "active"
@@ -211,11 +330,22 @@
         "wins": 3,
         "revenue": 450,
         "winRate": "30.0"
+      },
+      {
+        "date": "2026-03-01",
+        "bids": 10,
+        "wins": 3,
+        "revenue": 450,
+        "winRate": "30.0"
       }
     ],
     "winRateHistory": [
       {
         "date": "2026-02-28",
+        "rate": 30
+      },
+      {
+        "date": "2026-03-01",
         "rate": 30
       }
     ],
