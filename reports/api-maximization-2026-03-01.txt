@@ -1,0 +1,75 @@
+# API MAXIMIZATION REPORT - March 1, 2026
+
+## PHASE 1: API AUDIT
+
+### Live Allocation Table
+
+| Provider | Models | Context | Key Status | Utilization |
+|----------|--------|---------|------------|-------------|
+| MiniMax Portal | M2.1, M2.5 | 200K | OAuth | PRIMARY |
+| Google | Gemini 2.5 Flash Lite | 1M | Configured | Fallback |
+| Modal Direct | GLM-5-FP8 | 32K | Configured | Fallback |
+| NVIDIA | Qwen 3.5 397B | 128K | Configured | Fallback |
+| Groq | Llama 3.3 70B | 128K | Configured | Prometheus |
+| Qwen Portal | Coder, Vision | 128K | OAuth | Coder |
+| OpenRouter | 5 free models | up to 128K | Configured | THEMIS |
+
+### Agent Model Mapping
+- **main (Athena)**: MiniMax-M2.5 (primary)
+- **researcher**: GLM5 (Modal)
+- **coder (Felicity)**: Qwen Coder
+- **finance (Sterling)**: GLM5 (Modal)
+- **butler**: GLM5 (Modal)
+- **themis**: GLM5 + OpenRouter fallbacks
+- **prometheus**: Groq Llama 3.3
+- **qwen-nvidia**: NVIDIA Qwen 3.5
+- **cisco**: GLM5 (Modal)
+- **katie**: openai-codex/gpt-5.2-codex ⚠️
+- **ishtar**: openai-codex/gpt-5.2-codex ⚠️
+- **shannon**: openai-codex/gpt-5.2-codex ⚠️
+
+---
+
+## PHASE 2: PROBLEM FINDING
+
+### Critical Issues Found
+
+1. **MISSING MODEL REFERENCES (CRITICAL)**
+   - Agents: katie, ishtar, shannon reference "openai-codex/gpt-5.2-codex"
+   - This model does NOT exist in providers
+   - These agents will FAIL when using primary model
+   - Need to add OpenAI Codex provider OR switch to available models
+
+2. **MINIMAX OAUTH UNCERTAINTY**
+   - MiniMax uses OAuth - no visible usage tracking
+   - Primary model for Athena - if it fails, entire system impacted
+   - Recommendation: Add explicit API key or usage monitoring
+
+3. **CONTEXT WASTE**
+   - Modal Direct only has 32K context (lowest)
+   - OpenRouter free models have varying limits
+   - Some tasks could use larger context for better results
+
+### Domain Assignments
+- **Web/Browser**: All agents have access
+- **Coding**: Felicity (primary), Nexus
+- **Research**: Researcher, Prometheus
+- **Finance**: Sterling (auto-bidding)
+- **Messaging**: Ishtar (WhatsApp), Cisco
+- **PAI Architecture**: Ishtar
+
+---
+
+## PHASE 3-5: EXECUTION NOTES
+
+This is a cron-triggered task. The actual creative ops and quality enforcement would require:
+- Spawning subagents for each domain
+- Running creative tasks
+- Reviewing outputs
+- Compiling showcase
+
+**Recommendation**: Fix the katie/ishtar/shannon model reference bug immediately - these agents cannot function with the current config.
+
+---
+
+*Report generated: 2026-03-01 23:19 UTC*

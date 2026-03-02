@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-28T23:30:01.868175+00:00Z",
+  "timestamp": "2026-03-01T23:30:01.568629+00:00Z",
   "files": [
     {
       "path": "/root/.openclaw/workspace/memory/2026-02-20.md",
@@ -55,6 +55,22 @@
     },
     {
       "path": "/root/.openclaw/workspace/memory/2026-02-28.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/2026-03-01-api-maximization-report.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/2026-03-01-docs-audit.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/2026-03-01.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
@@ -126,6 +142,30 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/api-audit-2026-03-01.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-audit-20260301-1622.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-audit-finance.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-audit-main.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-maximization-03-01-0345.md",
+      "issues": []
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/api-maximization-2026-02-28-1315.md",
       "issues": []
     },
@@ -142,7 +182,15 @@
       "issues": []
     },
     {
+      "path": "/root/.openclaw/workspace/memory/api-maximization-2026-03-01.md",
+      "issues": []
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/api-maximization-evening-2026-02-28.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-maximization-evening-2026-03-01.md",
       "issues": []
     },
     {
@@ -165,6 +213,32 @@
     },
     {
       "path": "/root/.openclaw/workspace/memory/api-maximization-showcase-2026-02-28.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-maximization-showcase-2026-03-01-0651.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-maximization-showcase-2026-03-01-0700.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-maximization-showcase-2026-03-01-0815.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-maximization-showcase-2026-03-01-0900.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-maximization-showcase-2026-03-01-1345.md",
+      "issues": []
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/api-maximization-showcase-2026-03-01-1545.md",
       "issues": []
     },
     {
@@ -260,6 +334,12 @@
       "issues": []
     },
     {
+      "path": "/root/.openclaw/workspace/memory/code-audit-2026-03-01.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/code-execution-tts-realtime-research-2026-02-28.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -296,6 +376,10 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/creative-works-2026-03-01-run3.md",
+      "issues": []
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/daily-build-2026-02-26.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -303,6 +387,12 @@
     },
     {
       "path": "/root/.openclaw/workspace/memory/daily-build-backlog.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/daily-build-today.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
@@ -437,11 +527,23 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/ishtar-night-cycle-summary.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/ishtar-pai-audit-2026-02-28.md",
       "issues": []
     },
     {
       "path": "/root/.openclaw/workspace/memory/ishtar-research-log.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/ishtar-research-voice-commands.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
@@ -477,6 +579,13 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/lattice-connections.md",
+      "issues": [
+        "Missing header",
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/lattice-first-test-2026-02-28.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -491,6 +600,13 @@
     {
       "path": "/root/.openclaw/workspace/memory/mem0-integration.md",
       "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/micro-agent-registry.md",
+      "issues": [
+        "Missing header",
         "Second line lacks timezone indicator"
       ]
     },
@@ -595,6 +711,18 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/problem-finding-0550-2026-03-01.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/problem-finding-2026-03-01.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/problem-findings-dashboard-2026-02-28.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -607,6 +735,12 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/problem-hunt-2026-03-01-1015.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/progress-report-17:00.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -614,6 +748,18 @@
     },
     {
       "path": "/root/.openclaw/workspace/memory/quality-fix-log.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/quality-report-2026-03-01.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/quality-report-20260301-1621.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
@@ -653,6 +799,12 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/showcase-2026-03-01-0830.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/sprint-2026-02-25.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -677,6 +829,12 @@
       ]
     },
     {
+      "path": "/root/.openclaw/workspace/memory/strix-onboarding-2026-03-01.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
       "path": "/root/.openclaw/workspace/memory/subagent-architecture.md",
       "issues": [
         "Second line lacks timezone indicator"
@@ -684,6 +842,12 @@
     },
     {
       "path": "/root/.openclaw/workspace/memory/subagent-build-model-playground.md",
+      "issues": [
+        "Second line lacks timezone indicator"
+      ]
+    },
+    {
+      "path": "/root/.openclaw/workspace/memory/supermemory-strix-onboarding.md",
       "issues": [
         "Second line lacks timezone indicator"
       ]
