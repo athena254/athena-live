@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>🔌 API Status Dashboard</title>
+  <style>
+    body { font-family: monospace; background: #0d1117; color: #c9d1d9; padding: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+    .card { background: #161b22; padding: 20px; border-radius: 8px; border: 1px solid #30363d; }
+    .status { font-size: 24px; }
+    .working { color: #3fb950; }
+    .failed { color: #f85149; }
+    .unknown { color: #d29922; }
+    h2 { border-bottom: 1px solid #30363d; padding-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🔌 API Status Dashboard</h1>
+  <div class="grid">
+    <div class="card"><h2>Modal GLM-5</h2><span class="status working">✅ WORKING</span></div>
+    <div class="card"><h2>NVIDIA Qwen</h2><span class="status working">✅ WORKING</span></div>
+    <div class="card"><h2>GROQ Llama</h2><span class="status working">✅ WORKING</span></div>
+    <div class="card"><h2>Google Gemini</h2><span class="status working">✅ WORKING</span></div>
+    <div class="card"><h2>OpenRouter</h2><span class="status failed">❌ INVALID_KEY</span></div>
+    <div class="card"><h2>MiniMax</h2><span class="status failed">❌ OAUTH_EXPIRED</span></div>
+    <div class="card"><h2>Qwen Portal</h2><span class="status failed">❌ TOKEN_EXPIRED</span></div>
+  </div>
+  <p style="margin-top:30px;color:#8b949e">Last updated: 2026-03-03 05:00 UTC</p>
+</body>
+</html>

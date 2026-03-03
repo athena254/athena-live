@@ -1,139 +1,122 @@
 {
-  "audit_timestamp": "2026-03-02T04:48:00Z",
+  "audit_timestamp": "2026-03-03T03:13:00Z",
   "summary": {
-    "total_keys": 10,
-    "active_keys": 9,
-    "failed_keys": 0,
-    "warning_keys": 1
+    "total_keys": 8,
+    "active_keys": 3,
+    "failed_keys": 5,
+    "warning_keys": 0
   },
   "providers": [
     {
-      "provider": "OpenRouter (Primary)",
-      "key_preview": "sk-or-v1-391df...eb459",
-      "full_key_first8": "sk-or-v1-",
-      "full_key_last4": "eb459",
+      "provider": "GROQ (llama-3.3-70b)",
+      "key_preview": "gsk_nvugD...dSGUT",
       "status": "ACTIVE",
-      "rate_limit_status": "UNKNOWN",
-      "current_headroom": "UNLIMITED (Free models only)",
-      "assigned_agents": ["themis"],
-      "test_result": "SUCCESS - Models list accessible"
+      "test_result": "SUCCESS - 'OK' response, 39 tokens, 9ms",
+      "assigned_agents": ["Prometheus"],
+      "headroom": "HIGH",
+      "last_test": "2026-03-03T03:13:00Z"
+    },
+    {
+      "provider": "Modal GLM-5 FP8",
+      "key_preview": "modalres...-bD5yc",
+      "status": "ACTIVE",
+      "test_result": "SUCCESS - Response received",
+      "assigned_agents": ["Athena", "Researcher", "Finance", "Butler", "Cisco", "THEMIS", "Prometheus", "Nexus", "Felicity", "Katie", "Ishtar", "Shannon"],
+      "headroom": "UNLIMITED",
+      "last_test": "2026-03-03T03:13:00Z"
+    },
+    {
+      "provider": "NVIDIA Qwen 3.5 397B",
+      "key_preview": "nvapi-Jp7Y...PAErU",
+      "status": "ACTIVE",
+      "test_result": "SUCCESS - 'OK' response, 16 tokens",
+      "assigned_agents": ["Nexus (qwen-nvidia)"],
+      "headroom": "HIGH",
+      "last_test": "2026-03-03T03:13:00Z"
+    },
+    {
+      "provider": "OpenRouter",
+      "key_preview": "sk-or-v1-391df...eb459",
+      "status": "FAILED",
+      "test_result": "FAILED - 401 'User not found'",
+      "error": "Key appears revoked or expired",
+      "assigned_agents": ["THEMIS"],
+      "action_required": "Regenerate API key at openrouter.ai",
+      "last_test": "2026-03-03T03:13:00Z"
     },
     {
       "provider": "Google Gemini",
       "key_preview": "AIzaSyB6KMen...r4gLfQ",
-      "full_key_first8": "AIzaSyB6",
-      "full_key_last4": "4gLfQ",
-      "status": "ACTIVE",
-      "rate_limit_status": "UNKNOWN",
-      "current_headroom": "1M token context, rate limits apply",
-      "assigned_agents": ["Athena", "Researcher", "Finance", "Butler", "Cisco", "Felicity fallback"],
-      "test_result": "SUCCESS - Gemini 2.5 Flash available"
+      "status": "FAILED",
+      "test_result": "FAILED - 503 Service Unavailable",
+      "error": "Google service issue (temporary)",
+      "assigned_agents": ["Fallback chain"],
+      "action_required": "Wait for Google service recovery",
+      "last_test": "2026-03-03T03:13:00Z"
     },
     {
-      "provider": "NVIDIA NIM (Qwen 3.5 397B)",
-      "key_preview": "nvapi-Jp7Y...PAErU",
-      "full_key_first8": "nvapi-Jp7",
-      "full_key_last4": "PAErU",
-      "status": "ACTIVE",
-      "rate_limit_status": "UNKNOWN",
-      "current_headroom": "HIGH - Enterprise tier",
-      "assigned_agents": ["Nexus (qwen-nvidia)"],
-      "test_result": "SUCCESS - 01-ai/yi-large and other models accessible"
-    },
-    {
-      "provider": "Groq",
-      "key_preview": "gsk_nvugD...dSGUT",
-      "full_key_first8": "gsk_nvugD",
-      "full_key_last4": "dSGUT",
-      "status": "ACTIVE",
-      "rate_limit_status": "HIGH",
-      "current_headroom": "HIGH - on_demand tier",
-      "assigned_agents": ["Prometheus"],
-      "test_result": "SUCCESS - Test completion successful"
-    },
-    {
-      "provider": "Modal (GLM-5)",
-      "key_preview": "modalres...-bD5yc",
-      "full_key_first8": "modalres",
-      "full_key_last4": "bD5yc",
-      "status": "ACTIVE",
-      "rate_limit_status": "UNKNOWN",
-      "current_headroom": "UNLIMITED (0 cost)",
-      "assigned_agents": ["Athena", "Researcher", "Finance", "Butler", "Cisco", "THEMIS", "Prometheus", "Nexus", "Felicity", "Katie", "Ishtar", "Shannon"],
-      "test_result": "SUCCESS - zai-org/GLM-5-FP8 model accessible"
-    },
-    {
-      "provider": "Qwen Portal (OAuth)",
+      "provider": "Qwen Portal OAuth",
       "key_preview": "qwen-oauth",
-      "full_key_first8": "N/A",
-      "full_key_last4": "OAuth",
-      "status": "ACTIVE_OAUTH",
-      "rate_limit_status": "UNKNOWN",
-      "current_headroom": "UNLIMITED",
-      "assigned_agents": ["Felicity", "Nexus fallback"],
-      "test_result": "OAUTH - Requires portal authentication"
+      "status": "FAILED",
+      "test_result": "FAILED - 'invalid access token or token expired'",
+      "error": "OAuth token expired",
+      "assigned_agents": ["Felicity (primary)"],
+      "action_required": "Run: openclaw auth login qwen-portal",
+      "last_test": "2026-03-03T03:13:00Z"
     },
     {
-      "provider": "MiniMax Portal (OAuth)",
+      "provider": "MiniMax Portal OAuth",
       "key_preview": "minimax-oauth",
-      "full_key_first8": "N/A",
-      "full_key_last4": "OAuth",
-      "status": "ACTIVE_OAUTH",
-      "rate_limit_status": "UNKNOWN",
-      "current_headroom": "UNLIMITED",
-      "assigned_agents": ["Athena default fallback"],
-      "test_result": "OAUTH - Requires portal authentication"
+      "status": "FAILED",
+      "test_result": "FAILED - 'login fail: Please carry the API secret key'",
+      "error": "OAuth token expired or missing API secret",
+      "assigned_agents": ["Athena (primary)"],
+      "action_required": "Run: openclaw auth login minimax-portal",
+      "last_test": "2026-03-03T03:13:00Z"
     },
     {
-      "provider": "Tavily Search",
-      "key_preview": "tvly-dev-1lR9...sxYck",
-      "full_key_first8": "tvly-dev-",
-      "full_key_last4": "sxYck",
-      "status": "WARNING",
-      "rate_limit_status": "UNKNOWN",
-      "current_headroom": "DEV key - check limits",
-      "assigned_agents": [],
-      "test_result": "Method not allowed (endpoint issue, key format valid)",
-      "note": "Web search is disabled in config"
-    },
-    {
-      "provider": "OpenRouter (THEMIS Skill)",
-      "key_preview": "sk-or-v1-1481c...02e6b",
-      "full_key_first8": "sk-or-v1-1",
-      "full_key_last4": "02e6b",
-      "status": "ACTIVE",
-      "rate_limit_status": "UNKNOWN",
-      "current_headroom": "UNLIMITED (Free models)",
-      "assigned_agents": ["THEMIS (skill-specific)"],
-      "test_result": "SUCCESS - Models accessible"
-    },
-    {
-      "provider": "Github Copilot",
-      "key_preview": "tid=d06a87...7422",
-      "full_key_first8": "tid=d06a",
-      "full_key_last4": "7422",
-      "status": "ACTIVE",
-      "rate_limit_status": "UNKNOWN",
-      "current_headroom": "FREE LIMITED tier",
-      "assigned_agents": ["Katie", "Ishtar", "Shannon"],
-      "test_result": "TOKEN PRESENT - OAuth token stored",
-      "note": "Check expiration date in token"
+      "provider": "GitHub CLI",
+      "key_preview": "hosts.yml",
+      "status": "FAILED",
+      "test_result": "FAILED - 'token is invalid'",
+      "error": "GitHub token expired",
+      "assigned_agents": ["All agents for code ops"],
+      "action_required": "Run: gh auth login -h github.com",
+      "last_test": "2026-03-03T03:13:00Z"
     }
   ],
-  "optimization_opportunities": {
-    "underutilized_apis": [
-      {
-        "provider": "Groq",
-        "current_usage": "LOW",
-        "recommendation": "Prometheus is the only agent using Groq. Consider using for high-throughput tasks."
-      },
-      {
-        "provider": "Tavily",
-        "current_usage": "DISABLED",
-        "recommendation": "Web search is disabled in config (search.enabled: false). Enable for research capabilities."
-      }
-    ],
-    "keys_approaching_limits": [],
-    "failed_expired_keys": []
-  }
+  "system_health": {
+    "memory_used_percent": 68,
+    "swap_used_percent": 43,
+    "disk_used_percent": 78,
+    "gateway_status": "RUNNING_PID_3917034",
+    "gateway_issue": "Token mismatch - sessions blocked"
+  },
+  "action_items": [
+    {
+      "priority": "CRITICAL",
+      "action": "Regenerate OpenRouter API key",
+      "command": "Manual: openrouter.ai -> keys"
+    },
+    {
+      "priority": "CRITICAL",
+      "action": "Re-authenticate MiniMax portal",
+      "command": "openclaw auth login minimax-portal"
+    },
+    {
+      "priority": "CRITICAL",
+      "action": "Re-authenticate Qwen portal",
+      "command": "openclaw auth login qwen-portal"
+    },
+    {
+      "priority": "HIGH",
+      "action": "Re-authenticate GitHub CLI",
+      "command": "gh auth login -h github.com"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Restart gateway to fix token mismatch",
+      "command": "openclaw gateway restart"
+    }
+  ]
 }

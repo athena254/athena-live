@@ -1,0 +1,34 @@
+[
+  {
+    "timestamp": "2026-03-03T04:19:19.074Z",
+    "metrics": {
+      "disk": 61,
+      "memory": 63,
+      "swap": 100
+    },
+    "alerts": [
+      {
+        "type": "swap",
+        "status": "emergency",
+        "percent": 100,
+        "message": "Swap usage at 100%"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-03-03T04:19:28.023Z",
+    "metrics": {
+      "disk": 61,
+      "memory": 64,
+      "swap": 100
+    },
+    "alerts": [
+      {
+        "type": "swap",
+        "status": "emergency",
+        "percent": 100,
+        "message": "Swap usage at 100%"
+      }
+    ]
+  }
+]

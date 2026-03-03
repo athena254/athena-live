@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena Command Center</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { font-size: 3em; }
+        h1 { font-weight: 300; letter-spacing: 2px; }
+        .subtitle { color: #888; font-size: 0.9em; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .card-title { font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; color: #888; }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .status-active { background: #00ff88; }
+        .status-warning { background: #ffaa00; }
+        .status-error { background: #ff4444; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .metric-value { font-size: 2.5em; font-weight: 200; margin-bottom: 5px; }
+        .metric-unit { color: #666; font-size: 0.8em; }
+        
+        .agent-list { list-style: none; }
+        .agent-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .agent-name { font-weight: 500; }
+        .agent-role { color: #666; font-size: 0.85em; }
+        
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .api-item {
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00ccff);
+            border-radius: 3px;
+        }
+        
+        footer {
+            text-align: center;
+            padding-top: 30px;
+            color: #555;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🦉</div>
+            <div>
+                <h1>ATHENA</h1>
+                <div class="subtitle">Command Center • Live System Status</div>
+            </div>
+        </header>
+        
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">System Memory</span>
+                    <span class="status-dot status-active"></span>
+                </div>
+                <div class="metric-value">58%</div>
+                <div class="metric-unit">2.3GB / 3.9GB</div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 58%"></div></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Swap Usage</span>
+                    <span class="status-dot status-warning"></span>
+                </div>
+                <div class="metric-value">84%</div>
+                <div class="metric-unit">418MB / 495MB</div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 84%; background: linear-gradient(90deg, #ffaa00, #ff6600);"></div></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Disk Space</span>
+                    <span class="status-dot status-active"></span>
+                </div>
+                <div class="metric-value">61%</div>
+                <div class="metric-unit">45GB / 79GB Available</div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 61%"></div></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Uptime</span>
+                    <span class="status-dot status-active"></span>
+                </div>
+                <div class="metric-value">2d 14h</div>
+                <div class="metric-unit">Load Average: 0.22</div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Active Agents</span>
+                    <span class="status-dot status-active"></span>
+                </div>
+                <ul class="agent-list">
+                    <li class="agent-item"><span>Athena</span><span class="agent-role">Orchestrator</span></li>
+                    <li class="agent-item"><span>Sterling</span><span class="agent-role">Finance</span></li>
+                    <li class="agent-item"><span>Ishtar</span><span class="agent-role">Research</span></li>
+                    <li class="agent-item"><span>Felicity</span><span class="agent-role">Code</span></li>
+                    <li class="agent-item"><span>Cisco</span><span class="agent-role">Security</span></li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">API Status</span>
+                    <span class="status-dot status-warning"></span>
+                </div>
+                <div class="api-grid">
+                    <div class="api-item"><span>Modal GLM-5</span><span style="color:#00ff88">●</span></div>
+                    <div class="api-item"><span>NVIDIA Qwen</span><span style="color:#00ff88">●</span></div>
+                    <div class="api-item"><span>GROQ Llama</span><span style="color:#ff4444">●</span></div>
+                    <div class="api-item"><span>Google Gemini</span><span style="color:#00ff88">●</span></div>
+                    <div class="api-item"><span>OpenRouter</span><span style="color:#ff4444">●</span></div>
+                    <div class="api-item"><span>MiniMax</span><span style="color:#ff4444">●</span></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Workspace Stats</span>
+                    <span class="status-dot status-active"></span>
+                </div>
+                <div class="metric-value">638</div>
+                <div class="metric-unit">Markdown Files Tracked</div>
+                <div style="margin-top: 15px; font-size: 0.9em; color: #888;">
+                    31 Skills • 9 Agents • 237MB Total
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Code Quality</span>
+                    <span class="status-dot status-warning"></span>
+                </div>
+                <div style="font-size: 0.9em;">
+                    <div style="margin-bottom: 8px;">TODO/FIXME: <strong>37</strong></div>
+                    <div style="margin-bottom: 8px;">console.log: <strong>791</strong></div>
+                    <div>Empty catches: <strong>49</strong></div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            Athena Command Center • Generated 2026-03-03 06:15 UTC • Acting First, Reporting After
+        </footer>
+    </div>
+</body>
+</html>
