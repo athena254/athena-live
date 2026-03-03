@@ -1,0 +1,37 @@
+{
+  "lastUpdated": "2026-03-02T21:03:00Z",
+  "totals": {
+    "markdown": 595,
+    "json": 153,
+    "html": 136,
+    "totalFiles": 782
+  },
+  "recentFiles": [
+    "BUILT_APPS.md",
+    "HOUSEKEEPING_LOG.md",
+    "IDLE.md",
+    "api-allocation-table.json",
+    "memory/heartbeat-state.json",
+    "memory/model-state.json",
+    "memory/update-log.jsonl",
+    "memory/2026-03-02.md"
+  ],
+  "criticalFiles": {
+    "SOUL.md": "present",
+    "AGENTS.md": "present",
+    "USER.md": "present",
+    "IDENTITY.md": "present",
+    "TOOLS.md": "present",
+    "HEARTBEAT.md": "present",
+    "IDLE.md": "present",
+    "MEMORY.md": "present",
+    "memory/heartbeat-state.json": "present",
+    "memory/model-state.json": "present",
+    "memory/agent-states.json": "present"
+  },
+  "skills": 31,
+  "agents": 9,
+  "reportsGenerated": 15,
+  "orphanedFiles": [],
+  "notes": "Workspace index generated during hourly autonomous update"
+}

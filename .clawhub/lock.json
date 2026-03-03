@@ -16,6 +16,18 @@
     "moltmemory": {
       "version": "1.5.5",
       "installedAt": 1772345202338
+    },
+    "security-auditor": {
+      "version": "1.0.0",
+      "installedAt": 1772431483200
+    },
+    "productivity": {
+      "version": "1.0.3",
+      "installedAt": 1772431485496
+    },
+    "code": {
+      "version": "1.0.4",
+      "installedAt": 1772431487336
     }
   }
 }

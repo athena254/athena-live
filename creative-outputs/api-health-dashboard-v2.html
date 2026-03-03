@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena API Health Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .timestamp {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .api-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .api-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .api-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .api-provider {
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-dot.active {
+            background: #00ff88;
+            box-shadow: 0 0 12px #00ff88;
+        }
+        
+        .status-dot.warning {
+            background: #ffaa00;
+            box-shadow: 0 0 12px #ffaa00;
+        }
+        
+        .status-dot.error {
+            background: #ff4444;
+            box-shadow: 0 0 12px #ff4444;
+            animation: pulse-error 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        @keyframes pulse-error {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        
+        .status-text {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-text.active { color: #00ff88; }
+        .status-text.warning { color: #ffaa00; }
+        .status-text.error { color: #ff4444; }
+        
+        .api-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail {
+            font-size: 0.85rem;
+        }
+        
+        .detail-label {
+            color: #666;
+        }
+        
+        .detail-value {
+            color: #00d4ff;
+            font-weight: 500;
+        }
+        
+        .summary {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 30px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .summary h2 {
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        
+        .summary-stats {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .stat-label {
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚡ Athena API Health</h1>
+        <div class="timestamp">Last checked: <span id="timestamp"></span></div>
+    </div>
+    
+    <div class="grid" id="api-grid"></div>
+    
+    <div class="summary">
+        <h2>📊 System Summary</h2>
+        <div class="summary-stats">
+            <div class="stat">
+                <div class="stat-value" style="color: #00ff88;">6</div>
+                <div class="stat-label">Active APIs</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" style="color: #ff4444;">2</div>
+                <div class="stat-label">Failed APIs</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" style="color: #ffaa00;">1</div>
+                <div class="stat-label">Warnings</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" style="color: #00d4ff;">75%</div>
+                <div class="stat-label">Health Score</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const apis = [
+            { name: 'GLM-5 FP8', provider: 'Modal Direct', status: 'active', limit: 'Unlimited', latency: '~2-5s', agents: 'All agents' },
+            { name: 'NVIDIA Qwen 3.5', provider: 'NVIDIA NIM', status: 'active', limit: 'Unlimited', latency: '~3-5s', agents: 'Felicity, coding' },
+            { name: 'MiniMax M2.5', provider: 'MiniMax Portal', status: 'active', limit: '200k context', latency: '~2-4s', agents: 'Current session' },
+            { name: 'Qwen Portal', provider: 'Alibaba OAuth', status: 'active', limit: 'Unlimited', latency: '~3-6s', agents: 'Code tasks' },
+            { name: 'Gemini Flash', provider: 'Google AI', status: 'active', limit: '15 RPM', latency: '~1-3s', agents: 'Fallback' },
+            { name: 'OpenRouter', provider: 'OpenRouter', status: 'active', limit: 'Free tier', latency: '~3-8s', agents: 'THEMIS' },
+            { name: 'Groq Llama 3.3', provider: 'Groq', status: 'error', limit: '30/min', latency: 'N/A', agents: 'Prometheus (blocked)', error: 'Invalid API Key' },
+            { name: 'GitHub API', provider: 'gh CLI', status: 'error', limit: 'N/A', latency: 'N/A', agents: 'Backup/ops', error: 'Auth Failed' },
+            { name: 'Tavily', provider: 'Tavily', status: 'warning', limit: '1000/mo', latency: '~1-2s', agents: 'Research', error: 'Dev key' }
+        ];
+        
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = now.toLocaleString();
+        }
+        
+        function renderAPIs() {
+            const grid = document.getElementById('api-grid');
+            grid.innerHTML = apis.map(api => `
+                <div class="api-card">
+                    <div class="api-header">
+                        <div>
+                            <div class="api-name">${api.name}</div>
+                            <div class="api-provider">${api.provider}</div>
+                        </div>
+                        <div class="status-indicator">
+                            <div class="status-dot ${api.status}"></div>
+                            <span class="status-text ${api.status}">${api.status === 'active' ? 'Active' : api.status === 'warning' ? 'Warning' : 'Failed'}</span>
+                        </div>
+                    </div>
+                    <div class="api-details">
+                        <div class="detail">
+                            <span class="detail-label">Limit: </span>
+                            <span class="detail-value">${api.limit}</span>
+                        </div>
+                        <div class="detail">
+                            <span class="detail-label">Latency: </span>
+                            <span class="detail-value">${api.latency}</span>
+                        </div>
+                        <div class="detail" style="grid-column: span 2;">
+                            <span class="detail-label">Agents: </span>
+                            <span class="detail-value">${api.agents}</span>
+                        </div>
+                        ${api.error ? `<div class="detail" style="grid-column: span 2; color: #ff4444;">
+                            <span class="detail-label">Error: </span>
+                            <span>${api.error}</span>
+                        </div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        renderAPIs();
+        updateTimestamp();
+        setInterval(updateTimestamp, 30000);
+    </script>
+</body>
+</html>
