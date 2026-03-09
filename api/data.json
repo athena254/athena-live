@@ -1,133 +1,38 @@
 {
-  "lastUpdated": "2026-03-09T18:24:00.000Z",
+  "lastUpdated": "2026-03-09T23:11:17.444Z",
+  "pendingBids": 10,
+  "activeGigs": 3,
+  "skillsTracked": 25,
+  "agents": 9,
+  "status": "operational",
   "system": {
-    "name": "Athena OS",
-    "version": "1.0",
-    "status": "operational"
-  },
-  "agents": {
-    "athena": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
+    "health": "healthy",
+    "score": 95,
+    "memory": {
+      "total": 3915,
+      "used": 1747,
+      "percent": 45
     },
-    "sterling": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
+    "swap": {
+      "total": 2543,
+      "used": 2071,
+      "percent": 81
     },
-    "ishtar": {
-      "status": "BUSY",
-      "load": 0.8,
-      "currentTask": "orchestration_implementation"
+    "disk": {
+      "percent": 86,
+      "used": "64G",
+      "total": "79G"
     },
-    "delver": {
-      "status": "BUSY",
-      "load": 0.2,
-      "currentTask": "task_20260226_192523_23b21961"
+    "uptime": {
+      "hours": 223,
+      "mins": 7,
+      "formatted": "223h 7m"
     },
-    "squire": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
+    "load": {
+      "1m": 0.45,
+      "5m": 0.72,
+      "15m": 0.66
     },
-    "felicity": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
-    },
-    "prometheus": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
-    },
-    "cisco": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
-    },
-    "themis": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
-    },
-    "apollo": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
-    },
-    "hermes": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
-    },
-    "kratos": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
-    },
-    "chiron": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
-    },
-    "mnemosyne": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
-    },
-    "talia": {
-      "status": "IDLE",
-      "load": 0,
-      "currentTask": null
-    }
-  },
-  "meta_agents": {
-    "strix": {
-      "name": "Strix",
-      "role": "Security Scanning",
-      "status": "READY"
-    },
-    "shannon": {
-      "name": "Shannon",
-      "role": "Knowledge Graph",
-      "status": "READY"
-    },
-    "katie": {
-      "name": "Katie",
-      "role": "Agent Framework",
-      "status": "READY"
-    }
-  },
-  "capital": {
-    "total": 0,
-    "buckets": {
-      "operations": 0,
-      "growth": 0,
-      "reserve": 0
-    },
-    "floor": 5,
-    "status": "initializing"
-  },
-  "lattice": {
-    "total_flows": 11,
-    "live": 3,
-    "building": 4,
-    "pending": 4,
-    "status": "building"
-  },
-  "health": {
-    "overall": "good",
-    "agents_online": 13,
-    "meta_ready": 3,
-    "gateway": "operational"
-  },
-  "queue": {
-    "totalTasks": 1,
-    "pending": 0,
-    "inProgress": 1,
-    "completed": 0,
-    "failed": 0,
-    "avgCompletionTimeMs": 0
+    "gateway": "running"
   }
 }
