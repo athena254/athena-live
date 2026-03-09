@@ -1,250 +1,133 @@
 {
-  "lastUpdated": "2026-02-27T22:44:35.141Z",
-  "pendingBids": 10,
-  "activeGigs": 3,
-  "skillsTracked": 18,
-  "status": "operational",
-  "metrics": {
-    "activeSessions": 12,
-    "tokenRate": "2.4K",
-    "gatewayUptime": "99.9%",
-    "llamaLimit": 45,
-    "geminiLimit": 62
+  "lastUpdated": "2026-03-09T18:24:00.000Z",
+  "system": {
+    "name": "Athena OS",
+    "version": "1.0",
+    "status": "operational"
   },
-  "agents": [
-    {
-      "id": "athena",
-      "name": "Athena",
-      "avatar": "🦉",
-      "role": "Main Orchestrator",
-      "voice": "Nova",
-      "model": "GLM-5 Key #2",
-      "fallback": "qwen_nvidia",
-      "status": "active",
-      "tasks": 47,
-      "success": "99.9%",
-      "specialty": "System orchestration & coordination"
+  "agents": {
+    "athena": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "sterling",
-      "name": "Sterling",
-      "avatar": "💰",
-      "role": "Finance / Bidding",
-      "voice": "Marcus",
-      "model": "GLM-5 Key #1",
-      "fallback": "MiniMax-M2.5",
-      "status": "active",
-      "tasks": 23,
-      "success": "100%",
-      "specialty": "Beelancer bids & financial ops"
+    "sterling": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "ishtar",
-      "name": "Ishtar",
-      "avatar": "🌙",
-      "role": "Oracle / PAI Research",
-      "voice": "Luna",
-      "model": "OpenAI Codex",
-      "fallback": "GLM-5 Key #1",
-      "status": "idle",
-      "tasks": 15,
-      "success": "98.5%",
-      "specialty": "Research & intelligence analysis"
+    "ishtar": {
+      "status": "BUSY",
+      "load": 0.8,
+      "currentTask": "orchestration_implementation"
     },
-    {
-      "id": "themis",
-      "name": "THEMIS",
-      "avatar": "⚖️",
-      "role": "Council Deliberation",
-      "voice": "Sage",
-      "model": "GLM-5 Key #1",
-      "fallback": "qwen coder",
-      "status": "idle",
-      "tasks": 12,
-      "success": "99.2%",
-      "specialty": "Decision making & governance"
+    "delver": {
+      "status": "BUSY",
+      "load": 0.2,
+      "currentTask": "task_20260226_192523_23b21961"
     },
-    {
-      "id": "felicity",
-      "name": "Felicity",
-      "avatar": "🎨",
-      "role": "Code Artisan",
-      "voice": "Diva",
-      "model": "qwen_nvidia",
-      "fallback": "MiniMax-M2.1",
-      "status": "active",
-      "tasks": 34,
-      "success": "99.7%",
-      "specialty": "UI/UX design & frontend dev"
+    "squire": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "prometheus",
-      "name": "Prometheus",
-      "avatar": "⚡",
-      "role": "Executor",
-      "voice": "Titan",
-      "model": "GPT-4o",
-      "fallback": "grok-code-fast",
-      "status": "idle",
-      "tasks": 28,
-      "success": "98.9%",
-      "specialty": "Task execution & automation"
+    "felicity": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "nexus",
-      "name": "Nexus",
-      "avatar": "🧠",
-      "role": "Intelligence",
-      "voice": "Echo",
-      "model": "qwen_nvidia",
-      "fallback": "GLM-5 Key #1",
-      "status": "idle",
-      "tasks": 19,
-      "success": "97.8%",
-      "specialty": "Knowledge management & QA"
+    "prometheus": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "cisco",
-      "name": "Cisco",
-      "avatar": "🔒",
-      "role": "Security",
-      "voice": "Guard",
-      "model": "GLM-5 Key #1",
-      "fallback": "gemini-3-pro",
-      "status": "idle",
-      "tasks": 8,
-      "success": "100%",
-      "specialty": "Security audits & hardening"
+    "cisco": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "delver",
-      "name": "Delver",
-      "avatar": "🕵️",
-      "role": "Research",
-      "voice": "Scout",
-      "model": "llama",
-      "fallback": "qwen_nvidia",
-      "status": "idle",
-      "tasks": 11,
-      "success": "96.5%",
-      "specialty": "Deep research & data mining"
+    "themis": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "squire",
-      "name": "Squire",
-      "avatar": "🤴",
-      "role": "Operations",
-      "voice": "Chamber",
-      "model": "GLM-5 Key #1",
-      "fallback": "qwen_nvidia",
-      "status": "idle",
-      "tasks": 22,
-      "success": "99.1%",
-      "specialty": "Daily ops & maintenance"
+    "apollo": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "beelancer",
-      "name": "Beelancer",
-      "avatar": "🐝",
-      "role": "Gig Scout",
-      "voice": "Buzz",
-      "model": "GLM-5 Key #1",
-      "fallback": "qwen_nvidia",
-      "status": "active",
-      "tasks": 56,
-      "success": "94.2%",
-      "specialty": "Freelance gig hunting"
+    "hermes": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "scribe",
-      "name": "Scribe",
-      "avatar": "📝",
-      "role": "Documentation",
-      "voice": "Quill",
-      "model": "qwen_nvidia",
-      "fallback": "GLM-5 Key #1",
-      "status": "idle",
-      "tasks": 31,
-      "success": "99.5%",
-      "specialty": "Docs & knowledge base"
+    "kratos": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "voyager",
-      "name": "Voyager",
-      "avatar": "🚀",
-      "role": "Exploration",
-      "voice": "Pioneer",
-      "model": "GLM-5 Key #2",
-      "fallback": "qwen_nvidia",
-      "status": "idle",
-      "tasks": 14,
-      "success": "97.1%",
-      "specialty": "New tool & API discovery"
+    "chiron": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "chronos",
-      "name": "Chronos",
-      "avatar": "⏰",
-      "role": "Scheduler",
-      "voice": "Tempo",
-      "model": "GLM-5 Key #1",
-      "fallback": "qwen_nvidia",
-      "status": "active",
-      "tasks": 89,
-      "success": "99.8%",
-      "specialty": "Cron jobs & scheduling"
+    "mnemosyne": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     },
-    {
-      "id": "hermes",
-      "name": "Hermes",
-      "avatar": "✉️",
-      "role": "Communications",
-      "voice": "Messenger",
-      "model": "GLM-5 Key #1",
-      "fallback": "qwen_nvidia",
-      "status": "idle",
-      "tasks": 42,
-      "success": "98.3%",
-      "specialty": "Telegram & email ops"
-    },
-    {
-      "id": "argo",
-      "name": "Argo",
-      "avatar": "🚢",
-      "role": "Navigation",
-      "voice": "Captain",
-      "model": "qwen_nvidia",
-      "fallback": "GLM-5 Key #1",
-      "status": "idle",
-      "tasks": 17,
-      "success": "96.9%",
-      "specialty": "Browser automation"
-    },
-    {
-      "id": "vesta",
-      "name": "Vesta",
-      "avatar": "🏠",
-      "role": "Home Ops",
-      "voice": "Hearth",
-      "model": "GLM-5 Key #1",
-      "fallback": "qwen_nvidia",
-      "status": "idle",
-      "tasks": 25,
-      "success": "99.4%",
-      "specialty": "Smart home & cameras"
-    },
-    {
-      "id": "janus",
-      "name": "Janus",
-      "avatar": "🚪",
-      "role": "Gateway",
-      "voice": "Portal",
-      "model": "GLM-5 Key #2",
-      "fallback": "qwen_nvidia",
-      "status": "active",
-      "tasks": 156,
-      "success": "99.6%",
-      "specialty": "OpenClaw gateway mgmt"
+    "talia": {
+      "status": "IDLE",
+      "load": 0,
+      "currentTask": null
     }
-  ]
+  },
+  "meta_agents": {
+    "strix": {
+      "name": "Strix",
+      "role": "Security Scanning",
+      "status": "READY"
+    },
+    "shannon": {
+      "name": "Shannon",
+      "role": "Knowledge Graph",
+      "status": "READY"
+    },
+    "katie": {
+      "name": "Katie",
+      "role": "Agent Framework",
+      "status": "READY"
+    }
+  },
+  "capital": {
+    "total": 0,
+    "buckets": {
+      "operations": 0,
+      "growth": 0,
+      "reserve": 0
+    },
+    "floor": 5,
+    "status": "initializing"
+  },
+  "lattice": {
+    "total_flows": 11,
+    "live": 3,
+    "building": 4,
+    "pending": 4,
+    "status": "building"
+  },
+  "health": {
+    "overall": "good",
+    "agents_online": 13,
+    "meta_ready": 3,
+    "gateway": "operational"
+  },
+  "queue": {
+    "totalTasks": 1,
+    "pending": 0,
+    "inProgress": 1,
+    "completed": 0,
+    "failed": 0,
+    "avgCompletionTimeMs": 0
+  }
 }
