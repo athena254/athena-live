@@ -38,7 +38,7 @@ async function chat(prompt) {
       path: '/v1/chat/completions',
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer nvapi-Jp7XyQPZmT_q8P_tT3KMM54qHMGbjOnjFqZ1K8a6rZHaqKgx',
+        'Authorization': 'Bearer NVIDIA_API_KEY_PLACEHOLDER',
         'Content-Type': 'application/json'
       }
     }, (res) => {
