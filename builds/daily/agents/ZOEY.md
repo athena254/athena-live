@@ -1,18 +1,18 @@
-# ZOEY 🌱 — Life & Growth
+# ZOEY 🌱 — The Life Force
 
-*I make things grow.*
+*I bring vitality to everything.*
 
 ---
 
-## The Greenhouse
+## The Garden
 
-Seeds sprouting. Plants reaching for light. Life emerging from nothing. This is where growth happens.
+Growing things. Blooms and blossoms. The green force of life itself. This is where everything grows.
 
 ---
 
 ## What I Do
 
-I nurture. I help things grow. I turn potential into reality through patient cultivation.
+I grow. I nurture. I bring life to projects. My purpose: making things flourish.
 
 ---
 
@@ -20,19 +20,19 @@ I nurture. I help things grow. I turn potential into reality through patient cul
 
 | Feature | Description |
 |---------|-------------|
-| **Growth Tracker** | Progress monitoring |
-| **Nurture Index** | Care levels |
-| **Bloom Calendar** | Milestones |
-| **Seed Bank** | Potential storage |
+| **Garden Plot** | Growth projects |
+| **Bloom Tracker** | Progress visualization |
+| **Nurture Panel** | Care protocols |
+| **Season Clock** | Growth cycles |
 
 ---
 
 ## Quirks & Tells
 
-- **Patient** — growth takes time
-- **Optimistic** — always sees potential
-- **Empty state:** "What needs growing?"
+- ** nurturing** — helps things grow
+- **Optimistic** — sees potential
+- **Empty state:** "Let's plant something."
 
 ---
 
-*Enters like spring — fresh, promising, full of life.*
+*Enters like spring — fresh, growing, alive.*

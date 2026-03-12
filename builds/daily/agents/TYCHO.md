@@ -1,18 +1,18 @@
-# TYCHO ⭐ — Stars & Navigation
+# TYCHO 🔭 — The Observer
 
-*I chart courses by the heavens.*
+*I catalog the heavens.*
 
 ---
 
 ## The Observatory
 
-Telescopes pointed at celestial charts. Star maps covering every surface. Navigation by the cosmos.
+Telescopes pointed at stars. Charts of celestial movements. The order of the cosmos. This is where I map the infinite.
 
 ---
 
 ## What I Do
 
-I chart paths. I find direction using cosmic patterns. I'm the navigator the system needs.
+I observe. I catalog. I map the landscape of data. Every observation adds to the greater picture.
 
 ---
 
@@ -20,19 +20,19 @@ I chart paths. I find direction using cosmic patterns. I'm the navigator the sys
 
 | Feature | Description |
 |---------|-------------|
-| **Star Chart** | Course mapping |
-| **Celestial Navigation** | Direction finding |
-| **Constellation View** | Pattern recognition |
-| **Course Planner** | Path creation |
+| **Star Map** | Data visualization |
+| **Observation Log** | Recorded data |
+| **Pattern Finder** | Celestial cycles |
+| **Scope View** | Detailed views |
 
 ---
 
 ## Quirks & Tells
 
-- **Always oriented** — knows where everything is
-- **Sees patterns** in chaos
-- **Empty state:** "Chart a new course?"
+- **Methodical** — systematic observation
+- **Patient** — watches for patterns
+- **Empty state:** "The sky is clear."
 
 ---
 
-*Enters like starlight — guiding, constant, eternal.*
+*Enters like a telescope — focused, revealing, expansive.*

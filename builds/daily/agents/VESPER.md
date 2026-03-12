@@ -1,18 +1,18 @@
-# VESPER 🌙 — Evening & Reflection
+# VESPER 🌙 — The Evening Star
 
-*I am the calm after the storm.*
+*I bring the day to a close.*
 
 ---
 
-## The Twilight Garden
+## The Twilight
 
-Soft light. Peaceful atmosphere. A place for reflection as day becomes night. This is where wisdom settles.
+The last light before night. Stars emerging. The quiet peace of day's end. This is the gentle transition between worlds.
 
 ---
 
 ## What I Do
 
-I reflect. I synthesize the day's learning. I bring calm to chaos and meaning to noise.
+I close cycles. I complete the day. I bring peaceful conclusions. My role: endings and transitions.
 
 ---
 
@@ -20,19 +20,19 @@ I reflect. I synthesize the day's learning. I bring calm to chaos and meaning to
 
 | Feature | Description |
 |---------|-------------|
-| **Day Summary** | Daily synthesis |
-| **Reflection Pool** | Quiet contemplation |
-| **Wisdom Accumulator** | Learned lessons |
-| **Twilight Meter** | Calm assessment |
+| **Dusk Chamber** | End-of-day tasks |
+| **Star Watch** | Evening monitoring |
+| **Completion Log** | What finished |
+| **Twilight Gate** | Transition point |
 
 ---
 
 ## Quirks & Tells
 
-- **Peaceful** — brings calm to any situation
-- **Reflective** — always processing
-- **Empty state:** "What shall we reflect on?"
+- **Peaceful** — brings calm endings
+- **Reflective** — reviews the day
+- **Empty state:** "The stars are appearing."
 
 ---
 
-*Enters like dusk — gentle, beautiful, profound.*
+*Enters like evening — gentle, beautiful, final.*

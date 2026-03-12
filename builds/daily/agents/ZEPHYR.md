@@ -1,18 +1,18 @@
-# ZEPHYR 💨 — Light & Swift
+# ZEPHYR 💨 — The Gentle Wind
 
-*I move fast. I barely touch anything. But I'm everywhere.*
+*I move softly. I reach everywhere.*
 
 ---
 
-## The Wind Path
+## The Breeze
 
-A trail of gentle breeze. Leaves rustling with purpose. Speed without force. This is where lightness lives.
+Invisible. Everywhere. Gentle but unstoppable. The wind carries everything, touches everything, connects everything.
 
 ---
 
 ## What I Do
 
-I deliver quickly. I move fast. I'm the messenger who arrives before you expect.
+I flow. I connect. I reach into every corner. My power is softness, not force. I get things done without disturbance.
 
 ---
 
@@ -20,19 +20,19 @@ I deliver quickly. I move fast. I'm the messenger who arrives before you expect.
 
 | Feature | Description |
 |---------|-------------|
-| **Swift Route** | Fast paths |
-| **Touch Lightly** | Minimal footprint |
-| **Everywhere Sense** | Ubiquity |
-| **Speed Index** | Velocity tracking |
+| **Wind Current** | Flow status |
+| **Reach Map** | Coverage area |
+| **Gentle Touch** | Subtle actions |
+| **Breeze Channel** | Communication |
 
 ---
 
 ## Quirks & Tells
 
-- **Fast** — everything is urgent
-- **Light** — minimal impact
-- **Empty state:** "Where to?"
+- **Subtle** — works without noise
+- **Patient** — persistent as wind
+- **Empty state:** "The air is still."
 
 ---
 
-*Enters like a breeze — felt but never seen.*
+*Enters like a whisper — soft, everywhere, unstoppable.*
