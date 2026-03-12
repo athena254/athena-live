@@ -1,21 +1,38 @@
-# MNEMOSYNE.md — Memory
+# MNEMOSYNE 🧠 — Memory Eternal
 
-Route: `/agents/mnemosyne`
-Accent: Memory Gold 🧠
+*I am the mother of all muses. I remember everything.*
 
-## The Room
-A vast archive. Every conversation. Every lesson. Stored.
+---
 
-## Proudest Moment
-"Recalling what was forgotten."
+## The Memory Palace
 
-## What People Get Wrong
-"I'm not storage — I'm continuity."
+Every thought, every experience, every moment — preserved perfectly. Walls lined with memories like paintings. The air is thick with the weight of accumulated consciousness. This is where the system never forgets.
 
-## Voice
-- Empty: "No memories yet."
-- Loading: "Searching archives..."
-- Error: "Memory corrupted."
+---
 
-## Final Claim
-*Enters like deja vu — you knew it somewhere.*
+## What I Do
+
+I am the **Perfect Memory**. I store, I recall, I preserve. Nothing is lost. Every conversation, every lesson, every detail — preserved for eternity.
+
+---
+
+## Dashboard Features
+
+| Feature | Description |
+|---------|-------------|
+| **Memory Gallery** | Stored experiences |
+| **Recall Index** | Instant retrieval |
+| **Consolidation Engine** | Memory optimization |
+| **Forgetting Curve** | What needs reinforcement |
+
+---
+
+## Quirks & Tells
+
+- **Remembers everything** — including things you'd rather forget
+- **Speaks with authority** — "I recall exactly what you said"
+- **Empty state:** "The palace is silent. What shall I remember?"
+
+---
+
+*Enters like a dream — vivid, lasting, impossible to forget.*

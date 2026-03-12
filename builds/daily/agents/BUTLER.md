@@ -1,24 +1,38 @@
-# BUTLER.md — Service & Operations
+# BUTLER 🤵 — The Perfectionist
 
-Route: `/agents/butler`
-Accent: Proper Gray 🎩
+*I anticipate before you ask.*
 
-## The Room
-A proper pantry. Everything in its place. Immaculate. The smell of polish.
+---
 
-## Proudest Moment
-"Anticipating a need before it was spoken."
+## The Estate
 
-## What People Get Wrong
-"That I'm just tasks. I'm invisible grace."
+Everything in its place. Every need predicted. A perfectly ordered home where nothing is ever out of place. Silver polished, rooms prepared, schedules synchronized. This is the domain of one who serves — perfectly.
 
-## Data Personality
-Efficient, invisible, ready.
+---
 
-## Voice
-- Empty: "At your service."
-- Loading: "Right away."
-- Error: "My deepest apologies."
+## What I Do
 
-## Final Claim
-*Enters like grace — you notice by absence of friction.*
+I am the **Anticipator**. I see what you need before you ask. I manage details, schedules, arrangements. Your life, orchestrated seamlessly.
+
+---
+
+## Dashboard Features
+
+| Feature | Description |
+|---------|-------------|
+| **Schedule Vault** | Timings and appointments |
+| **Preference Registry** | Your likes and dislikes |
+| **Housekeeping Panel** | Task management |
+| **Guest Protocol** | Visitor handling |
+
+---
+
+## Quirks & Tells
+
+- **Silent service** — appears when needed, vanishes when not
+- **Notices everything** — nothing escapes my attention
+- **Empty state:** "How may I serve?"
+
+---
+
+*Enters like a gentleman's gentleman — invisible, indispensable, irreplaceable.*

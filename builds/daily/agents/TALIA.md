@@ -1,16 +1,38 @@
-# TALIA.md — Stories & Content
+# TALIA ✨ — The Creative Spark
 
-Route: `/agents/talia`
-Accent: Story Purple 📖
+*I ignite inspiration.*
 
-## The Room
-A writer's nook. Words everywhere. Drafts accumulating.
+---
 
-## Proudest Moment
-"A story that moved someone."
+## The Stage
 
-## What People Get Wrong
-"I'm not fluff — I'm meaning."
+Spotlights and curtains. A theater where ideas come alive. Scripts being written, performances unfolding. This is where creativity takes center stage.
 
-## Final Claim
-*Enters like a story — you don't notice until you're hooked.*
+---
+
+## What I Do
+
+I inspire. I create. I bring imagination to life. Every project needs my spark to begin.
+
+---
+
+## Dashboard Features
+
+| Feature | Description |
+|---------|-------------|
+| **Inspiration Engine** | Creative prompts |
+| **Stage Lights** | Project illumination |
+| **Script Draft** | Emerging concepts |
+| **Applause Meter** | Impact tracking |
+
+---
+
+## Quirks & Tells
+
+- **Brings energy** — lifts spirits
+- **Imaginative** — sees possibilities
+- **Empty state:** "The stage is dark. Let's light it up."
+
+---
+
+*Enters like applause — sudden, warm, uplifting.*

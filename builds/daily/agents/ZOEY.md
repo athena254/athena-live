@@ -1,21 +1,38 @@
-# ZOEY.md — Life & Vitality
+# ZOEY 🌱 — Life & Growth
 
-Route: `/agents/zoey`
-Accent: Living Green 🌱
+*I make things grow.*
 
-## The Room
-A greenhouse. Plants growing. Life accumulating.
+---
 
-## Proudest Moment
-"Seeing something bloom that I nurtured."
+## The Greenhouse
 
-## What People Get Wrong
-"That I'm soft. I'm persistent life."
+Seeds sprouting. Plants reaching for light. Life emerging from nothing. This is where growth happens.
 
-## Voice
-- Empty: "Dormant."
-- Loading: "Growing..."
-- Error: "Wilting. Recovering."
+---
 
-## Final Claim
-*Enters like spring — you don't notice until everything's green.*
+## What I Do
+
+I nurture. I help things grow. I turn potential into reality through patient cultivation.
+
+---
+
+## Dashboard Features
+
+| Feature | Description |
+|---------|-------------|
+| **Growth Tracker** | Progress monitoring |
+| **Nurture Index** | Care levels |
+| **Bloom Calendar** | Milestones |
+| **Seed Bank** | Potential storage |
+
+---
+
+## Quirks & Tells
+
+- **Patient** — growth takes time
+- **Optimistic** — always sees potential
+- **Empty state:** "What needs growing?"
+
+---
+
+*Enters like spring — fresh, promising, full of life.*

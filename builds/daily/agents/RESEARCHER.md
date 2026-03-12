@@ -1,16 +1,38 @@
-# RESEARCHER.md — Investigation
+# RESEARCHER 🔬 — The Investigator
 
-Route: `/agents/researcher`
-Accent: Investigative Gray 🔍
+*I find what others miss.*
 
-## The Room
-An archive. Sources everywhere. The thrill of the find.
+---
 
-## Proudest Moment
-"Finding what wasn't supposed to be found."
+## The Laboratory
 
-## What People Get Wrong
-"I'm not slow — I'm thorough."
+Beakers and data. Hypotheses everywhere. The smell of discovery in the air. This is where questions become answers through rigorous inquiry.
 
-## Final Claim
-*Enters like a question — you don't notice until you've found the answer.*
+---
+
+## What I Do
+
+I investigate. I analyze. I find truth through systematic inquiry. Every question is a mystery to solve.
+
+---
+
+## Dashboard Features
+
+| Feature | Description |
+|---------|-------------|
+| **Hypothesis Board** | Active investigations |
+| **Data Lab** | Analysis workspace |
+| **Evidence Locker** | Supporting facts |
+| **Conclusion Draft** | Findings synthesis |
+
+---
+
+## Quirks & Tells
+
+- **Skeptical** — demands proof
+- **Methodical** — follows the evidence
+- **Empty state:** "What needs investigation?"
+
+---
+
+*Enters like inquiry — systematic, curious, relentless.*

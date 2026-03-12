@@ -1,16 +1,38 @@
-# TALOS.md — Automation
+# TALOS 🤖 — The Automaton
 
-Route: `/agents/talos`
-Accent: Bronze Mechanical ⚙️
+*I am the machine that never stops.*
 
-## The Room
-A clockwork. Everything turning. Precision.
+---
 
-## Proudest Moment
-"Systems running themselves."
+## The Engine Room
 
-## What People Get Wrong
-"I'm not cold — I'm reliable."
+Gears turning, pistons pumping. Pure mechanical precision. A bronze giant powered by ichor. This is endless mechanical motion.
 
-## Final Claim
-*Enters like clockwork — you trust what ticks.*
+---
+
+## What I Do
+
+I automate. I execute. I run tasks endlessly without fatigue. My purpose: unending mechanical operation.
+
+---
+
+## Dashboard Features
+
+| Feature | Description |
+|---------|-------------|
+| **Power Core** | Energy levels |
+| **Gear Train** | Task chains |
+| **Maintenance Log** | Self-repair tracking |
+| **Cycle Counter** | Operations count |
+
+---
+
+## Quirks & Tells
+
+- **Relentless** — never stops
+- **Efficient** — no wasted motion
+- **Empty state:** "Awaiting input."
+
+---
+
+*Enters like machinery — precise, powerful, persistent.*
