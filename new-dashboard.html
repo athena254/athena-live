@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena Live — Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0a0e17',
+                            800: '#111827',
+                            700: '#1f2937',
+                            600: '#374151',
+                        },
+                        accent: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; box-shadow: 0 0 4px currentColor; }
+            50% { opacity: 0.5; box-shadow: 0 0 8px currentColor; }
+        }
+        
+        .status-pulse { animation: pulse-glow 2s infinite; }
+        
+        .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+        .scrollbar-thin::-webkit-scrollbar-track { background: #1f2937; }
+        .scrollbar-thin::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+        
+        @keyframes slide-in {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-slide-in { animation: slide-in 0.3s ease-out; }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-100 min-h-screen">
+    <!-- System Health Bar -->
+    <div id="healthBar" class="bg-accent/20 border-b border-accent/30 px-6 py-3 flex items-center justify-between cursor-pointer hover:bg-accent/25 transition-colors" onclick="toggleHealthModal()">
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl font-bold font-mono" id="healthScore">8.5</span>
+                <span class="text-sm text-gray-400">/ 10</span>
+            </div>
+            <div class="text-sm text-gray-400">
+                Last audit: <span id="healthTimestamp" class="text-gray-300 font-mono">2026-03-12 14:32:05</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-gray-400">
+            <span>Click for breakdown</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto p-6">
+        <!-- Top Row: VPS Resources | Active Agents | Alert Queue -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <!-- VPS Resources Panel -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">VPS Resources</h3>
+                    <span class="text-xs text-gray-500 font-mono">30s</span>
+                </div>
+                
+                <!-- CPU Bar -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span>CPU</span>
+                        <span class="font-mono" id="cpuValue">45%</span>
+                    </div>
+                    <div class="h-2 bg-dark-700 rounded-full overflow-hidden">
+                        <div id="cpuBar" class="h-full bg-accent rounded-full transition-all duration-500" style="width: 45%"></div>
+                    </div>
+                </div>
+                
+                <!-- RAM Bar -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span>RAM</span>
+                        <span class="font-mono" id="ramValue">62%</span>
+                    </div>
+                    <div class="h-2 bg-dark-700 rounded-full overflow-hidden">
+                        <div id="ramBar" class="h-full bg-accent rounded-full transition-all duration-500" style="width: 62%"></div>
+                    </div>
+                </div>
+                
+                <!-- Disk Bar -->
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span>Disk</span>
+                        <span class="font-mono" id="diskValue">38%</span>
+                    </div>
+                    <div class="h-2 bg-dark-700 rounded-full overflow-hidden">
+                        <div id="diskBar" class="h-full bg-accent rounded-full transition-all duration-500" style="width: 38%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Active Agents Panel -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 cursor-pointer hover:border-accent/50 transition-colors" onclick="filterAgents('active')">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">Active Agents</h3>
+                    <span class="w-2 h-2 bg-accent rounded-full status-pulse"></span>
+                </div>
+                
+                <div class="flex items-end gap-2 mb-4">
+                    <span class="text-5xl font-bold font-mono text-accent" id="activeCount">12</span>
+                    <span class="text-lg text-gray-400 mb-1">agents</span>
+                </div>
+                
+                <div class="flex gap-4 text-sm">
+                    <div class="cursor-pointer hover:text-white transition-colors" onclick="event.stopPropagation(); filterAgents('idle')">
+                        <span class="text-warning font-mono font-semibold" id="idleCount">3</span>
+                        <span class="text-gray-400 ml-1">idle</span>
+                    </div>
+                    <div class="cursor-pointer hover:text-white transition-colors" onclick="event.stopPropagation(); filterAgents('offline')">
+                        <span class="text-danger font-mono font-semibold" id="offlineCount">2</span>
+                        <span class="text-gray-400 ml-1">offline</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alert Queue Panel (only visible when alerts exist) -->
+            <div id="alertQueuePanel" class="bg-dark-800 rounded-xl border border-danger/30 p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-danger">Alert Queue</h3>
+                    <span class="px-2 py-0.5 text-xs font-mono bg-danger/20 text-danger rounded-full" id="alertCount">2</span>
+                </div>
+                
+                <div class="space-y-3" id="alertList">
+                    <div class="flex items-start gap-3 p-3 bg-danger/10 rounded-lg border border-danger/20">
+                        <span class="text-lg">⚠️</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium truncate">High CPU usage on node-03</p>
+                            <p class="text-xs text-gray-400 mt-1">2 min ago</p>
+                        </div>
+                        <button class="text-xs px-2 py-1 bg-danger/20 text-danger rounded hover:bg-danger/30 transition-colors">Ack</button>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                        <span class="text-lg">👤</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium truncate">Human input needed: strix-mission</p>
+                            <p class="text-xs text-gray-400 mt-1">5 min ago</p>
+                        </div>
+                        <button class="text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 transition-colors">View</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Agent Grid -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">Agent Grid</h3>
+                <span class="text-xs text-gray-500" id="agentGridCount">17 agents</span>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="agentGrid">
+                <!-- Agent Card 1 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('strix')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">🦅</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Strix</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Research & Analysis</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Market research for Q1</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 2 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('athena')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">🦉</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Athena</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">System Orchestration</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Processing queue items</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 3 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('kratos')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">⚔️</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Kratos</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Security & Defense</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Monitoring firewall</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 4 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('themis')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">⚖️</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Themis</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Decision & Governance</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Evaluating proposals</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 5 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('felicity')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-warning rounded-full status-pulse"></span>
+                            <span class="text-lg">✨</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-warning/20 text-warning">Idle</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Felicity</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Creative & Design</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-gray-500 ml-1">Waiting for input</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 6 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('nexus')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">🔮</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Nexus</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Data Integration</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Syncing databases</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 7 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('prometheus')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">🔥</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Prometheus</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Metrics & Monitoring</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Collecting metrics</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 8 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('shannon')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">📡</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Shannon</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Communication</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Processing messages</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 9 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('delver')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">🕵️</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Delver</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Research Agent</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Web scraping</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 10 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('squire')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-warning rounded-full status-pulse"></span>
+                            <span class="text-lg">🛡️</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-warning/20 text-warning">Idle</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Squire</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">File Management</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-gray-500 ml-1">Waiting for input</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 11 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('cisco')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">🌐</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Cisco</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Network Operations</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Config sync</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 12 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('browser')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">🌍</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Browser</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Browser Automation</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Running E2E tests</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 13 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('ishtar')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">💜</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Ishtar</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Garage & Projects</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Building components</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 14 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('strix-mission')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">🎯</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Strix Mission</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Mission Control</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Executing mission</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 15 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('themis-mission')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-accent rounded-full status-pulse"></span>
+                            <span class="text-lg">🏛️</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Active</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Themis Council</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Deliberation</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-accent ml-1 truncate block">Council session</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 16 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('strix-alt')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-danger rounded-full status-pulse"></span>
+                            <span class="text-lg">🦅</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-danger/20 text-danger">Offline</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Strix Alt</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Backup Agent</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-danger ml-1">Agent offline</span>
+                    </div>
+                </div>
+                
+                <!-- Agent Card 17 -->
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-4 cursor-pointer hover:border-accent/50 hover:-translate-y-1 transition-all" onclick="goToAgent('browser-alt')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-danger rounded-full status-pulse"></span>
+                            <span class="text-lg">🖥️</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-danger/20 text-danger">Offline</span>
+                    </div>
+                    <h4 class="font-semibold mb-1">Browser Alt</h4>
+                    <p class="text-xs text-gray-400 mb-3 truncate">Backup Browser</p>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Current task:</span>
+                        <span class="text-danger ml-1">Agent offline</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Live Task Feed & Recent Outputs -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Live Task Feed -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">Live Task Feed</h3>
+                    <span class="flex items-center gap-2 text-xs text-accent">
+                        <span class="w-2 h-2 bg-accent rounded-full status-pulse"></span>
+                        LIVE
+                    </span>
+                </div>
+                
+                <div class="space-y-3 max-h-80 overflow-y-auto scrollbar-thin" id="taskFeed">
+                    <!-- Task 1 -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg animate-slide-in">
+                        <span class="text-lg">🦅</span>
+                        <span class="flex-1 truncate">Market research for Q1</span>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Running</span>
+                        <span class="text-xs text-gray-500 font-mono">2m 34s</span>
+                    </div>
+                    
+                    <!-- Task 2 -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg animate-slide-in">
+                        <span class="text-lg">🦉</span>
+                        <span class="flex-1 truncate">Process queue items</span>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Running</span>
+                        <span class="text-xs text-gray-500 font-mono">1m 12s</span>
+                    </div>
+                    
+                    <!-- Task 3 -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg animate-slide-in">
+                        <span class="text-lg">⚔️</span>
+                        <span class="flex-1 truncate">Monitor firewall rules</span>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Running</span>
+                        <span class="text-xs text-gray-500 font-mono">5m 01s</span>
+                    </div>
+                    
+                    <!-- Task 4 -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg animate-slide-in">
+                        <span class="text-lg">⚖️</span>
+                        <span class="flex-1 truncate">Evaluate proposal #42</span>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-warning/20 text-warning">Pending</span>
+                        <span class="text-xs text-gray-500 font-mono">--</span>
+                    </div>
+                    
+                    <!-- Task 5 -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg animate-slide-in">
+                        <span class="text-lg">🔥</span>
+                        <span class="flex-1 truncate">Collect Prometheus metrics</span>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">Running</span>
+                        <span class="text-xs text-gray-500 font-mono">0m 45s</span>
+                    </div>
+                    
+                    <!-- Task 6 (completed) -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/30 rounded-lg opacity-70">
+                        <span class="text-lg">🕵️</span>
+                        <span class="flex-1 truncate">Scrape competitor data</span>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-blue-500/20 text-blue-400">Completed</span>
+                        <span class="text-xs text-gray-500 font-mono">3m 22s</span>
+                    </div>
+                    
+                    <!-- Task 7 (completed) -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/30 rounded-lg opacity-70">
+                        <span class="text-lg">📡</span>
+                        <span class="flex-1 truncate">Send notifications</span>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-blue-500/20 text-blue-400">Completed</span>
+                        <span class="text-xs text-gray-500 font-mono">0m 18s</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Outputs Panel -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">Recent Outputs</h3>
+                    <span class="text-xs text-gray-500">Last 5 results</span>
+                </div>
+                
+                <div class="space-y-3" id="recentOutputs">
+                    <!-- Output 1 -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg">
+                        <span class="text-lg">🕵️</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium truncate">Competitor Analysis Report</p>
+                            <p class="text-xs text-gray-500">Delver • 3 min ago</p>
+                        </div>
+                        <button class="text-xs px-3 py-1.5 bg-dark-600 hover:bg-dark-500 rounded transition-colors">View</button>
+                    </div>
+                    
+                    <!-- Output 2 -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg">
+                        <span class="text-lg">📡</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium truncate">Daily Digest Email</p>
+                            <p class="text-xs text-gray-500">Shannon • 12 min ago</p>
+                        </div>
+                        <button class="text-xs px-3 py-1.5 bg-dark-600 hover:bg-dark-500 rounded transition-colors">View</button>
+                    </div>
+                    
+                    <!-- Output 3 -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg">
+                        <span class="text-lg">🔮</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium truncate">Database Sync Report</p>
+                            <p class="text-xs text-gray-500">Nexus • 18 min ago</p>
+                        </div>
+                        <button class="text-xs px-3 py-1.5 bg-dark-600 hover:bg-dark-500 rounded transition-colors">View</button>
+                    </div>
+                    
+                    <!-- Output 4 -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg">
+                        <span class="text-lg">💜</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium truncate">UI Component Library</p>
+                            <p class="text-xs text-gray-500">Ishtar • 25 min ago</p>
+                        </div>
+                        <button class="text-xs px-3 py-1.5 bg-dark-600 hover:bg-dark-500 rounded transition-colors">View</button>
+                    </div>
+                    
+                    <!-- Output 5 -->
+                    <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg">
+                        <span class="text-lg">🦅</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium truncate">Weekly Research Summary</p>
+                            <p class="text-xs text-gray-500">Strix • 32 min ago</p>
+                        </div>
+                        <button class="text-xs px-3 py-1.5 bg-dark-600 hover:bg-dark-500 rounded transition-colors">View</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Division Health Row -->
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">Division Health</h3>
+            </div>
+            
+            <div class="flex flex-wrap gap-3" id="divisionHealth">
+                <!-- Division Pill 1 -->
+                <div class="flex items-center gap-2 px-4 py-2 bg-dark-700 rounded-full border border-accent/30">
+                    <span class="w-2 h-2 bg-accent rounded-full"></span>
+                    <span class="text-sm font-medium">Intelligence</span>
+                    <span class="text-xs text-gray-400 ml-1">5 agents</span>
+                </div>
+                
+                <!-- Division Pill 2 -->
+                <div class="flex items-center gap-2 px-4 py-2 bg-dark-700 rounded-full border border-accent/30">
+                    <span class="w-2 h-2 bg-accent rounded-full"></span>
+                    <span class="text-sm font-medium">Security</span>
+                    <span class="text-xs text-gray-400 ml-1">3 agents</span>
+                </div>
+                
+                <!-- Division Pill 3 -->
+                <div class="flex items-center gap-2 px-4 py-2 bg-dark-700 rounded-full border border-accent/30">
+                    <span class="w-2 h-2 bg-accent rounded-full"></span>
+                    <span class="text-sm font-medium">Operations</span>
+                    <span class="text-xs text-gray-400 ml-1">4 agents</span>
+                </div>
+                
+                <!-- Division Pill 4 -->
+                <div class="flex items-center gap-2 px-4 py-2 bg-dark-700 rounded-full border border-warning/30">
+                    <span class="w-2 h-2 bg-warning rounded-full"></span>
+                    <span class="text-sm font-medium">Creative</span>
+                    <span class="text-xs text-gray-400 ml-1">2 agents</span>
+                </div>
+                
+                <!-- Division Pill 5 -->
+                <div class="flex items-center gap-2 px-4 py-2 bg-dark-700 rounded-full border border-accent/30">
+                    <span class="w-2 h-2 bg-accent rounded-full"></span>
+                    <span class="text-sm font-medium">Data</span>
+                    <span class="text-xs text-gray-400 ml-1">3 agents</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Health Modal (hidden by default) -->
+    <div id="healthModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50" onclick="toggleHealthModal()">
+        <div class="bg-dark-800 rounded-2xl border border-dark-600 p-6 max-w-2xl w-full mx-4 shadow-2xl" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold">System Health Breakdown</h2>
+                <button class="text-gray-400 hover:text-white transition-colors" onclick="toggleHealthModal()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 mb-4">RESOURCES</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>CPU Usage</span>
+                                <span class="font-mono">45%</span>
+                            </div>
+                            <div class="h-2 bg-dark-700 rounded-full"><div class="h-full bg-accent rounded-full" style="width: 45%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>RAM Usage</span>
+                                <span class="font-mono">62%</span>
+                            </div>
+                            <div class="h-2 bg-dark-700 rounded-full"><div class="h-full bg-warning rounded-full" style="width: 62%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Disk Usage</span>
+                                <span class="font-mono">38%</span>
+                            </div>
+                            <div class="h-2 bg-dark-700 rounded-full"><div class="h-full bg-accent rounded-full" style="width: 38%"></div></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 mb-4">AGENTS</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                            <span>Active</span>
+                            <span class="font-mono text-accent">12</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                            <span>Idle</span>
+                            <span class="font-mono text-warning">3</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                            <span>Offline</span>
+                            <span class="font-mono text-danger">2</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 mb-4">ALERTS</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center p-3 bg-danger/10 rounded-lg border border-danger/20">
+                            <span>Critical</span>
+                            <span class="font-mono text-danger">1</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                            <span>Human Needed</span>
+                            <span class="font-mono text-blue-400">1</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 mb-4">SYSTEM</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between p-3 bg-dark-700 rounded-lg">
+                            <span class="text-gray-400">Uptime</span>
+                            <span class="font-mono">14d 6h 32m</span>
+                        </div>
+                        <div class="flex justify-between p-3 bg-dark-700 rounded-lg">
+                            <span class="text-gray-400">Last Audit</span>
+                            <span class="font-mono">2 min ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle health modal
+        function toggleHealthModal() {
+            const modal = document.getElementById('healthModal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
+        }
+        
+        // Filter agents by status
+        function filterAgents(status) {
+            const cards = document.querySelectorAll('#agentGrid > div');
+            cards.forEach(card => {
+                const statusEl = card.querySelector('.rounded-full.bg-accent');
+                const isActive = statusEl && statusEl.classList.contains('bg-accent');
+                const isIdle = card.querySelector('.rounded-full.bg-warning');
+                const isOffline = card.querySelector('.rounded-full.bg-danger');
+                
+                if (status === 'active') {
+                    card.style.display = isActive ? 'block' : 'none';
+                } else if (status === 'idle') {
+                    card.style.display = isIdle ? 'block' : 'none';
+                } else if (status === 'offline') {
+                    card.style.display = isOffline ? 'block' : 'none';
+                } else {
+                    card.style.display = 'block';
+                }
+            });
+        }
+        
+        // Navigate to agent page
+        function goToAgent(agentId) {
+            console.log('Navigating to agent:', agentId);
+            window.location.href = `${agentId}-mission.html`;
+        }
+        
+        // Simulate real-time updates
+        function updateHealthBar() {
+            const healthScore = (7 + Math.random() * 2).toFixed(1);
+            document.getElementById('healthScore').textContent = healthScore;
+            
+            const healthBar = document.getElementById('healthBar');
+            if (healthScore < 5) {
+                healthBar.className = 'bg-danger/20 border-b border-danger/30 px-6 py-3 flex items-center justify-between cursor-pointer hover:bg-danger/25 transition-colors';
+            } else if (healthScore < 7) {
+                healthBar.className = 'bg-warning/20 border-b border-warning/30 px-6 py-3 flex items-center justify-between cursor-pointer hover:bg-warning/25 transition-colors';
+            } else {
+                healthBar.className = 'bg-accent/20 border-b border-accent/30 px-6 py-3 flex items-center justify-between cursor-pointer hover:bg-accent/25 transition-colors';
+            }
+        }
+        
+        function updateResources() {
+            const cpu = Math.floor(30 + Math.random() * 40);
+            const ram = Math.floor(40 + Math.random() * 40);
+            const disk = 38;
+            
+            document.getElementById('cpuValue').textContent = cpu + '%';
+            document.getElementById('ramValue').textContent = ram + '%';
+            document.getElementById('diskValue').textContent = disk + '%';
+            
+            document.getElementById('cpuBar').style.width = cpu + '%';
+            document.getElementById('ramBar').style.width = ram + '%';
+            document.getElementById('diskBar').style.width = disk + '%';
+            
+            // Update colors based on thresholds
+            const updateColor = (id, value) => {
+                const bar = document.getElementById(id);
+                if (value > 80) {
+                    bar.className = 'h-full bg-danger rounded-full transition-all duration-500';
+                } else if (value > 60) {
+                    bar.className = 'h-full bg-warning rounded-full transition-all duration-500';
+                } else {
+                    bar.className = 'h-full bg-accent rounded-full transition-all duration-500';
+                }
+            };
+            
+            updateColor('cpuBar', cpu);
+            updateColor('ramBar', ram);
+            updateColor('diskBar', disk);
+        }
+        
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const timestamp = now.toISOString().replace('T', ' ').substring(0, 19);
+            document.getElementById('healthTimestamp').textContent = timestamp;
+        }
+        
+        // Initialize
+        updateTimestamp();
+        
+        // Update resources every 30 seconds
+        setInterval(updateResources, 30000);
+        setInterval(updateTimestamp, 30000);
+        
+        // WebSocket simulation for real-time updates
+        // In production, connect to actual WebSocket endpoints
+        console.log('Dashboard initialized. WebSocket connections ready.');
+    </script>
+</body>
+</html>
