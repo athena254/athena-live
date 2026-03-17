@@ -715,24 +715,373 @@ body {
 }
 
 /* ─────────────────────────────────────────
-   RESEARCH MODAL
+   MODEL & PERSONALITY MODAL
 ───────────────────────────────────────── */
-.overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,.8);
-  display: none; align-items: center; justify-content: center;
-  z-index: 200;
-  backdrop-filter: blur(6px);
-}
-.overlay.open { display: flex; }
 .modal {
   background: var(--ink2);
   border: 1px solid var(--border2);
   border-radius: 12px;
   padding: 28px;
-  width: 460px;
+  width: 520px;
   max-width: 92vw;
+  max-height: 85vh;
+  overflow-y: auto;
 }
+.modal-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+.modal-tab {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  padding: 6px 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all .15s;
+}
+.modal-tab:hover { color: var(--sepia); }
+.modal-tab.active { background: var(--gold); color: var(--ink); font-weight: 700; }
+
+.modal-section { margin-bottom: 20px; }
+.modal-section-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.form-group input[type="range"] {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  background: var(--border);
+  border-radius: 3px;
+  outline: none;
+}
+.form-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.slider-value {
+  float: right;
+  color: var(--gold);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.form-group textarea {
+  width: 100%;
+  min-height: 120px;
+  background: var(--ink);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--sepia);
+  font-family: 'Source Serif 4', serif;
+  font-size: 12px;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+}
+.form-group textarea:focus { border-color: var(--gold); }
+
+.modified-badge {
+  display: inline-block;
+  background: var(--rust);
+  color: var(--sepia);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+.btn-row { display: flex; gap: 8px; margin-top: 10px; }
+
+.prompt-editor { position: relative; }
+.prompt-chars {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-size: 9px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Connected Figures */
+.connected-figures {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+.connected-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.connected-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--ink3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold2);
+  flex-shrink: 0;
+}
+.connected-info { flex: 1; min-width: 0; }
+.connected-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sepia);
+}
+.connected-rel {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+}
+.summon-btn {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-family: 'Playfair Display', serif;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s;
+}
+.summon-btn:hover { background: var(--gold2); }
+
+.loading-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Scenario Banner */
+.scenario-banner {
+  background: linear-gradient(135deg, var(--ink3), var(--ink2));
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1;
+  position: relative;
+}
+.scenario-icon {
+  font-size: 16px;
+}
+.scenario-text {
+  flex: 1;
+  font-size: 12px;
+  color: var(--sepia);
+  font-style: italic;
+}
+.scenario-close {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px;
+}
+.scenario-close:hover { color: var(--gold); }
+
+/* Export Button */
+.export-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.export-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Message Actions */
+.msg-actions {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.bubble:hover .msg-actions { opacity: 1; }
+.msg-action-btn {
+  width: 22px;
+  height: 22px;
+  background: var(--ink2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s;
+}
+.msg-action-btn:hover { border-color: var(--gold); color: var(--gold); }
+.msg-action-btn.regen { color: var(--rust); }
+.msg-action-btn.regen:hover { border-color: var(--rust); color: var(--rust); }
+
+/* Debate Mode */
+.debate-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.debate-toggle label {
+  font-size: 11px;
+  color: var(--muted);
+}
+.debate-switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+}
+.debate-switch input { opacity: 0; width: 0; height: 0; }
+.debate-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--border2);
+  border-radius: 20px;
+  transition: .2s;
+}
+.debate-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background: var(--sepia);
+  border-radius: 50%;
+  transition: .2s;
+}
+.debate-switch input:checked + .debate-slider { background: var(--gold); }
+.debate-switch input:checked + .debate-slider:before { transform: translateX(16px); }
+
+.debate-opponent {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--ink3);
+  border-radius: 20px;
+  margin-right: 8px;
+}
+.debate-opponent.show { display: flex; }
+.debate-opponent select {
+  background: var(--ink);
+  border: 1px solid var(--border2);
+  color: var(--sepia);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  outline: none;
+}
+
+/* Language Selector */
+.lang-selector {
+  position: relative;
+  display: inline-block;
+}
+.lang-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.lang-btn:hover { border-color: var(--gold); color: var(--gold); }
+.lang-dropdown {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  background: var(--ink2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 6px;
+  min-width: 140px;
+  display: none;
+  margin-bottom: 6px;
+  z-index: 50;
+}
+.lang-dropdown.show { display: block; }
+.lang-option {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--sepia);
+  font-size: 12px;
+  padding: 6px 10px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background .15s;
+}
+.lang-option:hover { background: var(--ink3); }
+.lang-option.selected { color: var(--gold); }
 .modal-title {
   font-family: 'Playfair Display', serif;
   font-size: 20px;
@@ -869,6 +1218,7 @@ body {
         <div class="p2-subtitle" id="p2Sub"></div>
       </div>
       <div class="p2-actions">
+        <button class="export-btn" id="exportBtn" onclick="exportThread()" style="display:none" title="Export as Markdown">📥 Export</button>
         <button class="new-chat-btn" id="newChatBtn" onclick="startNewThread()" style="display:none">+ New Chat</button>
         <button class="del-fig-btn" id="delFigBtn" onclick="deleteFigure()" style="display:none" title="Remove figure">🗑</button>
       </div>
@@ -898,9 +1248,42 @@ body {
           <div class="p3-chat-name" id="chatName">—</div>
           <div class="p3-chat-sub" id="chatSub">—</div>
         </div>
+        
+        <!-- Debate Opponent (shown in input area) -->
+        <div class="debate-opponent" id="debateOpponent">
+          <span style="font-size:11px;color:var(--muted)">vs</span>
+          <select id="debateOpponentSelect" onchange="updateDebateOpponent()">
+            <option value="">Select opponent...</option>
+          </select>
+        </div>
+        
         <div class="p3-knowledge">
-          <div class="know-label" id="knowLabel">0%</div><button onclick="openModelSelector()" style="background:0;border:1px solid #3d342c;color:#8a7a68;padding:2px 6px;border-radius:4px;font-size:9px;cursor:pointer;margin-left:4px" title="Change AI Model">🤖</button>
+          <div class="know-label" id="knowLabel">0%</div><button onclick="openModelSelector()" style="background:0;border:1px solid #3d342c;color:#8a7a68;padding:2px 6px;border-radius:4px;font-size:9px;cursor:pointer;margin-left:4px" title="Settings">⚙️</button>
           <div class="know-bar"><div class="know-fill" id="knowFill" style="width:0%"></div></div>
+        </div>
+        
+        <!-- Language Selector -->
+        <div class="lang-selector">
+          <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()" title="Response Language">🌐 EN</button>
+          <div class="lang-dropdown" id="langDropdown">
+            <button class="lang-option selected" onclick="setLanguage('en')">English</button>
+            <button class="lang-option" onclick="setLanguage('es')">Español</button>
+            <button class="lang-option" onclick="setLanguage('fr')">Français</button>
+            <button class="lang-option" onclick="setLanguage('de')">Deutsch</button>
+            <button class="lang-option" onclick="setLanguage('it')">Italiano</button>
+            <button class="lang-option" onclick="setLanguage('pt')">Português</button>
+            <button class="lang-option" onclick="setLanguage('la')">Latin</button>
+            <button class="lang-option" onclick="setLanguage('grc')">Ancient Greek</button>
+          </div>
+        </div>
+        
+        <!-- Debate Toggle -->
+        <div class="debate-toggle">
+          <label>Debate</label>
+          <label class="debate-switch">
+            <input type="checkbox" id="debateToggle" onchange="toggleDebateMode()">
+            <span class="debate-slider"></span>
+          </label>
         </div>
       </div>
 
@@ -933,31 +1316,135 @@ body {
 
 <div class="toast" id="toast"></div>
 
-<!-- Model Selector Modal -->
+<!-- RESEARCH MODAL -->
+<div class="overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title" id="mTitle">Summoning…</div>
+    <div class="modal-sub">Researching historical records via Claude (free via Puter.js)</div>
+    <div class="rlog" id="rlog"></div>
+    <div class="pbar"><div class="pbar-fill" id="pbar"></div></div>
+    <div class="modal-btns">
+      <button class="btn-ghost" onclick="cancelR()">Cancel</button>
+      <button class="btn-gold" id="mDone" style="display:none" onclick="closeModal()">Open Conversation →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODEL & PERSONALITY MODAL -->
 <div id="modelModal" class="overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
-<div class="modal" style="max-width:320px">
-<div class="modal-title">🤖 AI Model</div>
-<div class="modal-section">
-<div class="form-group"><label>Provider</label>
-<select id="modelProvider" onchange="updateProviderModels()">
-<option value="anthropic">Anthropic (Claude)</option>
-<option value="openai">OpenAI (GPT)</option>
-<option value="google">Google (Gemini)</option>
-<option value="xai">xAI (Grok)</option>
-</select></div>
-<div class="form-group"><label>Model</label>
-<select id="modelSelect"></select></div>
-</div>
-<div class="modal-section">
-<div class="form-group"><label>Portrait</label>
-<button class="btn-ghost" style="width:100%" onclick="generatePortrait()">🖼️ Generate Portrait</button>
-</div>
-</div>
-<div class="modal-btns">
-<button class="btn-ghost" onclick="document.getElementById('modelModal').style.display='none'">Cancel</button>
-<button class="btn-gold" onclick="saveModelChoice()">Save</button>
-</div>
-</div>
+  <div class="modal">
+    <div class="modal-title" id="modelModalTitle">Configure Figure</div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchModalTab('model')">🤖 Model</button>
+      <button class="modal-tab" onclick="switchModalTab('personality')">🎭 Personality</button>
+      <button class="modal-tab" onclick="switchModalTab('prompt')">📝 Prompt</button>
+      <button class="modal-tab" onclick="switchModalTab('scenario')">🎬 Scenario</button>
+      <button class="modal-tab" onclick="switchModalTab('connections')">🔗 Figures</button>
+    </div>
+    
+    <!-- Model Tab -->
+    <div id="tab-model" class="modal-tab-content">
+      <div class="modal-section">
+        <div class="modal-section-title">AI Model</div>
+        <div class="form-group">
+          <label>Provider</label>
+          <select id="modelProvider" onchange="updateProviderModels()" style="width:100%;padding:10px;background:var(--ink);border:1px solid var(--border2);border-radius:6px;color:var(--sepia)">
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="openai">OpenAI (GPT)</option>
+            <option value="google">Google (Gemini)</option>
+            <option value="xai">xAI (Grok)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Model</label>
+          <select id="modelSelect" style="width:100%;padding:10px;background:var(--ink);border:1px solid var(--border2);border-radius:6px;color:var(--sepia)"></select>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Portrait</div>
+        <button class="btn-ghost" style="width:100%" onclick="generatePortrait()">🖼️ Generate Portrait</button>
+      </div>
+    </div>
+    
+    <!-- Personality Tab -->
+    <div id="tab-personality" class="modal-tab-content" style="display:none">
+      <div class="modal-section">
+        <div class="modal-section-title">Personality Traits</div>
+        <div class="form-group">
+          <label>Formality <span class="slider-value" id="formalityVal">70%</span></label>
+          <input type="range" id="formalitySlider" min="0" max="100" value="70" oninput="updatePersonalitySliders()">
+          <div class="slider-labels"><span>Casual</span><span>Formal</span></div>
+        </div>
+        <div class="form-group">
+          <label>Verbosity <span class="slider-value" id="verbosityVal">50%</span></label>
+          <input type="range" id="verbositySlider" min="0" max="100" value="50" oninput="updatePersonalitySliders()">
+          <div class="slider-labels"><span>Brief</span><span>Detailed</span></div>
+        </div>
+        <div class="form-group">
+          <label>Wit <span class="slider-value" id="witVal">40%</span></label>
+          <input type="range" id="witSlider" min="0" max="100" value="40" oninput="updatePersonalitySliders()">
+          <div class="slider-labels"><span>Serious</span><span>Witty</span></div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-gold" onclick="savePersonality()">Save Personality</button>
+      </div>
+    </div>
+    
+    <!-- Prompt Tab -->
+    <div id="tab-prompt" class="modal-tab-content" style="display:none">
+      <div class="modal-section">
+        <div class="modal-section-title">
+          System Prompt 
+          <span class="modified-badge" id="promptModified" style="display:none">Modified</span>
+        </div>
+        <div class="form-group prompt-editor">
+          <textarea id="systemPromptEditor" placeholder="Enter system prompt..." oninput="markPromptModified()"></textarea>
+          <span class="prompt-chars" id="promptChars">0 chars</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn-ghost" onclick="resetPrompt()">↺ Reset</button>
+          <button class="btn-gold" onclick="savePrompt()">Save Prompt</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scenario Tab -->
+    <div id="tab-scenario" class="modal-tab-content" style="display:none">
+      <div class="modal-section">
+        <div class="modal-section-title">Historical Scenario</div>
+        <div class="form-group">
+          <label>Set the scene (e.g., "At a dinner party in ancient Rome...")</label>
+          <textarea id="scenarioInput" placeholder="Describe the historical context or setting..." style="min-height:80px" oninput="updateScenarioPreview()"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn-gold" onclick="saveScenario()">Set Scenario</button>
+        </div>
+      </div>
+      <div class="modal-section" id="scenarioPreviewSection" style="display:none">
+        <div class="modal-section-title">Active Scenario</div>
+        <div class="scenario-banner" style="margin:0">
+          <span class="scenario-icon">🎬</span>
+          <span class="scenario-text" id="activeScenarioText"></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Connections Tab -->
+    <div id="tab-connections" class="modal-tab-content" style="display:none">
+      <div class="modal-section">
+        <div class="modal-section-title">Connected Figures</div>
+        <button class="btn-ghost" style="width:100%;margin-bottom:12px" onclick="findConnectedFigures()">
+          🔍 Find Connected Figures
+        </button>
+        <div id="connectedFiguresList" class="connected-figures"></div>
+      </div>
+    </div>
+    
+    <div class="modal-btns" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+      <button class="btn-ghost" onclick="document.getElementById('modelModal').style.display='none'">Close</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1001,6 +1488,7 @@ function migrateFigure(fig) {
   fig.wit ??= 40;
   fig.scenario ??= '';
   fig.connections ??= [];
+  fig.language ??= 'en';
   return fig;
 }
 
@@ -1106,6 +1594,11 @@ function openFigure(id) {
   document.getElementById('p2Sub').textContent = fig.era;
   document.getElementById('newChatBtn').style.display = 'inline-block';
   document.getElementById('delFigBtn').style.display = 'inline-block';
+  document.getElementById('exportBtn').style.display = 'inline-block';
+
+  // Load language preference
+  currentLanguage = fig.language || 'en';
+  document.getElementById('langBtn').textContent = '🌐 ' + LANG_NAMES[currentLanguage];
 
   renderThreads(fig);
   navTo(2);
@@ -1174,6 +1667,9 @@ function openConversation(figId, convId) {
   // Show chat panel
   document.getElementById('p3-welcome').style.display = 'none';
   document.getElementById('p3-chat').style.display = 'flex';
+
+  // Show scenario banner if active
+  setTimeout(() => renderScenarioBanner(), 100);
 
   renderMessages(fig, conv);
   navTo(3);
@@ -1264,8 +1760,18 @@ function appendBubble(msg, figName) {
   const b = document.createElement('div');
   b.className = 'bubble ' + (msg.role === 'user' ? 'tail-me' : 'tail-ai');
   b.innerHTML = fmtText(msg.content);
-  // Add TTS button for AI messages
+  
+  // Message Actions (Copy, Regenerate)
   if (msg.role === 'assistant') {
+    const actions = document.createElement('div');
+    actions.className = 'msg-actions';
+    actions.innerHTML = `
+      <button class="msg-action-btn" onclick="copyMessage(\`${esc(msg.content).replace(/`/g, '\\`')}\`)" title="Copy">📋</button>
+      <button class="msg-action-btn regen" onclick="regenerateMessage()" title="Regenerate">↻</button>
+    `;
+    b.appendChild(actions);
+    
+    // TTS button
     const ttsBtn = document.createElement('button');
     ttsBtn.className = 'tts-btn';
     ttsBtn.innerHTML = '🔊';
@@ -1295,6 +1801,7 @@ async function sendMsg() {
 
   const fig = state.figures[activeFigId];
   const conv = fig.conversations[activeConvId];
+  const lang = fig.language || 'en';
 
   const userMsg = { role: 'user', content: text, time: Date.now() };
   conv.messages.push(userMsg);
@@ -1311,8 +1818,12 @@ async function sendMsg() {
       content: m.content
     }));
 
+    // Language instruction
+    const langNames = { en: 'English', es: 'Spanish', fr: 'French', de: 'German', it: 'Italian', pt: 'Portuguese', la: 'Latin', grc: 'Ancient Greek' };
+    const langInstr = lang !== 'en' ? `\n\nIMPORTANT: Respond in ${langNames[lang] || 'English'}.` : '';
+
     // System context injected as a priming exchange
-    const systemMsg = fig.systemPrompt + '\n\n## Your Accumulated Knowledge:\n' + fig.markdown;
+    const systemMsg = fig.systemPrompt + '\n\n## Your Accumulated Knowledge:\n' + fig.markdown + langInstr;
     const fullMsgs = [
       { role: 'user', content: `[SYSTEM — follow for entire conversation]:\n${systemMsg}\n\nAcknowledge briefly.` },
       { role: 'assistant', content: 'Understood.' },
@@ -1603,7 +2114,227 @@ function openModelSelector() {
   document.getElementById('modelProvider').value = provider;
   updateProviderModels();
   document.getElementById('modelSelect').value = current;
+  // Load personality values
+  document.getElementById('formalitySlider').value = f.formality || 70;
+  document.getElementById('verbositySlider').value = f.verbosity || 50;
+  document.getElementById('witSlider').value = f.wit || 40;
+  updatePersonalitySliders();
+  // Load prompt
+  document.getElementById('systemPromptEditor').value = f.systemPrompt || '';
+  markPromptModified();
+  // Load scenario
+  document.getElementById('scenarioInput').value = f.scenario || '';
+  updateScenarioPreview();
+  // Switch to model tab
+  switchModalTab('model');
   document.getElementById('modelModal').style.display = 'flex';
+}
+
+function switchModalTab(tab) {
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.modal-tab-content').forEach(c => c.style.display = 'none');
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).style.display = 'block';
+}
+
+// Personality Sliders
+function updatePersonalitySliders() {
+  document.getElementById('formalityVal').textContent = document.getElementById('formalitySlider').value + '%';
+  document.getElementById('verbosityVal').textContent = document.getElementById('verbositySlider').value + '%';
+  document.getElementById('witVal').textContent = document.getElementById('witSlider').value + '%';
+}
+
+function savePersonality() {
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  f.formality = parseInt(document.getElementById('formalitySlider').value);
+  f.verbosity = parseInt(document.getElementById('verbositySlider').value);
+  f.wit = parseInt(document.getElementById('witSlider').value);
+  // Inject into system prompt
+  f.systemPrompt = f.systemPrompt || f.originalSystemPrompt;
+  const personalityLine = `\n\nPERSONALITY: Formality ${f.formality}%, Verbosity ${f.verbosity}%, Wit ${f.wit}%`;
+  if (!f.systemPrompt.includes('PERSONALITY:')) {
+    f.systemPrompt += personalityLine;
+  } else {
+    f.systemPrompt = f.systemPrompt.replace(/PERSONALITY: Formality \d+%, Verbosity \d+%, Wit \d+%/i, 
+      `PERSONALITY: Formality ${f.formality}%, Verbosity ${f.verbosity}%, Wit ${f.wit}%`);
+  }
+  f.originalSystemPrompt = f.originalSystemPrompt || f.systemPrompt;
+  f.promptEdited = true;
+  save();
+  document.getElementById('promptModified').style.display = 'inline-block';
+  document.getElementById('systemPromptEditor').value = f.systemPrompt;
+  markPromptModified();
+  showToast('Personality saved!');
+}
+
+// Prompt Editor
+function markPromptModified() {
+  const editor = document.getElementById('systemPromptEditor');
+  const chars = editor.value.length;
+  document.getElementById('promptChars').textContent = chars + ' chars';
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  const original = f.originalSystemPrompt || f.systemPrompt;
+  if (editor.value !== original) {
+    document.getElementById('promptModified').style.display = 'inline-block';
+    f.promptEdited = true;
+  } else {
+    document.getElementById('promptModified').style.display = 'none';
+    f.promptEdited = false;
+  }
+}
+
+function resetPrompt() {
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  f.systemPrompt = f.originalSystemPrompt || f.systemPrompt;
+  document.getElementById('systemPromptEditor').value = f.systemPrompt;
+  document.getElementById('promptModified').style.display = 'none';
+  f.promptEdited = false;
+  showToast('Prompt reset to original');
+}
+
+function savePrompt() {
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  f.systemPrompt = document.getElementById('systemPromptEditor').value;
+  f.originalSystemPrompt = f.originalSystemPrompt || f.systemPrompt;
+  f.promptEdited = true;
+  save();
+  document.getElementById('promptModified').style.display = 'none';
+  showToast('System prompt saved!');
+}
+
+// Scenario
+function updateScenarioPreview() {
+  const scenario = document.getElementById('scenarioInput').value;
+  const preview = document.getElementById('scenarioPreviewSection');
+  if (scenario.trim()) {
+    preview.style.display = 'block';
+    document.getElementById('activeScenarioText').textContent = scenario;
+  } else {
+    preview.style.display = 'none';
+  }
+}
+
+function saveScenario() {
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  const scenario = document.getElementById('scenarioInput').value.trim();
+  f.scenario = scenario;
+  // Prepend to system prompt
+  if (scenario) {
+    const scenarioLine = `\n\nSCENARIO: ${scenario}`;
+    if (!f.systemPrompt.includes('SCENARIO:')) {
+      f.systemPrompt = f.systemPrompt + scenarioLine;
+    } else {
+      f.systemPrompt = f.systemPrompt.replace(/SCENARIO: .*/i, scenarioLine.trim());
+    }
+  }
+  save();
+  renderScenarioBanner();
+  showToast(scenario ? 'Scenario activated!' : 'Scenario cleared');
+}
+
+function renderScenarioBanner() {
+  const existing = document.getElementById('scenarioBanner');
+  if (existing) existing.remove();
+  
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  if (!f.scenario) return;
+  
+  const header = document.getElementById('p3-chat').querySelector('.p3-header');
+  const banner = document.createElement('div');
+  banner.id = 'scenarioBanner';
+  banner.className = 'scenario-banner';
+  banner.innerHTML = `
+    <span class="scenario-icon">🎬</span>
+    <span class="scenario-text">${esc(f.scenario)}</span>
+    <button class="scenario-close" onclick="clearScenario()" title="Clear scenario">✕</button>
+  `;
+  header.parentNode.insertBefore(banner, header.nextSibling);
+}
+
+function clearScenario() {
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  f.scenario = '';
+  f.systemPrompt = f.systemPrompt.replace(/\n\nSCENARIO: .*/i, '');
+  save();
+  const banner = document.getElementById('scenarioBanner');
+  if (banner) banner.remove();
+  document.getElementById('scenarioInput').value = '';
+  updateScenarioPreview();
+  showToast('Scenario cleared');
+}
+
+// Connected Figures
+async function findConnectedFigures() {
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  const list = document.getElementById('connectedFiguresList');
+  list.innerHTML = '<div style="text-align:center;padding:20px"><span class="loading-spinner"></span><br><span style="color:var(--muted);font-size:12px">Finding connected figures...</span></div>';
+  
+  try {
+    const prompt = `Find 4 historically significant figures connected to ${f.name}. For each, provide: name, relationship (e.g., "student", "rival", "colleague"), and a brief reason. Return as JSON array: [{"name":"Name","relationship":"relation","reason":"why"}]`;
+    const res = await puter.ai.chat(prompt, { model: 'claude-sonnet-4-6' });
+    const text = res?.message?.content?.[0]?.text || '';
+    let figures = [];
+    try {
+      const match = text.match(/\[[\s\S]*\]/);
+      if (match) figures = JSON.parse(match[0]);
+    } catch {
+      figures = [
+        { name: f.name.split(' ')[0] + ' Student', relationship: 'Student', reason: 'Learned from ' + f.name },
+        { name: f.name.split(' ')[0] + ' Colleague', relationship: 'Colleague', reason: 'Worked alongside ' + f.name },
+        { name: f.name.split(' ')[0] + ' Rival', relationship: 'Rival', reason: 'Competed with ' + f.name },
+        { name: f.name.split(' ')[0] + ' Mentor', relationship: 'Mentor', reason: 'Influenced ' + f.name }
+      ];
+    }
+    f.connections = figures;
+    save();
+    renderConnectedFigures(figures);
+    showToast('Found ' + figures.length + ' connected figures');
+  } catch(e) {
+    list.innerHTML = '<div style="color:var(--rust);font-size:12px;text-align:center">Error: ' + e.message + '</div>';
+  }
+}
+
+function renderConnectedFigures(figures) {
+  const list = document.getElementById('connectedFiguresList');
+  if (!figures || !figures.length) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center">No connections found</div>';
+    return;
+  }
+  list.innerHTML = '';
+  figures.forEach(cf => {
+    const initial = cf.name.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const item = document.createElement('div');
+    item.className = 'connected-item';
+    item.innerHTML = `
+      <div class="connected-avatar">${initial}</div>
+      <div class="connected-info">
+        <div class="connected-name">${cf.name}</div>
+        <div class="connected-rel">${cf.relationship}: ${cf.reason}</div>
+      </div>
+      <button class="summon-btn" onclick="summonConnected('${esc(cf.name)}')">Summon</button>
+    `;
+    list.appendChild(item);
+  });
+}
+
+async function summonConnected(name) {
+  const id = slug(name);
+  if (state.figures[id]) {
+    openFigure(id);
+    showToast('Returning to ' + state.figures[id].name);
+    return;
+  }
+  document.getElementById('modelModal').style.display = 'none';
+  document.getElementById('figInput').value = name;
+  await initResearch();
 }
 
 function saveModelChoice() {
@@ -1613,6 +2344,132 @@ function saveModelChoice() {
   save();
   document.getElementById('modelModal').style.display = 'none';
   showToast('Model: ' + f.model);
+}
+
+// Export Thread as Markdown
+function exportThread() {
+  if (!activeFigId || !activeConvId) return;
+  const fig = state.figures[activeFigId];
+  const conv = fig.conversations[activeConvId];
+  
+  const date = new Date(conv.created).toLocaleDateString('en-US', { 
+    year: 'numeric', month: 'long', day: 'numeric' 
+  });
+  
+  let md = `# Conversation with ${fig.name}\n`;
+  md += `**Date:** ${date}\n`;
+  md += `**Era:** ${fig.era}\n\n---\n\n`;
+  
+  conv.messages.forEach(m => {
+    if (m.role === 'user') {
+      md += `**You:** ${m.content}\n\n`;
+    } else {
+      md += `**${fig.name}:** ${m.content}\n\n`;
+    }
+  });
+  
+  // Download file
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${slug(fig.name)}-${slug(conv.label)}.md`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📥 Exported as Markdown');
+}
+
+// Message Actions (Copy, Regenerate)
+function copyMessage(content) {
+  navigator.clipboard.writeText(content).then(() => {
+    showToast('📋 Copied!');
+  });
+}
+
+async function regenerateMessage(msgIndex) {
+  if (!activeFigId || !activeConvId) return;
+  const fig = state.figures[activeFigId];
+  const conv = fig.conversations[activeConvId];
+  
+  // Find the message to regenerate (last AI message)
+  const aiMessages = conv.messages.filter(m => m.role === 'assistant');
+  if (aiMessages.length === 0) return;
+  
+  const msgToRegen = aiMessages[aiMessages.length - 1];
+  const msgIndex = conv.messages.indexOf(msgToRegen);
+  
+  // Remove the message and subsequent messages
+  conv.messages = conv.messages.slice(0, msgIndex);
+  
+  // Re-render and re-send
+  renderMessages(fig, conv);
+  
+  // Re-send the last user message
+  const lastUserMsg = conv.messages.filter(m => m.role === 'user').slice(-1)[0];
+  if (lastUserMsg) {
+    await sendMsg();
+  }
+}
+
+// Language Selector
+const LANG_NAMES = { en: 'EN', es: 'ES', fr: 'FR', de: 'DE', it: 'IT', pt: 'PT', la: 'LA', grc: 'GRC' };
+let currentLanguage = 'en';
+
+function toggleLangDropdown() {
+  document.getElementById('langDropdown').classList.toggle('show');
+}
+
+function setLanguage(lang) {
+  currentLanguage = lang;
+  document.getElementById('langBtn').textContent = '🌐 ' + LANG_NAMES[lang];
+  document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('selected'));
+  event.target.classList.add('selected');
+  document.getElementById('langDropdown').classList.remove('show');
+  
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  f.language = lang;
+  save();
+  showToast('Language: ' + LANG_NAMES[lang]);
+}
+
+// Debate Mode
+let debateMode = false;
+let debateOpponent = null;
+
+function toggleDebateMode() {
+  debateMode = document.getElementById('debateToggle').checked;
+  const opponentDiv = document.getElementById('debateOpponent');
+  
+  if (debateMode) {
+    opponentDiv.classList.add('show');
+    populateDebateOpponents();
+  } else {
+    opponentDiv.classList.remove('show');
+    debateOpponent = null;
+  }
+}
+
+function populateDebateOpponents() {
+  const select = document.getElementById('debateOpponentSelect');
+  select.innerHTML = '<option value="">Select opponent...</option>';
+  
+  Object.values(state.figures).forEach(f => {
+    if (f.id !== activeFigId) {
+      const opt = document.createElement('option');
+      opt.value = f.id;
+      opt.textContent = f.name;
+      select.appendChild(opt);
+    }
+  });
+}
+
+function updateDebateOpponent() {
+  const select = document.getElementById('debateOpponentSelect');
+  debateOpponent = select.value ? state.figures[select.value] : null;
+  if (debateOpponent) {
+    showToast('Debating with ' + debateOpponent.name);
+  }
 }
 function wait(ms) { return new Promise(r=>setTimeout(r,ms)); }
 function autoH(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
@@ -1678,39 +2535,6 @@ renderP1();
 document.getElementById('figInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') initResearch();
 });
-function toggleStar(e,id){e.stopPropagation();const f=state.figures[id];f.starred=!f.starred;save();renderP1();showToast(f.starred?'★ Starred':'☆ Unstarred')}</script>
-
-<!-- Model Selector Modal -->
-<div id="modelModal" class="overlay" style="display:none">
-<div class="modal" style="max-width:320px">
-<div class="modal-title">Select AI Model</div>
-<div class="modal-section">
-<div style="margin-bottom:10px"><label style="font-size:11px;color:#8a7a68">Provider</label>
-<select id="modelProvider" onchange="updateProviderModels()" style="width:100%;padding:8px;background:#3d342c;border:1px solid #3d342c;border-radius:6px;color:#f5ede0">
-<option value="anthropic">Anthropic (Claude)</option>
-<option value="openai">OpenAI (GPT)</option>
-<option value="google">Google (Gemini)</option>
-<option value="xai">xAI (Grok)</option>
-</select></div>
-<div><label style="font-size:11px;color:#8a7a68">Model</label>
-<select id="modelSelect" style="width:100%;padding:8px;background:#3d342c;border:1px solid #3d342c;border-radius:6px;color:#f5ede0"></select></div>
-</div>
-<div style="display:flex;gap:8px;justify-content:flex-end">
-<button onclick="document.getElementById('modelModal').style.display='none'" class="btn-ghost" style="padding:8px 14px;border-radius:6px;background:0;border:1px solid #3d342c;color:#8a7a68">Cancel</button>
-<button onclick="saveModelChoice()" class="btn-gold" style="padding:8px 14px;border-radius:6px;background:#b8862e;border:0;color:#1a1612;font-weight:700">Save</button>
-</div>
-</div>
-</div>
-
-<script>
-const PROVIDERS={anthropic:['claude-sonnet-4-6','claude-opus-4-6','claude-haiku-4-5'],openai:['gpt-4o','gpt-4o-mini','o1-mini'],google:['gemini-1-5-pro','gemini-1-5-flash'],xai:['grok-2','grok-2-vision']};
-const PROVIDER_NAMES={anthropic:'Claude',openai:'GPT',google:'Gemini',xai:'Grok'};
-
-function updateProviderModels(){const p=document.getElementById('modelProvider').value;const s=document.getElementById('modelSelect');s.innerHTML='';PROVIDERS[p].forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;s.appendChild(o)})}
-
-function openModelSelector(){if(!activeFigId)return;const f=state.figures[activeFigId];document.getElementById('modelProvider').value=f.model?.split('-')[0]||'anthropic';updateProviderModels();const current=f.model||'claude-sonnet-4-6';document.getElementById('modelSelect').value=current;document.getElementById('modelModal').style.display='flex'}
-
-function saveModelChoice(){if(!activeFigId)return;const f=state.figures[activeFigId];f.model=document.getElementById('modelSelect').value;save();document.getElementById('modelModal').style.display='none';showToast('Model: '+f.model)}
-function toggleStar(e,id){e.stopPropagation();const f=state.figures[id];f.starred=!f.starred;save();renderP1();showToast(f.starred?'★ Starred':'☆ Unstarred')}</script>
+</script>
 </body>
 </html>
