@@ -2072,10 +2072,10 @@ function openModal(name) {
   document.getElementById('pbar').style.width = '0%';
   document.getElementById('mDone').style.display = 'none';
   document.getElementById('mDone').textContent = 'Open Conversation →';
-  document.getElementById('modal').classList.add('open');
+  document.getElementById('modal').style.display = 'flex';
 }
 function closeModal() {
-  document.getElementById('modal').classList.remove('open');
+  document.getElementById('modal').style.display = 'none';
   if (activeFigId && activeConvId) {
     openFigure(activeFigId);
     renderThreads(state.figures[activeFigId]);
@@ -2084,7 +2084,7 @@ function closeModal() {
 }
 function cancelR() {
   cancelled = true;
-  document.getElementById('modal').classList.remove('open');
+  document.getElementById('modal').style.display = 'none';
   document.getElementById('summonBtn').disabled = false;
 }
 function log(line) {
