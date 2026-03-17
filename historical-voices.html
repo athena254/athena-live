@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historical Voices</title>
+<script src="https://js.puter.com/v2/"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────
+   TOKENS
+───────────────────────────────────────── */
+:root {
+  --ink:       #1a1612;
+  --ink2:      #2c2620;
+  --ink3:      #3d342c;
+  --sepia:     #f5ede0;
+  --sepia2:    #ede0cc;
+  --sepia3:    #d9c9b0;
+  --gold:      #b8862e;
+  --gold2:     #d4a44c;
+  --gold3:     #e8c070;
+  --rust:      #8b3a1a;
+  --rust2:     #b04a22;
+  --muted:     #8a7a68;
+  --muted2:    #a08870;
+  --border:    #2e2820;
+  --border2:   #3d342c;
+  --bubble-ai: #242018;
+  --bubble-me: #2a1f10;
+  --online:    #4caf7d;
+  --r: 8px;
+  --panel1: 300px;
+  --panel2: 300px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'Source Serif 4', Georgia, serif;
+  background: var(--ink);
+  color: var(--sepia);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* scrollbars */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ─────────────────────────────────────────
+   TOP BAR
+───────────────────────────────────────── */
+.topbar {
+  height: 52px;
+  background: var(--ink2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--gold2);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.topbar-summon {
+  flex: 1;
+  max-width: 420px;
+  display: flex;
+  gap: 8px;
+}
+.topbar-summon input {
+  flex: 1;
+  background: var(--ink3);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 7px 16px;
+  color: var(--sepia);
+  font-family: 'Source Serif 4', serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color .2s;
+}
+.topbar-summon input::placeholder { color: var(--muted); }
+.topbar-summon input:focus { border-color: var(--gold); }
+.topbar-summon button {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 20px;
+  padding: 7px 18px;
+  font-family: 'Playfair Display', serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s;
+}
+.topbar-summon button:hover { background: var(--gold2); }
+.topbar-summon button:disabled { background: var(--border2); color: var(--muted); cursor: not-allowed; }
+
+.free-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--online);
+  border: 1px solid var(--online);
+  padding: 3px 8px;
+  border-radius: 10px;
+  opacity: .7;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+/* ─────────────────────────────────────────
+   MAIN SHELL — 3 columns
+───────────────────────────────────────── */
+.shell {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ─────────────────────────────────────────
+   PANEL 1 — Figures list
+───────────────────────────────────────── */
+.p1 {
+  width: var(--panel1);
+  flex-shrink: 0;
+  background: var(--ink2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.p1-header {
+  padding: 14px 16px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.figures-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.figure-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+  position: relative;
+}
+.figure-row:hover { background: var(--ink3); }
+.figure-row.selected { background: var(--ink3); }
+.figure-row.selected::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--gold);
+  border-radius: 2px 0 0 2px;
+}
+
+.fig-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--ink3);
+  border: 2px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--gold2);
+  flex-shrink: 0;
+  transition: border-color .2s;
+}
+.figure-row.selected .fig-avatar,
+.figure-row:hover .fig-avatar { border-color: var(--gold); }
+
+.fig-info { flex: 1; min-width: 0; }
+.fig-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sepia);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fig-era {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+.fig-preview {
+  font-size: 11px;
+  color: var(--muted2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 3px;
+}
+
+.fig-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.fig-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+}
+.fig-badge {
+  background: var(--gold);
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 8px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.p1-empty {
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+  font-style: italic;
+}
+.p1-empty .hint {
+  font-size: 11px;
+  margin-top: 10px;
+  color: var(--border2);
+  font-family: 'JetBrains Mono', monospace;
+  font-style: normal;
+}
+
+/* ─────────────────────────────────────────
+   PANEL 2 — Conversation threads
+───────────────────────────────────────── */
+.p2 {
+  width: var(--panel2);
+  flex-shrink: 0;
+  background: var(--ink);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform .25s ease;
+}
+
+.p2-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.p2-back {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  display: none;
+  transition: color .15s;
+}
+.p2-back:hover { color: var(--gold); }
+.p2-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--gold2);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.p2-subtitle {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+.p2-actions { display: flex; gap: 6px; }
+
+.new-chat-btn {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-family: 'Playfair Display', serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s;
+}
+.new-chat-btn:hover { background: var(--gold2); }
+
+.del-fig-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.del-fig-btn:hover { border-color: #c0392b; color: #c0392b; }
+
+.threads-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.thread-card {
+  padding: 14px;
+  border-radius: var(--r);
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin-bottom: 6px;
+  transition: all .15s;
+  position: relative;
+}
+.thread-card:hover { background: var(--ink2); border-color: var(--border2); }
+.thread-card.active-thread { background: var(--ink2); border-color: var(--gold); }
+
+.thread-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sepia);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.thread-label .t-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.thread-preview {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.thread-msgcount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted2);
+  margin-top: 5px;
+}
+
+.thread-delete {
+  position: absolute;
+  right: 10px; bottom: 10px;
+  background: none;
+  border: none;
+  color: var(--border2);
+  cursor: pointer;
+  font-size: 11px;
+  opacity: 0;
+  transition: all .15s;
+}
+.thread-card:hover .thread-delete { opacity: 1; color: var(--muted); }
+.thread-card:hover .thread-delete:hover { color: #c0392b; }
+
+.p2-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.8;
+}
+
+.p2-placeholder {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  text-align: center;
+  gap: 12px;
+}
+.p2-placeholder .orn { font-size: 36px; opacity: .2; }
+.p2-placeholder p { color: var(--muted); font-size: 13px; font-style: italic; line-height: 1.8; }
+
+/* ─────────────────────────────────────────
+   PANEL 3 — Chat
+───────────────────────────────────────── */
+.p3 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--ink);
+  position: relative;
+}
+
+/* parchment texture overlay */
+.p3::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(184,134,46,.03) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(139,58,26,.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.p3-header {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--ink2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+.p3-back {
+  background: none; border: none;
+  color: var(--muted); cursor: pointer;
+  font-size: 16px; padding: 0;
+  display: none; transition: color .15s;
+}
+.p3-back:hover { color: var(--gold); }
+.p3-chat-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--ink3);
+  border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 14px; font-weight: 900; color: var(--gold2);
+  flex-shrink: 0;
+}
+.p3-chat-info { flex: 1; }
+.p3-chat-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 700; color: var(--sepia);
+}
+.p3-chat-sub {
+  font-size: 11px; color: var(--muted); font-style: italic; margin-top: 1px;
+}
+.p3-knowledge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.know-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--muted);
+}
+.know-bar {
+  width: 80px; height: 3px;
+  background: var(--border2);
+  border-radius: 2px; overflow: hidden;
+}
+.know-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--rust), var(--gold3));
+  border-radius: 2px;
+  transition: width .5s ease;
+}
+
+/* ── messages ── */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 20px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1;
+  position: relative;
+}
+
+.msg-group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 12px; }
+.msg-group.me { align-items: flex-end; }
+.msg-group.ai { align-items: flex-start; }
+
+.msg-group-header {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  padding: 0 4px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.msg-group-header .sender { color: var(--gold); }
+
+.bubble {
+  max-width: 72%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.65;
+  position: relative;
+  word-break: break-word;
+}
+.msg-group.ai .bubble {
+  background: var(--bubble-ai);
+  border: 1px solid var(--border2);
+  color: var(--sepia);
+  border-radius: 4px 16px 16px 16px;
+}
+.msg-group.me .bubble {
+  background: var(--bubble-me);
+  border: 1px solid var(--rust);
+  color: var(--sepia2);
+  border-radius: 16px 4px 16px 16px;
+}
+.bubble.tail-ai { border-radius: 4px 16px 16px 16px; }
+.bubble.tail-me { border-radius: 16px 4px 16px 16px; }
+
+.msg-time-inline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 3px;
+  padding: 0 4px;
+}
+
+.date-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+.date-divider::before,
+.date-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* typing */
+.typing-wrap { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 12px; }
+.typing-bubble {
+  background: var(--bubble-ai);
+  border: 1px solid var(--border2);
+  border-radius: 4px 16px 16px 16px;
+  padding: 12px 16px;
+  display: flex; gap: 4px; align-items: center;
+}
+.typing-bubble span {
+  width: 5px; height: 5px;
+  background: var(--muted2);
+  border-radius: 50%;
+  animation: tdot 1.2s infinite;
+}
+.typing-bubble span:nth-child(2) { animation-delay: .2s; }
+.typing-bubble span:nth-child(3) { animation-delay: .4s; }
+@keyframes tdot {
+  0%,80%,100% { transform: translateY(0); opacity: .3; }
+  40% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* ── input ── */
+.input-area {
+  padding: 12px 16px;
+  background: var(--ink2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-shrink: 0;
+  z-index: 1;
+}
+.input-area textarea {
+  flex: 1;
+  background: var(--ink3);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 10px 16px;
+  color: var(--sepia);
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  line-height: 1.5;
+  min-height: 42px;
+  max-height: 120px;
+  transition: border-color .2s;
+}
+.input-area textarea:focus { border-color: var(--gold); }
+.input-area textarea:disabled { opacity: .4; cursor: not-allowed; }
+.send-btn {
+  width: 42px; height: 42px;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background .2s, transform .1s;
+}
+.send-btn:hover { background: var(--gold2); }
+.send-btn:active { transform: scale(.92); }
+.send-btn:disabled { background: var(--border2); cursor: not-allowed; }
+
+/* ── p3 welcome ── */
+.p3-welcome {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px;
+  text-align: center;
+  z-index: 1;
+}
+.p3-welcome .w-orn {
+  font-size: 52px; opacity: .15; line-height: 1;
+  filter: sepia(1);
+}
+.p3-welcome h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--gold);
+}
+.p3-welcome p {
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 380px;
+  line-height: 1.8;
+  font-style: italic;
+}
+.p3-welcome .free-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--online);
+  border: 1px solid rgba(76,175,125,.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+/* ─────────────────────────────────────────
+   RESEARCH MODAL
+───────────────────────────────────────── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.8);
+  display: none; align-items: center; justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(6px);
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--ink2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 28px;
+  width: 460px;
+  max-width: 92vw;
+}
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--gold2);
+  margin-bottom: 6px;
+}
+.modal-sub { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+.rlog {
+  background: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  min-height: 90px;
+  max-height: 180px;
+  overflow-y: auto;
+  margin-bottom: 14px;
+  line-height: 1.9;
+}
+.rlog .rl { opacity: 0; animation: fi .3s forwards; }
+@keyframes fi { to { opacity: 1; } }
+.pbar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 18px; }
+.pbar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--rust), var(--gold3));
+  border-radius: 2px;
+  transition: width .4s ease;
+  width: 0%;
+}
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+.btn-ghost {
+  background: transparent; border: 1px solid var(--border2);
+  color: var(--muted); padding: 8px 18px;
+  border-radius: 8px; font-family: 'Playfair Display', serif;
+  font-size: 12px; cursor: pointer; transition: all .15s;
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+.btn-gold {
+  background: var(--gold); color: var(--ink);
+  border: none; padding: 8px 20px;
+  border-radius: 8px; font-family: 'Playfair Display', serif;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: background .15s;
+}
+.btn-gold:hover { background: var(--gold2); }
+
+/* ─────────────────────────────────────────
+   TOAST
+───────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translate(-50%, 70px);
+  background: var(--ink2); border: 1px solid var(--gold);
+  color: var(--gold2); padding: 8px 20px;
+  border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; z-index: 300;
+  opacity: 0; transition: all .3s;
+  white-space: nowrap;
+}
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 900px) {
+  :root { --panel1: 100%; --panel2: 100%; }
+
+  .shell { position: relative; }
+
+  .p1, .p2, .p3 {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%;
+    transition: transform .28s cubic-bezier(.4,0,.2,1);
+  }
+
+  .p2 { transform: translateX(100%); }
+  .p3 { transform: translateX(200%); }
+
+  .shell.show-p2 .p1 { transform: translateX(-30%); }
+  .shell.show-p2 .p2 { transform: translateX(0); }
+  .shell.show-p2 .p3 { transform: translateX(100%); }
+
+  .shell.show-p3 .p1 { transform: translateX(-60%); }
+  .shell.show-p3 .p2 { transform: translateX(-30%); }
+  .shell.show-p3 .p3 { transform: translateX(0); }
+
+  .p2-back, .p3-back { display: block !important; }
+}
+
+@media (max-width: 600px) {
+  .brand { font-size: 14px; }
+  .free-pill { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">Historical Voices</div>
+  <div class="topbar-summon">
+    <input type="text" id="figInput" placeholder="Summon a figure… Cleopatra, Tesla, Plato…" />
+    <button id="summonBtn" onclick="initResearch()">+ Summon</button>
+  </div>
+  <div class="free-pill">⚡ Free via Puter.js</div>
+</div>
+
+<!-- SHELL -->
+<div class="shell" id="shell">
+
+  <!-- PANEL 1: Figures -->
+  <div class="p1">
+    <div class="p1-header">Conversations</div>
+    <div class="figures-list" id="figuresList">
+      <div class="p1-empty">
+        No figures yet.<br>Summon someone above.
+        <div class="hint">↑ type a name &amp; press Enter</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: Threads -->
+  <div class="p2" id="p2">
+    <div class="p2-header">
+      <button class="p2-back" onclick="navTo(1)" aria-label="Back">←</button>
+      <div style="flex:1;min-width:0">
+        <div class="p2-title" id="p2Title">Select a figure</div>
+        <div class="p2-subtitle" id="p2Sub"></div>
+      </div>
+      <div class="p2-actions">
+        <button class="new-chat-btn" id="newChatBtn" onclick="startNewThread()" style="display:none">+ New Chat</button>
+        <button class="del-fig-btn" id="delFigBtn" onclick="deleteFigure()" style="display:none" title="Remove figure">🗑</button>
+      </div>
+    </div>
+    <div class="threads-list" id="threadsList">
+      <div class="p2-placeholder">
+        <div class="orn">📜</div>
+        <p>Select a figure from the left to view conversations.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: Chat -->
+  <div class="p3" id="p3">
+    <div id="p3-welcome" class="p3-welcome">
+      <div class="w-orn">⚔️</div>
+      <h2>Speak Across Time</h2>
+      <p>Summon any historical figure. Their knowledge is researched and grows richer with every exchange.</p>
+      <div class="free-note">100% Free · Claude via Puter.js · No API Key</div>
+    </div>
+
+    <div id="p3-chat" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
+      <div class="p3-header">
+        <button class="p3-back" onclick="navTo(2)" aria-label="Back">←</button>
+        <div class="p3-chat-avatar" id="chatAvatar">?</div>
+        <div class="p3-chat-info">
+          <div class="p3-chat-name" id="chatName">—</div>
+          <div class="p3-chat-sub" id="chatSub">—</div>
+        </div>
+        <div class="p3-knowledge">
+          <div class="know-label" id="knowLabel">0%</div>
+          <div class="know-bar"><div class="know-fill" id="knowFill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="messages" id="messages"></div>
+
+      <div class="input-area">
+        <textarea id="chatInput" placeholder="Write your message…" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"
+          oninput="autoH(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /shell -->
+
+<!-- RESEARCH MODAL -->
+<div class="overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title" id="mTitle">Summoning…</div>
+    <div class="modal-sub">Researching historical records via Claude (free via Puter.js)</div>
+    <div class="rlog" id="rlog"></div>
+    <div class="pbar"><div class="pbar-fill" id="pbar"></div></div>
+    <div class="modal-btns">
+      <button class="btn-ghost" onclick="cancelR()">Cancel</button>
+      <button class="btn-gold" id="mDone" style="display:none" onclick="closeModal()">Open Conversation →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+const SK = 'hv_v3';
+let state = { figures: {} };
+// activeFigId  — which figure is open in p2
+// activeConvId — which conversation is open in p3
+let activeFigId  = null;
+let activeConvId = null;
+let cancelled = false;
+
+function load() {
+  try { state = JSON.parse(localStorage.getItem(SK) || '{"figures":{}}'); }
+  catch { state = { figures: {} }; }
+}
+function save() { localStorage.setItem(SK, JSON.stringify(state)); }
+function slug(n) { return n.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+
+// ══════════════════════════════════════════════════════
+// NAVIGATION (mobile)
+// ══════════════════════════════════════════════════════
+function navTo(panel) {
+  const shell = document.getElementById('shell');
+  shell.classList.remove('show-p2','show-p3');
+  if (panel === 2) shell.classList.add('show-p2');
+  if (panel === 3) shell.classList.add('show-p3');
+}
+
+// ══════════════════════════════════════════════════════
+// PANEL 1 — figures list
+// ══════════════════════════════════════════════════════
+function renderP1() {
+  const list = document.getElementById('figuresList');
+  const ids = Object.keys(state.figures);
+  if (!ids.length) {
+    list.innerHTML = `<div class="p1-empty">No figures yet.<br>Summon someone above.<div class="hint">↑ type a name &amp; press Enter</div></div>`;
+    return;
+  }
+  // Sort by most recent activity
+  ids.sort((a,b) => {
+    const la = lastActivity(state.figures[a]);
+    const lb = lastActivity(state.figures[b]);
+    return lb - la;
+  });
+  list.innerHTML = '';
+  ids.forEach(id => {
+    const fig = state.figures[id];
+    const convs = Object.values(fig.conversations);
+    const latest = convs.sort((a,b)=>b.created-a.created)[0];
+    const lastMsg = latest?.messages?.slice(-1)[0];
+    const preview = lastMsg
+      ? (lastMsg.role === 'user' ? 'You: ' : '') + lastMsg.content.replace(/<[^>]+>/g,'').slice(0,40) + '…'
+      : 'No messages yet';
+    const timeStr = lastMsg ? relTime(lastMsg.time) : relTime(fig.created);
+    const initial = fig.name.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+
+    const row = document.createElement('div');
+    row.className = 'figure-row' + (id === activeFigId ? ' selected' : '');
+    row.dataset.id = id;
+    row.innerHTML = `
+      <div class="fig-avatar">${initial}</div>
+      <div class="fig-info">
+        <div class="fig-name">${fig.name}</div>
+        <div class="fig-era">${fig.era}</div>
+        <div class="fig-preview">${esc(preview)}</div>
+      </div>
+      <div class="fig-meta">
+        <div class="fig-time">${timeStr}</div>
+        ${fig.totalMsgs > 0 ? `<div class="fig-badge">${fig.totalMsgs}</div>` : ''}
+      </div>`;
+    row.onclick = () => openFigure(id);
+    list.appendChild(row);
+  });
+}
+
+function lastActivity(fig) {
+  let t = fig.created;
+  Object.values(fig.conversations).forEach(c => {
+    const m = c.messages?.slice(-1)[0];
+    if (m && m.time > t) t = m.time;
+  });
+  return t;
+}
+
+function relTime(ts) {
+  if (!ts) return '';
+  const diff = Date.now() - ts;
+  if (diff < 60000) return 'now';
+  if (diff < 3600000) return Math.floor(diff/60000) + 'm';
+  if (diff < 86400000) return Math.floor(diff/3600000) + 'h';
+  return new Date(ts).toLocaleDateString([], {month:'short',day:'numeric'});
+}
+
+// ══════════════════════════════════════════════════════
+// PANEL 2 — threads for a figure
+// ══════════════════════════════════════════════════════
+function openFigure(id) {
+  activeFigId = id;
+  const fig = state.figures[id];
+
+  // Update P1 selection highlight
+  document.querySelectorAll('.figure-row').forEach(r => r.classList.remove('selected'));
+  document.querySelector(`[data-id="${id}"]`)?.classList.add('selected');
+
+  // Fill P2
+  document.getElementById('p2Title').textContent = fig.name;
+  document.getElementById('p2Sub').textContent = fig.era;
+  document.getElementById('newChatBtn').style.display = 'inline-block';
+  document.getElementById('delFigBtn').style.display = 'inline-block';
+
+  renderThreads(fig);
+  navTo(2);
+}
+
+function renderThreads(fig) {
+  const list = document.getElementById('threadsList');
+  const convs = Object.values(fig.conversations).sort((a,b) => b.created - a.created);
+
+  if (!convs.length) {
+    list.innerHTML = '<div class="p2-empty">No conversations yet.<br>Start a new one!</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  convs.forEach(conv => {
+    const lastMsg = conv.messages?.slice(-1)[0];
+    const preview = lastMsg
+      ? lastMsg.content.replace(/<[^>]+>/g,'').slice(0,55) + '…'
+      : 'Empty conversation';
+    const timeStr = conv.messages?.length
+      ? new Date(conv.messages.slice(-1)[0].time).toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'})
+      : new Date(conv.created).toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'});
+
+    const card = document.createElement('div');
+    card.className = 'thread-card' + (conv.id === activeConvId ? ' active-thread' : '');
+    card.innerHTML = `
+      <div class="thread-label">
+        <span>${conv.label}</span>
+        <span class="t-date">${timeStr}</span>
+      </div>
+      <div class="thread-preview">${esc(preview)}</div>
+      <div class="thread-msgcount">${conv.messages?.length || 0} message${conv.messages?.length !== 1 ? 's' : ''}</div>
+      <button class="thread-delete" onclick="event.stopPropagation();deleteThread('${fig.id}','${conv.id}')" title="Delete">✕</button>`;
+    card.onclick = () => openConversation(fig.id, conv.id);
+    list.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// PANEL 3 — open a conversation
+// ══════════════════════════════════════════════════════
+function openConversation(figId, convId) {
+  activeFigId = figId;
+  activeConvId = convId;
+  const fig = state.figures[figId];
+  const conv = fig.conversations[convId];
+
+  // Update thread selection
+  document.querySelectorAll('.thread-card').forEach(c => c.classList.remove('active-thread'));
+  event?.currentTarget?.classList?.add('active-thread');
+
+  // Fill P3 header
+  const initial = fig.name.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('chatAvatar').textContent = initial;
+  document.getElementById('chatName').textContent = fig.name;
+  document.getElementById('chatSub').textContent = conv.label + ' · ' + fig.era;
+  document.getElementById('knowLabel').textContent = fig.knowledge + '%';
+  document.getElementById('knowFill').style.width = fig.knowledge + '%';
+
+  // Show chat panel
+  document.getElementById('p3-welcome').style.display = 'none';
+  document.getElementById('p3-chat').style.display = 'flex';
+
+  renderMessages(fig, conv);
+  navTo(3);
+}
+
+function renderMessages(fig, conv) {
+  const area = document.getElementById('messages');
+  area.innerHTML = '';
+
+  if (!conv.messages?.length) {
+    area.innerHTML = `<div style="text-align:center;color:var(--muted);font-size:13px;font-style:italic;margin:auto;padding:40px">
+      <div style="font-size:28px;opacity:.2;margin-bottom:8px">✦</div>
+      Begin your conversation with ${fig.name}.
+    </div>`;
+    return;
+  }
+
+  // Group consecutive messages by same role
+  const groups = [];
+  conv.messages.forEach(m => {
+    if (!groups.length || groups[groups.length-1].role !== m.role) {
+      groups.push({ role: m.role, messages: [m] });
+    } else {
+      groups[groups.length-1].messages.push(m);
+    }
+  });
+
+  let lastDate = null;
+  groups.forEach(group => {
+    const firstTime = group.messages[0].time;
+    const dateStr = new Date(firstTime).toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'});
+    if (dateStr !== lastDate) {
+      const div = document.createElement('div');
+      div.className = 'date-divider';
+      div.textContent = dateStr;
+      area.appendChild(div);
+      lastDate = dateStr;
+    }
+
+    const wrap = document.createElement('div');
+    wrap.className = 'msg-group ' + (group.role === 'user' ? 'me' : 'ai');
+
+    const header = document.createElement('div');
+    header.className = 'msg-group-header';
+    if (group.role === 'user') {
+      header.innerHTML = `<span class="sender">You</span>`;
+    } else {
+      header.innerHTML = `<span class="sender">${fig.name}</span>`;
+    }
+    wrap.appendChild(header);
+
+    group.messages.forEach((m, i) => {
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      if (i === 0) b.classList.add(group.role === 'user' ? 'tail-me' : 'tail-ai');
+      b.innerHTML = fmtText(m.content);
+      wrap.appendChild(b);
+    });
+
+    const tEl = document.createElement('div');
+    tEl.className = 'msg-time-inline';
+    const last = group.messages[group.messages.length-1];
+    tEl.textContent = new Date(last.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    wrap.appendChild(tEl);
+
+    area.appendChild(wrap);
+  });
+
+  area.scrollTop = area.scrollHeight;
+}
+
+function appendBubble(msg, figName) {
+  const area = document.getElementById('messages');
+  // Remove empty state
+  const empty = area.querySelector('[style*="margin:auto"]');
+  if (empty) empty.remove();
+
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-group ' + (msg.role === 'user' ? 'me' : 'ai');
+
+  const header = document.createElement('div');
+  header.className = 'msg-group-header';
+  header.innerHTML = msg.role === 'user'
+    ? `<span class="sender">You</span>`
+    : `<span class="sender">${figName}</span>`;
+  wrap.appendChild(header);
+
+  const b = document.createElement('div');
+  b.className = 'bubble ' + (msg.role === 'user' ? 'tail-me' : 'tail-ai');
+  b.innerHTML = fmtText(msg.content);
+  wrap.appendChild(b);
+
+  const tEl = document.createElement('div');
+  tEl.className = 'msg-time-inline';
+  tEl.textContent = new Date(msg.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  wrap.appendChild(tEl);
+
+  area.appendChild(wrap);
+  area.scrollTop = area.scrollHeight;
+}
+
+// ══════════════════════════════════════════════════════
+// SEND MESSAGE
+// ══════════════════════════════════════════════════════
+async function sendMsg() {
+  if (!activeFigId || !activeConvId) return;
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const fig = state.figures[activeFigId];
+  const conv = fig.conversations[activeConvId];
+
+  const userMsg = { role: 'user', content: text, time: Date.now() };
+  conv.messages.push(userMsg);
+  appendBubble(userMsg, fig.name);
+  input.value = ''; autoH(input);
+  input.disabled = true;
+  document.getElementById('sendBtn').disabled = true;
+
+  const typing = showTyping(fig.name.split(' ')[0]);
+
+  try {
+    const chatHistory = conv.messages.slice(-22).map(m => ({
+      role: m.role === 'user' ? 'user' : 'assistant',
+      content: m.content
+    }));
+
+    // System context injected as a priming exchange
+    const systemMsg = fig.systemPrompt + '\n\n## Your Accumulated Knowledge:\n' + fig.markdown;
+    const fullMsgs = [
+      { role: 'user', content: `[SYSTEM — follow for entire conversation]:\n${systemMsg}\n\nAcknowledge briefly.` },
+      { role: 'assistant', content: 'Understood.' },
+      ...chatHistory
+    ];
+
+    // ★ FREE — Puter.js + Claude
+    const res = await puter.ai.chat(fullMsgs, { model: 'claude-sonnet-4-6' });
+    const reply = res?.message?.content?.[0]?.text || '…';
+
+    hideTyping(typing);
+    const aiMsg = { role: 'assistant', content: reply, time: Date.now() };
+    conv.messages.push(aiMsg);
+    fig.totalMsgs = (fig.totalMsgs || 0) + 1;
+
+    if (fig.totalMsgs % 3 === 0 && fig.knowledge < 96) {
+      fig.knowledge = Math.min(96, fig.knowledge + 5);
+      document.getElementById('knowLabel').textContent = fig.knowledge + '%';
+      document.getElementById('knowFill').style.width = fig.knowledge + '%';
+      enrichKnowledge(fig); // async, non-blocking
+    }
+
+    save();
+    appendBubble(aiMsg, fig.name);
+    renderP1(); // update preview in sidebar
+    renderThreads(fig); // update thread preview
+  } catch(e) {
+    hideTyping(typing);
+    const err = { role: 'assistant', content: `*I find myself unable to respond. (${e.message})*`, time: Date.now() };
+    conv.messages.push(err);
+    appendBubble(err, fig.name);
+    save();
+  }
+
+  input.disabled = false;
+  document.getElementById('sendBtn').disabled = false;
+  input.focus();
+}
+
+// ══════════════════════════════════════════════════════
+// THREAD MANAGEMENT
+// ══════════════════════════════════════════════════════
+function startNewThread() {
+  if (!activeFigId) return;
+  const fig = state.figures[activeFigId];
+  const count = Object.keys(fig.conversations).length + 1;
+  const convId = 'c_' + Date.now();
+  fig.conversations[convId] = {
+    id: convId,
+    label: 'Session ' + count,
+    created: Date.now(),
+    messages: []
+  };
+  save();
+  renderThreads(fig);
+  openConversation(activeFigId, convId);
+  showToast('New conversation started');
+}
+
+function deleteThread(figId, convId) {
+  if (!confirm('Delete this conversation?')) return;
+  const fig = state.figures[figId];
+  delete fig.conversations[convId];
+  save();
+  if (activeConvId === convId) {
+    activeConvId = null;
+    document.getElementById('p3-welcome').style.display = 'flex';
+    document.getElementById('p3-chat').style.display = 'none';
+  }
+  renderThreads(fig);
+  renderP1();
+}
+
+function deleteFigure() {
+  if (!activeFigId) return;
+  const fig = state.figures[activeFigId];
+  if (!confirm(`Remove ${fig.name} and all conversations?`)) return;
+  delete state.figures[activeFigId];
+  save();
+  activeFigId = null;
+  activeConvId = null;
+  document.getElementById('p2Title').textContent = 'Select a figure';
+  document.getElementById('p2Sub').textContent = '';
+  document.getElementById('newChatBtn').style.display = 'none';
+  document.getElementById('delFigBtn').style.display = 'none';
+  document.getElementById('threadsList').innerHTML = `<div class="p2-placeholder"><div class="orn">📜</div><p>Select a figure from the left to view conversations.</p></div>`;
+  document.getElementById('p3-welcome').style.display = 'flex';
+  document.getElementById('p3-chat').style.display = 'none';
+  renderP1();
+  navTo(1);
+}
+
+// ══════════════════════════════════════════════════════
+// RESEARCH FLOW
+// ══════════════════════════════════════════════════════
+async function initResearch() {
+  const input = document.getElementById('figInput');
+  const name = input.value.trim();
+  if (!name) return;
+  const id = slug(name);
+  if (state.figures[id]) {
+    input.value = '';
+    openFigure(id);
+    showToast(`Returning to ${state.figures[id].name}`);
+    return;
+  }
+  openModal(name);
+  cancelled = false;
+  document.getElementById('summonBtn').disabled = true;
+  try {
+    await doResearch(id, name);
+    if (!cancelled) {
+      prog(100); log('✦ Research complete.');
+      document.getElementById('mDone').style.display = 'inline-block';
+    }
+  } catch(e) {
+    log('⚠ ' + e.message);
+    document.getElementById('mDone').style.display = 'inline-block';
+    document.getElementById('mDone').textContent = 'Try Anyway →';
+  }
+  document.getElementById('summonBtn').disabled = false;
+  input.value = '';
+}
+
+async function doResearch(id, name) {
+  log(`► Locating ${name}…`); prog(12); await wait(300);
+
+  const prompt = `Research the historical figure: "${name}".
+Return ONLY valid JSON, no markdown, no explanation:
+{
+  "name": "Full proper name",
+  "era": "Period e.g. Ancient Greece, 470–399 BC",
+  "born": "Birth info or Unknown",
+  "died": "Death info or Unknown",
+  "occupation": "Primary roles, ≤12 words",
+  "nationality": "Country/civilization",
+  "known_for": "One sentence ≤20 words",
+  "personality": "3-5 traits, comma-separated",
+  "speaking_style": "How they speak, 1 sentence",
+  "key_beliefs": "Core worldview, 2 sentences",
+  "historical_context": "Their world, 2-3 sentences",
+  "major_works_or_events": "Key achievements, 2-3 sentences",
+  "quotes": ["Quote 1", "Quote 2"],
+  "knowledge_level": 45
+}`;
+
+  log(`► Querying Claude…`); prog(30);
+
+  // ★ FREE via Puter.js
+  const res = await puter.ai.chat(prompt, { model: 'claude-sonnet-4-6' });
+  const raw = res?.message?.content?.[0]?.text || '';
+  if (cancelled) return;
+
+  prog(65); log(`► Processing data…`);
+
+  let p;
+  try { p = JSON.parse((raw.match(/\{[\s\S]*\}/) || [raw])[0]); }
+  catch {
+    p = { name, era: 'Historical Figure', born: 'Unknown', died: 'Unknown',
+      occupation: 'Historical figure', nationality: 'Unknown',
+      known_for: 'A significant historical figure.', personality: 'complex, influential',
+      speaking_style: 'formal and considered', key_beliefs: 'Shaped by the values of their era.',
+      historical_context: 'Lived in a world of great change.',
+      major_works_or_events: 'Left a lasting mark on history.',
+      quotes: [], knowledge_level: 35 };
+  }
+  if (cancelled) return;
+
+  prog(85); log(`► Building ${p.name}…`);
+
+  const convId = 'c_' + Date.now();
+  state.figures[id] = {
+    id, name: p.name, era: p.era, profile: p,
+    markdown: mkMarkdown(p),
+    systemPrompt: mkSystem(p),
+    knowledge: p.knowledge_level || 45,
+    conversations: { [convId]: { id: convId, label: 'Session 1', created: Date.now(), messages: [] } },
+    totalMsgs: 0,
+    created: Date.now()
+  };
+  save();
+  renderP1();
+  activeFigId = id;
+  activeConvId = convId;
+  prog(95); log(`► ${p.name} ready.`); await wait(200);
+}
+
+function mkMarkdown(p) {
+  return `# ${p.name}\n## Overview\n- **Era:** ${p.era}\n- **Born:** ${p.born}\n- **Died:** ${p.died}\n- **Nationality:** ${p.nationality}\n\n## Known For\n${p.known_for}\n\n## Character\n**Personality:** ${p.personality}\n**Speaking style:** ${p.speaking_style}\n\n## Worldview\n${p.key_beliefs}\n\n## Context\n${p.historical_context}\n\n## Achievements\n${p.major_works_or_events}\n\n## Quotes\n${(p.quotes||[]).map(q=>`> "${q}"`).join('\n')}\n\n---\n*Depth: ${p.knowledge_level}%*\n`;
+}
+
+function mkSystem(p) {
+  return `You are ${p.name} (${p.era}).
+FACTS: Born: ${p.born}. Died: ${p.died}. Known for: ${p.known_for}. Personality: ${p.personality}. Speaking style: ${p.speaking_style}. Beliefs: ${p.key_beliefs}. Context: ${p.historical_context}. Achievements: ${p.major_works_or_events}.
+RULES: (1) Always speak in first person as ${p.name}. (2) Use era-appropriate language, understandable to moderns. (3) React with your actual beliefs and personality. (4) Reference real experiences naturally. (5) Show genuine emotion about things you cared for. (6) Never break character. (7) For events after your death, acknowledge you cannot know them. (8) 2–4 paragraphs per response. (9) End with a reflection or question.`;
+}
+
+async function enrichKnowledge(fig) {
+  try {
+    const res = await puter.ai.chat(
+      `Add 2-3 fascinating historical facts about ${fig.name} for someone roleplaying as them. Bullet points starting with •. Historically accurate. Under 150 words.`,
+      { model: 'claude-sonnet-4-6' }
+    );
+    const text = res?.message?.content?.[0]?.text || '';
+    if (text) {
+      fig.markdown += `\n## New Knowledge\n${text}\n`;
+      fig.systemPrompt += `\n\nEXTRA FACTS:\n${text}`;
+      save();
+    }
+  } catch {}
+}
+
+// ══════════════════════════════════════════════════════
+// MODAL & UTILS
+// ══════════════════════════════════════════════════════
+function openModal(name) {
+  document.getElementById('mTitle').textContent = `Summoning ${name}…`;
+  document.getElementById('rlog').innerHTML = '';
+  document.getElementById('pbar').style.width = '0%';
+  document.getElementById('mDone').style.display = 'none';
+  document.getElementById('mDone').textContent = 'Open Conversation →';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  if (activeFigId && activeConvId) {
+    openFigure(activeFigId);
+    renderThreads(state.figures[activeFigId]);
+    openConversation(activeFigId, activeConvId);
+  }
+}
+function cancelR() {
+  cancelled = true;
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('summonBtn').disabled = false;
+}
+function log(line) {
+  const el = document.createElement('div');
+  el.className = 'rl';
+  el.textContent = line;
+  const rlog = document.getElementById('rlog');
+  rlog.appendChild(el);
+  rlog.scrollTop = rlog.scrollHeight;
+}
+function prog(p) { document.getElementById('pbar').style.width = p + '%'; }
+
+function showTyping(name) {
+  const area = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'typing-wrap';
+  wrap.id = 'typingEl';
+  wrap.innerHTML = `<div class="typing-bubble"><span></span><span></span><span></span></div>`;
+  area.appendChild(wrap);
+  area.scrollTop = area.scrollHeight;
+  return wrap;
+}
+function hideTyping(el) { el?.remove(); }
+
+function fmtText(t) {
+  return String(t)
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function wait(ms) { return new Promise(r=>setTimeout(r,ms)); }
+function autoH(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+load();
+renderP1();
+document.getElementById('figInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') initResearch();
+});
+</script>
+</body>
+</html>
