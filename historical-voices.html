@@ -1174,9 +1174,56 @@ body {
 }
 .btn-gold:hover { background: var(--gold2); }
 
-/* ─────────────────────────────────────────
-   TOAST
-───────────────────────────────────────── */
+/* ═══════════════════════════════════════
+   DEBATE SYSTEM
+══════════════════════════════════════ */
+.debate-setup-modal { max-width: 480px; }
+.debate-setup-modal .modal-title { color: var(--gold2); }
+.debate-fig-select { display: flex; gap: 10px; margin-bottom: 12px; }
+.debate-fig-select select {
+  flex: 1; padding: 10px; background: var(--ink); border: 1px solid var(--border2);
+  border-radius: 6px; color: var(--sepia); font-size: 13px;
+}
+.debate-opts { margin: 16px 0; }
+.debate-opt { display: block; margin: 8px 0; color: var(--sepia); font-size: 13px; cursor: pointer; }
+.debate-opt input { margin-right: 8px; }
+.debate-topic { width: 100%; padding: 10px; background: var(--ink); border: 1px solid var(--border2); border-radius: 6px; color: var(--sepia); font-size: 13px; margin: 8px 0; }
+.debate-suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.debate-suggestion {
+  background: var(--ink3); border: 1px solid var(--border2); border-radius: 8px;
+  padding: 8px 12px; font-size: 11px; cursor: pointer; transition: all .2s;
+}
+.debate-suggestion:hover { border-color: var(--gold); background: var(--ink2); }
+.debate-card {
+  display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--ink2);
+  border: 1px solid var(--border2); border-radius: 8px; margin-bottom: 8px; cursor: pointer;
+}
+.debate-card:hover { border-color: var(--gold); }
+.debate-card-icon { font-size: 24px; }
+.debate-card-info { flex: 1; }
+.debate-card-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--sepia); }
+.debate-card-sub { font-size: 11px; color: var(--muted); }
+.debate-avatar-stack { display: flex; }
+.debate-avatar-stack .fig-avatar { margin-left: -8px; border: 2px solid var(--ink2); }
+.debate-avatar-stack .fig-avatar:first-child { margin-left: 0; }
+.debate-header { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--ink2); border-bottom: 1px solid var(--border); }
+.debate-turn-counter { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); }
+.debate-controls { display: flex; gap: 6px; padding: 8px 12px; background: var(--ink3); border-top: 1px solid var(--border); }
+.debate-controls button { padding: 6px 12px; font-size: 11px; border-radius: 6px; cursor: pointer; }
+.debate-msg { display: flex; gap: 10px; margin-bottom: 12px; }
+.debate-msg .fig-avatar { width: 36px; height: 36px; font-size: 12px; flex-shrink: 0; }
+.debate-bubble-wrap { flex: 1; }
+.debate-speaker-name { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+.debate-speaker-name .era { font-weight: 400; color: var(--muted); margin-left: 6px; font-size: 9px; }
+.debate-bubble { padding: 8px 12px; border-radius: 12px; background: var(--bubble-ai); border-left: 3px solid var(--gold); font-size: 13px; line-height: 1.5; }
+.debate-bubble.debater-2 { border-left-color: var(--rust); }
+.debate-bubble.debater-3 { border-left-color: #2a9d8f; }
+.debate-system-msg { text-align: center; padding: 8px 16px; margin: 12px 0; }
+.debate-system-msg span { background: var(--ink3); padding: 6px 16px; border-radius: 20px; font-size: 11px; color: var(--gold); }
+.debate-ended { background: linear-gradient(135deg, var(--ink2), var(--ink3)); border: 1px solid var(--gold); border-radius: 12px; padding: 16px; margin: 16px 0; }
+.debate-ended h4 { font-family: 'Playfair Display', serif; color: var(--gold2); margin-bottom: 12px; }
+
+/* TOAST */
 .toast {
   position: fixed; bottom: 24px; left: 50%;
   transform: translate(-50%, 70px);
@@ -1234,6 +1281,7 @@ body {
     <input type="text" id="figInput" placeholder="Summon a figure… Cleopatra, Tesla, Plato…" />
     <button id="summonBtn">+ Summon</button>
   </div>
+  <button onclick="openDebateModal()" style="background:0;border:1px solid var(--gold);color:var(--gold);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px">⚔️ Debate</button>
   <div class="free-pill">⚡ Free via Puter.js</div>
 </div>
 
@@ -1355,7 +1403,60 @@ body {
   </div>
 </div>
 
+<!-- DEBATE VIEW -->
+<div id="debateView" style="display:none;flex-direction:column;flex:1;background:var(--ink)">
+  <div class="debate-header" id="debateViewHeader"></div>
+  <div class="messages" id="debateMessages" style="flex:1;overflow-y:auto;padding:16px"></div>
+  <div class="debate-controls" id="debateControls" style="display:flex;gap:8px;padding:12px;background:var(--ink3);border-top:1px solid var(--border)">
+    <button class="btn-ghost" onclick="pauseDebate(activeDebateId)">⏸️ Pause</button>
+    <button class="btn-ghost" onclick="resumeDebate(activeDebateId)">▶️ Resume</button>
+    <button class="btn-ghost" onclick="endDebate(activeDebateId)">🏁 End</button>
+  </div>
+  <div id="debateInputArea" style="display:none;padding:12px;background:var(--ink2);border-top:1px solid var(--border)">
+    <input type="text" id="debateInput" placeholder="Interject..." style="flex:1;background:var(--ink3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--sepia)" onkeydown="if(e.key==='Enter')sendDebateMessage()">
+    <button class="btn-gold" onclick="sendDebateMessage()">→</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
+<!-- DEBATE SETUP MODAL -->
+<div id="debateModal" class="overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal debate-setup-modal">
+    <div class="modal-title">⚔️ Set Up Your Debate</div>
+    <div class="modal-section">
+      <div class="debate-fig-select">
+        <select id="debateFig1"><option value="">Select Debater 1...</option></select>
+        <select id="debateFig2"><option value="">Select Debater 2...</option></select>
+      </div>
+      <div class="debate-fig-select">
+        <select id="debateFig3"><option value="">+ Add third voice (optional)</option></select>
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Topic</div>
+      <input type="text" id="debateTopic" class="debate-topic" placeholder="Leave blank for them to choose their own dispute..." />
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Opening</div>
+      <label class="debate-opt"><input type="radio" name="debateOpening" value="unprompted" checked /> Debater 1 speaks first (unprompted)</label>
+      <label class="debate-opt"><input type="radio" name="debateOpening" value="auto" /> Auto-generate an inciting question</label>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Quick Start</div>
+      <div class="debate-suggestions">
+        <div class="debate-suggestion" onclick="quickDebate('einstein','newton')">⚡ Einstein vs Newton</div>
+        <div class="debate-suggestion" onclick="quickDebate('galileo','church')">🔥 Galileo vs Church</div>
+        <div class="debate-suggestion" onclick="quickDebate('freud','jung')">🧠 Freud vs Jung</div>
+        <div class="debate-suggestion" onclick="quickDebate('confucius','socrates')">☯️ Confucius vs Socrates</div>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-ghost" onclick="document.getElementById('debateModal').style.display='none'">Cancel</button>
+      <button class="btn-gold" onclick="startDebate()">⚔️ Begin Debate</button>
+    </div>
+  </div>
+</div>
 
 <!-- MODEL & PERSONALITY MODAL -->
 <div id="modelModal" class="overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
@@ -1479,7 +1580,7 @@ body {
 // STATE
 // ══════════════════════════════════════════════════════
 const SK = 'hv_v4';
-let state = { figures: {} };
+let state = { figures: {}, debates: {} };
 // activeFigId  — which figure is open in p2
 // activeConvId — which conversation is open in p3
 let activeFigId  = null;
@@ -2569,6 +2670,100 @@ function updateDebateOpponent() {
     showToast('Debating with ' + debateOpponent.name);
   }
 }
+
+// DEBATE ENGINE
+let activeDebateId = null;
+
+function openDebateModal() {
+  const f1 = document.getElementById('debateFig1');
+  const f2 = document.getElementById('debateFig2');
+  const f3 = document.getElementById('debateFig3');
+  const opts = Object.values(state.figures).map(f => `<option value="${f.id}">${f.name}</option>`).join('');
+  f1.innerHTML = '<option value="">Debater 1...</option>' + opts;
+  f2.innerHTML = '<option value="">Debater 2...</option>' + opts;
+  f3.innerHTML = '<option value="">+ Third (optional)</option>' + opts;
+  if (activeFigId) f1.value = activeFigId;
+  document.getElementById('debateModal').style.display = 'flex';
+}
+
+async function startDebate() {
+  const f1 = document.getElementById('debateFig1').value;
+  const f2 = document.getElementById('debateFig2').value;
+  const f3 = document.getElementById('debateFig3').value;
+  const topic = document.getElementById('debateTopic').value;
+  if (!f1 || !f2) { showToast('Select two debaters'); return; }
+  if (!state.figures[f1] || !state.figures[f2]) { showToast('Summon figures first'); return; }
+  
+  const id = 'debate_' + Date.now();
+  const figs = [f1, f2];
+  if (f3 && state.figures[f3]) figs.push(f3);
+  
+  const debate = {
+    id, type: 'debate', label: state.figures[f1].name + ' vs ' + state.figures[f2].name,
+    topic, figureIds: figs, currentSpeakerIndex: 0, turnCount: 0, messages: [],
+    autoAdvance: true, autoAdvanceCount: 0, maxAutoTurns: 6, status: 'active', created: Date.now()
+  };
+  
+  state.debates[id] = debate;
+  save();
+  document.getElementById('debateModal').style.display = 'none';
+  activeDebateId = id;
+  document.getElementById('p3-welcome').style.display = 'none';
+  document.getElementById('p3-chat').style.display = 'none';
+  document.getElementById('debateView').style.display = 'flex';
+  renderDebate(debate);
+  advanceTurn(debate);
+}
+
+function renderDebate(d) {
+  const h = document.getElementById('debateViewHeader');
+  const avatars = d.figureIds.map((fid,i) => {
+    const f = state.figures[fid];
+    return f ? `<div class="fig-avatar" style="border-color:${i===0?'var(--gold)':i===1?'var(--rust)':'#2a9d8f'}">${f.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>` : '';
+  }).join(' <span style="color:var(--gold)">⚔</span> ');
+  h.innerHTML = `<div style="display:flex;align-items:center;gap:8px">${avatars}</div><div style="flex:1"><div style="font-weight:700">${d.label}</div><div style="font-size:11px;color:var(--muted)">Turn ${d.turnCount+1}</div></div><button class="btn-ghost" onclick="endDebate('${d.id}')">End</button>`;
+  
+  const m = document.getElementById('debateMessages');
+  m.innerHTML = d.messages.map(msg => {
+    if (msg.role === 'system') return `<div style="text-align:center;margin:12px 0"><span style="background:var(--ink3);padding:6px 16px;border-radius:20px;font-size:11px;color:var(--gold)">${msg.content}</span></div>`;
+    const f = state.figures[msg.figureId];
+    const idx = d.figureIds.indexOf(msg.figureId);
+    const color = idx===0?'var(--gold)':idx===1?'var(--rust)':'#2a9d8f';
+    return `<div style="display:flex;gap:10px;margin-bottom:12px"><div class="fig-avatar" style="border-color:${color}">${f?f.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase():'?'}</div><div style="flex:1"><div style="font-size:11px;font-weight:700;color:${color};margin-bottom:4px">${f?.name||'?'}</div><div class="bubble" style="border-left:3px solid ${color}">${fmtText(msg.content)}</div></div></div>`;
+  }).join('');
+  m.scrollTop = m.scrollHeight;
+}
+
+async function advanceTurn(d) {
+  if (d.status !== 'active') return;
+  const idx = d.currentSpeakerIndex % d.figureIds.length;
+  const fig = state.figures[d.figureIds[idx]];
+  if (!fig) return;
+  
+  const msgs = d.messages.slice(-10).map(m => m.role === 'user' ? {role:'user',content:m.content} : {role:'assistant',content:`[${state.figures[m.figureId]?.name||'?'}]: ${m.content}`});
+  if (msgs.length && msgs[msgs.length-1].role === 'assistant') msgs.push({role:'user',content:'Continue as '+fig.name});
+  
+  const sys = `You are ${fig.name}. Debate with ${d.figureIds.filter(i=>i!==fig.id).map(i=>state.figures[i]?.name).join(', ')}. ${d.topic?'Topic: '+d.topic:''}. Rules: 1st person, 3 paragraphs max, end with question.`;
+  
+  const area = document.getElementById('debateMessages');
+  area.innerHTML += `<div class="typing-wrap"><div class="typing-bubble"><span></span><span></span><span></span></div></div>`;
+  area.scrollTop = area.scrollHeight;
+  
+  try {
+    const res = await puter.ai.chat([{role:'user',content:sys},...msgs],{model:fig.model||'claude-sonnet-4-6'});
+    const reply = res?.message?.content?.[0]?.text || '...';
+    area.querySelector('.typing-wrap')?.remove();
+    d.messages.push({role:'assistant',figureId:fig.id,content:reply,time:Date.now()});
+    d.turnCount++; d.currentSpeakerIndex++;
+    save(); renderDebate(d);
+    if (d.autoAdvance && d.autoAdvanceCount < d.maxAutoTurns && d.status==='active') { d.autoAdvanceCount++; setTimeout(()=>advanceTurn(d), 1800); }
+  } catch(e) { area.querySelector('.typing-wrap')?.remove(); showToast('Error: '+e.message); }
+}
+
+function pauseDebate(did) { const d=state.debates[did]; if(d){d.autoAdvance=false;d.status='paused';renderDebate(d);showToast('Paused');} }
+function resumeDebate(did) { const d=state.debates[did]; if(d){d.autoAdvance=true;d.status='active';advanceTurn(d);} }
+function endDebate(did) { const d=state.debates[did]; if(d){d.status='ended';d.messages.push({role:'system',content:'🏁 Debate ended',time:Date.now()});renderDebate(d);} }
+
 function wait(ms) { return new Promise(r=>setTimeout(r,ms)); }
 function autoH(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
 function showToast(msg) {
