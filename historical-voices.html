@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Historical Voices</title>
-<script src="https://js.puter.com/v2/"></script>
+<script src="https://js.puter.com/v2/">function toggleStar(e,id){e.stopPropagation();const f=state.figures[id];f.starred=!f.starred;save();renderP1();showToast(f.starred?'★ Starred':'☆ Unstarred')}</script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ─────────────────────────────────────────
@@ -1502,6 +1502,39 @@ renderP1();
 document.getElementById('figInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') initResearch();
 });
-</script>
+function toggleStar(e,id){e.stopPropagation();const f=state.figures[id];f.starred=!f.starred;save();renderP1();showToast(f.starred?'★ Starred':'☆ Unstarred')}</script>
+
+<!-- Model Selector Modal -->
+<div id="modelModal" class="overlay" style="display:none">
+<div class="modal" style="max-width:320px">
+<div class="modal-title">Select AI Model</div>
+<div class="modal-section">
+<div style="margin-bottom:10px"><label style="font-size:11px;color:#8a7a68">Provider</label>
+<select id="modelProvider" onchange="updateProviderModels()" style="width:100%;padding:8px;background:#3d342c;border:1px solid #3d342c;border-radius:6px;color:#f5ede0">
+<option value="anthropic">Anthropic (Claude)</option>
+<option value="openai">OpenAI (GPT)</option>
+<option value="google">Google (Gemini)</option>
+<option value="xai">xAI (Grok)</option>
+</select></div>
+<div><label style="font-size:11px;color:#8a7a68">Model</label>
+<select id="modelSelect" style="width:100%;padding:8px;background:#3d342c;border:1px solid #3d342c;border-radius:6px;color:#f5ede0"></select></div>
+</div>
+<div style="display:flex;gap:8px;justify-content:flex-end">
+<button onclick="document.getElementById('modelModal').style.display='none'" class="btn-ghost" style="padding:8px 14px;border-radius:6px;background:0;border:1px solid #3d342c;color:#8a7a68">Cancel</button>
+<button onclick="saveModelChoice()" class="btn-gold" style="padding:8px 14px;border-radius:6px;background:#b8862e;border:0;color:#1a1612;font-weight:700">Save</button>
+</div>
+</div>
+</div>
+
+<script>
+const PROVIDERS={anthropic:['claude-sonnet-4-6','claude-opus-4-6','claude-haiku-4-5'],openai:['gpt-4o','gpt-4o-mini','o1-mini'],google:['gemini-1-5-pro','gemini-1-5-flash'],xai:['grok-2','grok-2-vision']};
+const PROVIDER_NAMES={anthropic:'Claude',openai:'GPT',google:'Gemini',xai:'Grok'};
+
+function updateProviderModels(){const p=document.getElementById('modelProvider').value;const s=document.getElementById('modelSelect');s.innerHTML='';PROVIDERS[p].forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;s.appendChild(o)})}
+
+function openModelSelector(){if(!activeFigId)return;const f=state.figures[activeFigId];document.getElementById('modelProvider').value=f.model?.split('-')[0]||'anthropic';updateProviderModels();const current=f.model||'claude-sonnet-4-6';document.getElementById('modelSelect').value=current;document.getElementById('modelModal').style.display='flex'}
+
+function saveModelChoice(){if(!activeFigId)return;const f=state.figures[activeFigId];f.model=document.getElementById('modelSelect').value;save();document.getElementById('modelModal').style.display='none';showToast('Model: '+f.model)}
+function toggleStar(e,id){e.stopPropagation();const f=state.figures[id];f.starred=!f.starred;save();renderP1();showToast(f.starred?'★ Starred':'☆ Unstarred')}</script>
 </body>
 </html>
