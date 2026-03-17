@@ -171,10 +171,10 @@ body {
   padding: 12px 14px;
   cursor: pointer;
   border-bottom: 1px solid var(--border);
-  transition: background .15s;
+  transition: background .15s, transform .15s;
   position: relative;
 }
-.figure-row:hover { background: var(--ink3); }
+.figure-row:hover { background: var(--ink3); transform: translateX(2px); }
 .figure-row.selected { background: var(--ink3); }
 .figure-row.selected::after {
   content: '';
@@ -362,8 +362,13 @@ body {
   margin-bottom: 6px;
   transition: all .15s;
   position: relative;
+  animation: cardIn 0.25s ease;
 }
-.thread-card:hover { background: var(--ink2); border-color: var(--border2); }
+@keyframes cardIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+.thread-card:hover { background: var(--ink2); border-color: var(--border2); transform: translateX(-2px); }
 .thread-card.active-thread { background: var(--ink2); border-color: var(--gold); }
 
 .thread-label {
@@ -527,7 +532,17 @@ body {
   position: relative;
 }
 
-.msg-group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 12px; }
+.msg-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 12px;
+  animation: msgIn 0.3s ease;
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .msg-group.me { align-items: flex-end; }
 .msg-group.ai { align-items: flex-start; }
 
@@ -717,6 +732,20 @@ body {
 /* ─────────────────────────────────────────
    MODEL & PERSONALITY MODAL
 ───────────────────────────────────────── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.8);
+  display: none; align-items: center; justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.overlay.open { display: flex; }
+
 .modal {
   background: var(--ink2);
   border: 1px solid var(--border2);
@@ -726,6 +755,18 @@ body {
   max-width: 92vw;
   max-height: 85vh;
   overflow-y: auto;
+  animation: modalIn 0.25s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-tab-content {
+  animation: tabIn 0.2s ease;
+}
+@keyframes tabIn {
+  from { opacity: 0; transform: translateX(-4px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 .modal-tabs {
   display: flex;
@@ -733,6 +774,7 @@ body {
   margin-bottom: 20px;
   border-bottom: 1px solid var(--border);
   padding-bottom: 12px;
+  flex-wrap: wrap;
 }
 .modal-tab {
   background: transparent;
