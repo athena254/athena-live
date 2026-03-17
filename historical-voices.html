@@ -883,7 +883,7 @@ body {
           <div class="p3-chat-sub" id="chatSub">—</div>
         </div>
         <div class="p3-knowledge">
-          <div class="know-label" id="knowLabel">0%</div>
+          <div class="know-label" id="knowLabel">0%</div><button onclick="openModelSelector()" style="background:0;border:1px solid #3d342c;color:#8a7a68;padding:2px 6px;border-radius:4px;font-size:9px;cursor:pointer;margin-left:4px" title="Change AI Model">🤖</button>
           <div class="know-bar"><div class="know-fill" id="knowFill" style="width:0%"></div></div>
         </div>
       </div>
@@ -917,11 +917,33 @@ body {
 
 <div class="toast" id="toast"></div>
 
+<!-- Model Selector Modal -->
+<div id="modelModal" class="overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+<div class="modal" style="max-width:320px">
+<div class="modal-title">🤖 AI Model</div>
+<div class="modal-section">
+<div class="form-group"><label>Provider</label>
+<select id="modelProvider" onchange="updateProviderModels()">
+<option value="anthropic">Anthropic (Claude)</option>
+<option value="openai">OpenAI (GPT)</option>
+<option value="google">Google (Gemini)</option>
+<option value="xai">xAI (Grok)</option>
+</select></div>
+<div class="form-group"><label>Model</label>
+<select id="modelSelect"></select></div>
+</div>
+<div class="modal-btns">
+<button class="btn-ghost" onclick="document.getElementById('modelModal').style.display='none'">Cancel</button>
+<button class="btn-gold" onclick="saveModelChoice()">Save</button>
+</div>
+</div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════════════════
-const SK = 'hv_v3';
+const SK = 'hv_v4';
 let state = { figures: {} };
 // activeFigId  — which figure is open in p2
 // activeConvId — which conversation is open in p3
@@ -929,11 +951,47 @@ let activeFigId  = null;
 let activeConvId = null;
 let cancelled = false;
 
+// Model providers
+const PROVIDERS = {
+  anthropic: ['claude-sonnet-4-6', 'claude-opus-4-6', 'claude-haiku-4-5'],
+  openai: ['gpt-4o', 'gpt-4o-mini', 'o1-mini'],
+  google: ['gemini-1-5-pro', 'gemini-1-5-flash'],
+  xai: ['grok-2', 'grok-2-vision']
+};
+const ERA_VOICES = { ancient: 'onyx', medieval: 'fable', 'early modern': 'echo', modern: 'nova', contemporary: 'shimmer' };
+
 function load() {
   try { state = JSON.parse(localStorage.getItem(SK) || '{"figures":{}}'); }
   catch { state = { figures: {} }; }
+  // Migrate old data
+  Object.values(state.figures).forEach(migrateFigure);
 }
 function save() { localStorage.setItem(SK, JSON.stringify(state)); }
+
+// Migration for existing users
+function migrateFigure(fig) {
+  fig.model ??= 'claude-sonnet-4-6';
+  fig.originalSystemPrompt ??= fig.systemPrompt;
+  fig.promptEdited ??= false;
+  fig.voiceId ??= getDefaultVoice(fig.era);
+  fig.starred ??= false;
+  fig.formality ??= 70;
+  fig.verbosity ??= 50;
+  fig.wit ??= 40;
+  fig.scenario ??= '';
+  fig.connections ??= [];
+  return fig;
+}
+
+function getDefaultVoice(era) {
+  if (!era) return 'onyx';
+  const e = era.toLowerCase();
+  if (e.includes('ancient') || e.includes('bc') || e.includes('ad')) return 'onyx';
+  if (e.includes('medieval')) return 'fable';
+  if (e.includes('1500') || e.includes('1600') || e.includes('1700')) return 'echo';
+  if (e.includes('1800') || e.includes('1900')) return 'nova';
+  return 'shimmer';
+}
 function slug(n) { return n.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
 
 // ══════════════════════════════════════════════════════
@@ -1227,7 +1285,7 @@ async function sendMsg() {
     ];
 
     // ★ FREE — Puter.js + Claude
-    const res = await puter.ai.chat(fullMsgs, { model: 'claude-sonnet-4-6' });
+    const res = await puter.ai.chat(fullMsgs, { model: fig.model || 'claude-sonnet-4-6' });
     const reply = res?.message?.content?.[0]?.text || '…';
 
     hideTyping(typing);
@@ -1485,6 +1543,42 @@ function fmtText(t) {
     .replace(/\n/g,'<br>');
 }
 function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// Model Selection
+function updateProviderModels() {
+  const p = document.getElementById('modelProvider').value;
+  const s = document.getElementById('modelSelect');
+  s.innerHTML = '';
+  (PROVIDERS[p] || []).forEach(m => {
+    const o = document.createElement('option');
+    o.value = m; o.textContent = m;
+    s.appendChild(o);
+  });
+}
+
+function openModelSelector() {
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  const current = f.model || 'claude-sonnet-4-6';
+  // Find provider
+  let provider = 'anthropic';
+  for (const [p, models] of Object.entries(PROVIDERS)) {
+    if (models.includes(current)) { provider = p; break; }
+  }
+  document.getElementById('modelProvider').value = provider;
+  updateProviderModels();
+  document.getElementById('modelSelect').value = current;
+  document.getElementById('modelModal').style.display = 'flex';
+}
+
+function saveModelChoice() {
+  if (!activeFigId) return;
+  const f = state.figures[activeFigId];
+  f.model = document.getElementById('modelSelect').value;
+  save();
+  document.getElementById('modelModal').style.display = 'none';
+  showToast('Model: ' + f.model);
+}
 function wait(ms) { return new Promise(r=>setTimeout(r,ms)); }
 function autoH(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
 function showToast(msg) {
@@ -1492,6 +1586,15 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+function toggleStar(e, id) {
+  e.stopPropagation();
+  const f = state.figures[id];
+  f.starred = !f.starred;
+  save();
+  renderP1();
+  showToast(f.starred ? '★ Starred' : '☆ Unstarred');
 }
 
 // ══════════════════════════════════════════════════════
