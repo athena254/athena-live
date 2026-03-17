@@ -1342,24 +1342,7 @@ body {
 
 </div><!-- /shell -->
 
-<!-- RESEARCH MODAL -->
-<div class="overlay" id="modal">
-  <div class="modal">
-    <div class="modal-title" id="mTitle">Summoning…</div>
-    <div class="modal-sub">Researching historical records via Claude (free via Puter.js)</div>
-    <div class="rlog" id="rlog"></div>
-    <div class="pbar"><div class="pbar-fill" id="pbar"></div></div>
-    <div class="modal-btns">
-      <button class="btn-ghost" onclick="cancelR()">Cancel</button>
-      <button class="btn-gold" id="mDone" style="display:none" onclick="closeModal()">Open Conversation →</button>
-    </div>
-  </div>
-</div>
 
-<div class="toast" id="toast"></div>
-
-<!-- RESEARCH MODAL -->
-<div class="overlay" id="modal">
   <div class="modal">
     <div class="modal-title" id="mTitle">Summoning…</div>
     <div class="modal-sub">Researching historical records via Claude (free via Puter.js)</div>
@@ -2428,28 +2411,69 @@ function copyMessage(content) {
   });
 }
 
-async function regenerateMessage(msgIndex) {
+async function regenerateMessage() {
   if (!activeFigId || !activeConvId) return;
   const fig = state.figures[activeFigId];
   const conv = fig.conversations[activeConvId];
   
-  // Find the message to regenerate (last AI message)
-  const aiMessages = conv.messages.filter(m => m.role === 'assistant');
-  if (aiMessages.length === 0) return;
+  // Find the last AI message to regenerate
+  const aiMsgIndex = conv.messages.findLastIndex(m => m.role === 'assistant');
+  if (aiMsgIndex === -1) return;
   
-  const msgToRegen = aiMessages[aiMessages.length - 1];
-  const msgIndex = conv.messages.indexOf(msgToRegen);
+  const msgToRegen = conv.messages[aiMsgIndex];
   
-  // Remove the message and subsequent messages
-  conv.messages = conv.messages.slice(0, msgIndex);
+  // Remove this message and any after it
+  conv.messages = conv.messages.slice(0, aiMsgIndex);
   
-  // Re-render and re-send
+  // Re-render messages
   renderMessages(fig, conv);
   
-  // Re-send the last user message
+  // Get the last user message to re-send
   const lastUserMsg = conv.messages.filter(m => m.role === 'user').slice(-1)[0];
-  if (lastUserMsg) {
-    await sendMsg();
+  if (!lastUserMsg) return;
+  
+  // Show typing and regenerate
+  const input = document.getElementById('chatInput');
+  const text = lastUserMsg.content;
+  
+  // Temporarily remove the last user message for regeneration
+  conv.messages.pop();
+  
+  const typing = showTyping(fig.name.split(' ')[0]);
+  
+  try {
+    const chatHistory = conv.messages.slice(-22).map(m => ({
+      role: m.role === 'user' ? 'user' : 'assistant',
+      content: m.content
+    }));
+
+    const langNames = { en: 'English', es: 'Spanish', fr: 'French', de: 'German', it: 'Italian', pt: 'Portuguese', la: 'Latin', grc: 'Ancient Greek' };
+    const lang = fig.language || 'en';
+    const langInstr = lang !== 'en' ? `\n\nIMPORTANT: Respond in ${langNames[lang] || 'English'}.` : '';
+
+    const systemMsg = fig.systemPrompt + '\n\n## Your Accumulated Knowledge:\n' + fig.markdown + langInstr;
+    const fullMsgs = [
+      { role: 'user', content: `[SYSTEM — follow for entire conversation]:\n${systemMsg}\n\nAcknowledge briefly.` },
+      { role: 'assistant', content: 'Understood.' },
+      ...chatHistory
+    ];
+
+    const res = await puter.ai.chat(fullMsgs, { model: fig.model || 'claude-sonnet-4-6' });
+    const reply = res?.message?.content?.[0]?.text || '…';
+
+    hideTyping(typing);
+    const aiMsg = { role: 'assistant', content: reply, time: Date.now() };
+    conv.messages.push(aiMsg);
+    
+    save();
+    appendBubble(aiMsg, fig.name);
+    renderThreads(fig);
+    showToast('Message regenerated');
+  } catch(e) {
+    hideTyping(typing);
+    showToast('Regeneration failed: ' + e.message);
+    // Restore the user message
+    conv.messages.push(lastUserMsg);
   }
 }
 
