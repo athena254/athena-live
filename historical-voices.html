@@ -1485,6 +1485,7 @@ let state = { figures: {} };
 let activeFigId  = null;
 let activeConvId = null;
 let cancelled = false;
+let debateOpponent = null;
 
 // Model providers
 const PROVIDERS = {
@@ -1830,14 +1831,32 @@ async function sendMsg() {
   const conv = fig.conversations[activeConvId];
   const lang = fig.language || 'en';
 
+  // Debate mode check
+  const debateEnabled = document.getElementById('debateToggle')?.checked && debateOpponent;
+  
+  // Determine which figure speaks in debate
+  let currentFig = fig;
+  let opponentFig = null;
+  
+  if (debateEnabled && debateOpponent) {
+    // Count messages to alternate speakers
+    const msgCount = conv.messages.filter(m => m.role === 'assistant').length;
+    if (msgCount % 2 === 0) {
+      currentFig = fig; // User's chosen figure
+    } else {
+      currentFig = debateOpponent; // Opponent
+    }
+    opponentFig = currentFig === fig ? debateOpponent : fig;
+  }
+
   const userMsg = { role: 'user', content: text, time: Date.now() };
   conv.messages.push(userMsg);
-  appendBubble(userMsg, fig.name);
+  appendBubble(userMsg, currentFig.name);
   input.value = ''; autoH(input);
   input.disabled = true;
   document.getElementById('sendBtn').disabled = true;
 
-  const typing = showTyping(fig.name.split(' ')[0]);
+  const typing = showTyping(currentFig.name.split(' ')[0]);
 
   try {
     const chatHistory = conv.messages.slice(-22).map(m => ({
@@ -1849,39 +1868,50 @@ async function sendMsg() {
     const langNames = { en: 'English', es: 'Spanish', fr: 'French', de: 'German', it: 'Italian', pt: 'Portuguese', la: 'Latin', grc: 'Ancient Greek' };
     const langInstr = lang !== 'en' ? `\n\nIMPORTANT: Respond in ${langNames[lang] || 'English'}.` : '';
 
-    // System context injected as a priming exchange
-    const systemMsg = fig.systemPrompt + '\n\n## Your Accumulated Knowledge:\n' + fig.markdown + langInstr;
+    // Build system prompt based on mode
+    let systemPrompt = currentFig.systemPrompt || currentFig.markdown || '';
+    
+    if (debateEnabled && opponentFig) {
+      // Debate mode: inject debate context
+      systemPrompt = `You are ${currentFig.name}. You are in a philosophical or historical debate with ${opponentFig.name}. \n\nYour opponent's background: ${opponentFig.era || 'Historical figure'}.\n\nDEBATE RULES:\n1. Stay strictly in character as ${currentFig.name}\n2. Address your opponent's arguments directly\n3. Use historical facts and your character's viewpoints\n4. Be authentic to your historical period and beliefs\n5. Keep responses to 2-3 paragraphs max\n6. Never break character or acknowledge this is an AI\n\nCurrent debate topic: The last user message.\n\nRespond NOW as ${currentFig.name}:${langInstr}`;
+    } else {
+      systemPrompt = systemPrompt + '\n\n## Your Accumulated Knowledge:\n' + (currentFig.markdown || '') + langInstr;
+    }
+
     const fullMsgs = [
-      { role: 'user', content: `[SYSTEM — follow for entire conversation]:\n${systemMsg}\n\nAcknowledge briefly.` },
-      { role: 'assistant', content: 'Understood.' },
+      { role: 'user', content: `[SYSTEM]: ${systemPrompt}\n\nAcknowledge and respond as ${currentFig.name}.` },
+      { role: 'assistant', content: 'Understood. I am ' + currentFig.name + '.' },
       ...chatHistory
     ];
 
     // ★ FREE — Puter.js + Claude
-    const res = await puter.ai.chat(fullMsgs, { model: fig.model || 'claude-sonnet-4-6' });
+    const res = await puter.ai.chat(fullMsgs, { model: currentFig.model || 'claude-sonnet-4-6' });
     const reply = res?.message?.content?.[0]?.text || '…';
 
     hideTyping(typing);
-    const aiMsg = { role: 'assistant', content: reply, time: Date.now() };
+    const aiMsg = { role: 'assistant', content: reply, time: Date.now(), figure: currentFig.name };
     conv.messages.push(aiMsg);
-    fig.totalMsgs = (fig.totalMsgs || 0) + 1;
+    currentFig.totalMsgs = (currentFig.totalMsgs || 0) + 1;
 
-    if (fig.totalMsgs % 3 === 0 && fig.knowledge < 96) {
-      fig.knowledge = Math.min(96, fig.knowledge + 5);
-      document.getElementById('knowLabel').textContent = fig.knowledge + '%';
-      document.getElementById('knowFill').style.width = fig.knowledge + '%';
-      enrichKnowledge(fig); // async, non-blocking
+    if (currentFig.totalMsgs % 3 === 0 && currentFig.knowledge < 96) {
+      currentFig.knowledge = Math.min(96, currentFig.knowledge + 5);
+      // Update UI for active figure
+      if (currentFig.id === activeFigId) {
+        document.getElementById('knowLabel').textContent = currentFig.knowledge + '%';
+        document.getElementById('knowFill').style.width = currentFig.knowledge + '%';
+      }
+      enrichKnowledge(currentFig);
     }
 
     save();
-    appendBubble(aiMsg, fig.name);
-    renderP1(); // update preview in sidebar
-    renderThreads(fig); // update thread preview
+    appendBubble(aiMsg, currentFig.name);
+    renderP1();
+    renderThreads(fig);
   } catch(e) {
     hideTyping(typing);
     const err = { role: 'assistant', content: `*I find myself unable to respond. (${e.message})*`, time: Date.now() };
     conv.messages.push(err);
-    appendBubble(err, fig.name);
+    appendBubble(err, currentFig.name);
     save();
   }
 
