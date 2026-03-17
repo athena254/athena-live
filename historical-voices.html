@@ -1232,7 +1232,7 @@ body {
   <div class="brand">Historical Voices</div>
   <div class="topbar-summon">
     <input type="text" id="figInput" placeholder="Summon a figure… Cleopatra, Tesla, Plato…" />
-    <button id="summonBtn" onclick="initResearch()">+ Summon</button>
+    <button id="summonBtn">+ Summon</button>
   </div>
   <div class="free-pill">⚡ Free via Puter.js</div>
 </div>
@@ -2603,6 +2603,7 @@ renderP1();
 document.getElementById('figInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') initResearch();
 });
+document.getElementById('summonBtn').addEventListener('click', () => initResearch());
 </script>
 </body>
 </html>
