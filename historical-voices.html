@@ -575,6 +575,22 @@ body {
   padding: 0 4px;
 }
 
+/* TTS Button */
+.tts-btn {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background: 0;
+  border: none;
+  color: var(--muted2);
+  cursor: pointer;
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.bubble:hover .tts-btn { opacity: 1; }
+.tts-btn:hover { color: var(--gold); }
+
 .date-divider {
   display: flex;
   align-items: center;
@@ -932,6 +948,11 @@ body {
 <div class="form-group"><label>Model</label>
 <select id="modelSelect"></select></div>
 </div>
+<div class="modal-section">
+<div class="form-group"><label>Portrait</label>
+<button class="btn-ghost" style="width:100%" onclick="generatePortrait()">🖼️ Generate Portrait</button>
+</div>
+</div>
 <div class="modal-btns">
 <button class="btn-ghost" onclick="document.getElementById('modelModal').style.display='none'">Cancel</button>
 <button class="btn-gold" onclick="saveModelChoice()">Save</button>
@@ -1139,7 +1160,12 @@ function openConversation(figId, convId) {
 
   // Fill P3 header
   const initial = fig.name.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  document.getElementById('chatAvatar').textContent = initial;
+  const avatarEl = document.getElementById('chatAvatar');
+  if (fig.portraitUrl) {
+    avatarEl.innerHTML = `<img src="${fig.portraitUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  } else {
+    avatarEl.textContent = initial;
+  }
   document.getElementById('chatName').textContent = fig.name;
   document.getElementById('chatSub').textContent = conv.label + ' · ' + fig.era;
   document.getElementById('knowLabel').textContent = fig.knowledge + '%';
@@ -1238,6 +1264,15 @@ function appendBubble(msg, figName) {
   const b = document.createElement('div');
   b.className = 'bubble ' + (msg.role === 'user' ? 'tail-me' : 'tail-ai');
   b.innerHTML = fmtText(msg.content);
+  // Add TTS button for AI messages
+  if (msg.role === 'assistant') {
+    const ttsBtn = document.createElement('button');
+    ttsBtn.className = 'tts-btn';
+    ttsBtn.innerHTML = '🔊';
+    ttsBtn.title = 'Speak';
+    ttsBtn.onclick = () => speakText(msg.content);
+    b.appendChild(ttsBtn);
+  }
   wrap.appendChild(b);
 
   const tEl = document.createElement('div');
@@ -1586,6 +1621,44 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+// Voice/TTS
+async function speakText(text) {
+  if (!activeFigId) return;
+  const fig = state.figures[activeFigId];
+  const voice = fig.voiceId || 'onyx';
+  showToast('Speaking...');
+  try {
+    const result = await puter.ai.txt2speech(text, { voice: voice });
+    const url = result.url ?? URL.createObjectURL(result);
+    const audio = new Audio(url);
+    audio.play();
+    showToast('🔊 Playing');
+  } catch(e) {
+    showToast('TTS error: ' + e.message);
+  }
+}
+
+// Portrait Generation
+async function generatePortrait() {
+  if (!activeFigId) return;
+  const fig = state.figures[activeFigId];
+  showToast('Generating portrait...');
+  try {
+    const prompt = `Portrait of ${fig.name}, ${fig.era}. Classical oil painting style, museum quality, detailed face, no text, no symbols.`;
+    const result = await puter.ai.txt2img(prompt);
+    fig.portraitUrl = result.image_url ?? result.src ?? result.url;
+    save();
+    // Refresh display
+    const avatarEl = document.getElementById('chatAvatar');
+    if (avatarEl && activeFigId) {
+      avatarEl.innerHTML = `<img src="${fig.portraitUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    }
+    showToast('🖼️ Portrait generated!');
+  } catch(e) {
+    showToast('Portrait error: ' + e.message);
+  }
 }
 
 function toggleStar(e, id) {
