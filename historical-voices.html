@@ -1279,7 +1279,7 @@ body {
   <div class="brand">Historical Voices</div>
   <div class="topbar-summon">
     <input type="text" id="figInput" placeholder="Summon a figure… Cleopatra, Tesla, Plato…" />
-    <button id="summonBtn" onclick="console.log('clicked');initResearch()">+ Summon</button>
+    <button id="summonBtn" type="button">+ Summon</button>
   </div>
   <button onclick="openDebateModal()" style="background:0;border:1px solid var(--gold);color:var(--gold);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px">⚔️ Debate</button>
   <div class="free-pill">⚡ Free via Puter.js</div>
@@ -2831,7 +2831,10 @@ renderP1();
 document.getElementById('figInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') initResearch();
 });
-document.getElementById('summonBtn').addEventListener('click', () => initResearch());
+document.getElementById('summonBtn').addEventListener('click', function() { 
+  console.log('Summon clicked'); 
+  initResearch(); 
+});
 </script>
 </body>
 </html>
